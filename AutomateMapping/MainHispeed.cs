@@ -83,9 +83,46 @@ namespace AutomateMapping
 
                     break;
                 }
-
-               
+              
             }
+        }
+        private void MainHispeed_SizeChanged(object sender, EventArgs e)
+        {
+            int w = this.Size.Width;
+            int h = this.Size.Height;
+
+            btnClose.Location = new Point(w - 22, 13);
+            btnMaximize.Location = new Point(w - 46, 13);
+            btnMinimize.Location = new Point(w - 75, 13);
+
+
+            btnExe.Location = new Point(w - 125, h - 90);
+            btnLog.Location = new Point(w - 330, h - 90);
+
+        }
+
+        private void btnMaximize_Click(object sender, EventArgs e)
+        {
+            if (this.WindowState != FormWindowState.Maximized)
+            {
+                this.WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Normal;
+            }
+        }
+
+        private void btnMinimize_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            InputHispeed inputHispeed = new InputHispeed(ConnectionProd, "");
+            inputHispeed.Show();
         }
     }
 }

@@ -76,6 +76,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validation.cs" />
     <EmbeddedResource Include="InputHispeed.resx">
       <DependentUpon>InputHispeed.cs</DependentUpon>
     </EmbeddedResource>
@@ -154,6 +155,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\icons8-system-report-36.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-sign-out-18.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

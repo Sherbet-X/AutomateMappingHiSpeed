@@ -32,8 +32,8 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.label15 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.labelDescFile = new System.Windows.Forms.Label();
-            this.lableInput = new System.Windows.Forms.Label();
+            this.txtDescFile = new System.Windows.Forms.TextBox();
+            this.txtInput = new System.Windows.Forms.TextBox();
             this.btnOpenDesc = new System.Windows.Forms.Button();
             this.btnOpen = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
@@ -48,7 +48,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.labelOutput = new System.Windows.Forms.Label();
+            this.txtOutput = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -58,31 +58,34 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnNext = new System.Windows.Forms.Button();
+            this.btnLogout = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel5.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnLogout)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // labelClose
             // 
             this.labelClose.AutoSize = true;
-            this.labelClose.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelClose.Font = new System.Drawing.Font("Times New Roman", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelClose.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.labelClose.Location = new System.Drawing.Point(807, 9);
+            this.labelClose.Location = new System.Drawing.Point(819, 7);
             this.labelClose.Name = "labelClose";
-            this.labelClose.Size = new System.Drawing.Size(20, 19);
+            this.labelClose.Size = new System.Drawing.Size(23, 22);
             this.labelClose.TabIndex = 7;
             this.labelClose.Text = "X";
+            this.labelClose.Click += new System.EventHandler(this.labelClose_Click);
             // 
             // panel5
             // 
-            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(52)))), ((int)(((byte)(85)))));
+            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(116)))), ((int)(((byte)(205)))));
+            this.panel5.Controls.Add(this.btnLogout);
             this.panel5.Controls.Add(this.pictureBox1);
             this.panel5.Controls.Add(this.label15);
             this.panel5.Controls.Add(this.labelClose);
@@ -91,6 +94,9 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(845, 41);
             this.panel5.TabIndex = 15;
+            this.panel5.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel5_MouseDown);
+            this.panel5.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel5_MouseMove);
+            this.panel5.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel5_MouseUp);
             // 
             // label15
             // 
@@ -106,9 +112,8 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.textBox1);
-            this.panel1.Controls.Add(this.labelDescFile);
-            this.panel1.Controls.Add(this.lableInput);
+            this.panel1.Controls.Add(this.txtDescFile);
+            this.panel1.Controls.Add(this.txtInput);
             this.panel1.Controls.Add(this.btnOpenDesc);
             this.panel1.Controls.Add(this.btnOpen);
             this.panel1.Controls.Add(this.label5);
@@ -125,27 +130,28 @@
             this.panel1.Size = new System.Drawing.Size(735, 266);
             this.panel1.TabIndex = 16;
             // 
-            // labelDescFile
+            // txtDescFile
             // 
-            this.labelDescFile.AutoSize = true;
-            this.labelDescFile.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDescFile.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.labelDescFile.Location = new System.Drawing.Point(385, 189);
-            this.labelDescFile.Name = "labelDescFile";
-            this.labelDescFile.Size = new System.Drawing.Size(150, 14);
-            this.labelDescFile.TabIndex = 9;
-            this.labelDescFile.Text = "X:/xxxx/xxxx/xxxx/file.xlsx";
+            this.txtDescFile.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtDescFile.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDescFile.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+            this.txtDescFile.Location = new System.Drawing.Point(382, 189);
+            this.txtDescFile.Name = "txtDescFile";
+            this.txtDescFile.Size = new System.Drawing.Size(325, 15);
+            this.txtDescFile.TabIndex = 14;
+            this.txtDescFile.Text = "X:/xxxx/xxxx/xxxx/file.xlsx";
             // 
-            // lableInput
+            // txtInput
             // 
-            this.lableInput.AutoSize = true;
-            this.lableInput.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lableInput.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.lableInput.Location = new System.Drawing.Point(385, 146);
-            this.lableInput.Name = "lableInput";
-            this.lableInput.Size = new System.Drawing.Size(150, 14);
-            this.lableInput.TabIndex = 8;
-            this.lableInput.Text = "X:/xxxx/xxxx/xxxx/file.xlsx";
+            this.txtInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtInput.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtInput.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+            this.txtInput.Location = new System.Drawing.Point(382, 146);
+            this.txtInput.Name = "txtInput";
+            this.txtInput.Size = new System.Drawing.Size(325, 15);
+            this.txtInput.TabIndex = 13;
+            this.txtInput.Text = "X:/xxxx/xxxx/xxxx/file.xlsx";
+            this.txtInput.WordWrap = false;
             // 
             // btnOpenDesc
             // 
@@ -287,25 +293,25 @@
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.White;
-            this.panel3.Controls.Add(this.labelOutput);
+            this.panel3.Controls.Add(this.txtOutput);
             this.panel3.Controls.Add(this.button3);
             this.panel3.Controls.Add(this.label7);
             this.panel3.Controls.Add(this.label14);
-            this.panel3.Location = new System.Drawing.Point(57, 405);
+            this.panel3.Location = new System.Drawing.Point(57, 401);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(733, 105);
             this.panel3.TabIndex = 17;
             // 
-            // labelOutput
+            // txtOutput
             // 
-            this.labelOutput.AutoSize = true;
-            this.labelOutput.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelOutput.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.labelOutput.Location = new System.Drawing.Point(385, 53);
-            this.labelOutput.Name = "labelOutput";
-            this.labelOutput.Size = new System.Drawing.Size(150, 14);
-            this.labelOutput.TabIndex = 10;
-            this.labelOutput.Text = "X:/xxxx/xxxx/xxxx/file.xlsx";
+            this.txtOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtOutput.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtOutput.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+            this.txtOutput.Location = new System.Drawing.Point(380, 53);
+            this.txtOutput.Name = "txtOutput";
+            this.txtOutput.Size = new System.Drawing.Size(325, 15);
+            this.txtOutput.TabIndex = 15;
+            this.txtOutput.Text = "X:/xxxx/xxxx/xxxx/file.xlsx";
             // 
             // button3
             // 
@@ -346,7 +352,7 @@
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(52)))), ((int)(((byte)(85)))));
             this.panel4.Controls.Add(this.label6);
-            this.panel4.Location = new System.Drawing.Point(77, 393);
+            this.panel4.Location = new System.Drawing.Point(77, 389);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(116, 45);
             this.panel4.TabIndex = 19;
@@ -380,13 +386,6 @@
             this.statusStrip1.TabIndex = 28;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(388, 123);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(204, 20);
-            this.textBox1.TabIndex = 13;
-            // 
             // btnNext
             // 
             this.btnNext.AutoEllipsis = true;
@@ -397,7 +396,7 @@
             this.btnNext.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.btnNext.Image = global::AutomateMapping.Properties.Resources.icons8_forward_button_24;
             this.btnNext.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnNext.Location = new System.Drawing.Point(621, 539);
+            this.btnNext.Location = new System.Drawing.Point(681, 533);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(109, 40);
             this.btnNext.TabIndex = 27;
@@ -405,6 +404,16 @@
             this.btnNext.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.btnNext.UseVisualStyleBackColor = false;
             this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            // 
+            // btnLogout
+            // 
+            this.btnLogout.Image = global::AutomateMapping.Properties.Resources.icons8_sign_out_18;
+            this.btnLogout.Location = new System.Drawing.Point(791, 10);
+            this.btnLogout.Name = "btnLogout";
+            this.btnLogout.Size = new System.Drawing.Size(22, 19);
+            this.btnLogout.TabIndex = 32;
+            this.btnLogout.TabStop = false;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
             // pictureBox1
             // 
@@ -419,7 +428,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(116)))), ((int)(((byte)(205)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(172)))), ((int)(((byte)(254)))));
             this.ClientSize = new System.Drawing.Size(845, 613);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.btnNext);
@@ -430,6 +439,7 @@
             this.Controls.Add(this.panel3);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "InputHispeed";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "InputHispeed";
             this.Load += new System.EventHandler(this.InputHispeed_Load);
             this.panel5.ResumeLayout(false);
@@ -442,6 +452,7 @@
             this.panel3.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnLogout)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -469,12 +480,9 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label labelDescFile;
-        private System.Windows.Forms.Label lableInput;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label labelOutput;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -482,6 +490,9 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.OpenFileDialog openFileDialog2;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtInput;
+        private System.Windows.Forms.TextBox txtDescFile;
+        private System.Windows.Forms.TextBox txtOutput;
+        private System.Windows.Forms.PictureBox btnLogout;
     }
 }

@@ -143,6 +143,16 @@ namespace AutomateMapping.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_sign_out_18 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-sign-out-18", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_system_report_36 {
             get {
                 object obj = ResourceManager.GetObject("icons8-system-report-36", resourceCulture);

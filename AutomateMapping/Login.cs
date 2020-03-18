@@ -21,6 +21,20 @@ namespace AutomateMapping
             InitializeComponent();
         }
 
+        #region "Drop Shadow"
+        private const int CS_DropShadow = 0x00020000;
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ClassStyle |= CS_DropShadow;
+                return cp;
+            }
+        }
+        #endregion
+
         private void Login_Load(object sender, EventArgs e)
         {
             btnLogin.Enabled = true;
@@ -99,6 +113,20 @@ namespace AutomateMapping
                     Cursor.Current = Cursors.Default;
                 }
             }
+        }
+
+        private void labelClose_Click(object sender, EventArgs e)
+        {
+            if (ConnectionProd != null)
+            {
+                if (ConnectionProd.State == ConnectionState.Open)
+                {
+                    ConnectionProd.Close();
+                    ConnectionProd.Dispose();
+                }
+            }
+
+            Application.Exit();
         }
     }
 }
