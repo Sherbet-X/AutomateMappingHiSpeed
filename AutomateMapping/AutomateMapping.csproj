@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReserveID.cs" />
     <Compile Include="Validation.cs" />
     <EmbeddedResource Include="InputHispeed.resx">
       <DependentUpon>InputHispeed.cs</DependentUpon>
