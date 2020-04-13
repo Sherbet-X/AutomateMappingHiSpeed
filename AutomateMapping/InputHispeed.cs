@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Oracle.ManagedDataAccess.Client;
+using System.Data.OracleClient;
 
 namespace AutomateMapping
 {
@@ -110,6 +110,12 @@ namespace AutomateMapping
         {
             Cursor.Current = Cursors.WaitCursor;
 
+            if(String.IsNullOrEmpty(txtDescFile.Text) ||
+                String.Equals(txtDescFile.Text, "X:/xxxx/xxxx/xxxx/file.xlsx"))
+            {
+                fileDesc = null;
+            }
+
             if (String.IsNullOrEmpty(txtUr.Text))
             {
                 MessageBox.Show("Please input Ur.NO#");
@@ -130,7 +136,7 @@ namespace AutomateMapping
             }
             else
             {
-                MainHispeed main = new MainHispeed(ConnectionProd, filename);
+                MainHispeed main = new MainHispeed(ConnectionProd, filename, fileDesc, implementer, txtUr.Text);
 
                 this.Hide();
                 main.Show();

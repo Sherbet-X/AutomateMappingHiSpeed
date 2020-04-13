@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label15 = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
             this.btnMaximize = new System.Windows.Forms.PictureBox();
@@ -40,6 +40,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.label2 = new System.Windows.Forms.Label();
+            this.btnValidate = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.btnExe = new System.Windows.Forms.Button();
             this.btnLog = new System.Windows.Forms.Button();
@@ -48,6 +49,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnMinimize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnValidate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
@@ -58,9 +60,9 @@
             this.label15.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.label15.Location = new System.Drawing.Point(56, 13);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(159, 15);
+            this.label15.Size = new System.Drawing.Size(165, 15);
             this.label15.TabIndex = 20;
-            this.label15.Text = "Hispeed Package Mapping";
+            this.label15.Text = "Hi-Speed Package Mapping";
             // 
             // panel5
             // 
@@ -120,13 +122,17 @@
             // 
             // listBox1
             // 
-            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBox1.Font = new System.Drawing.Font("Roboto", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 18;
             this.listBox1.Location = new System.Drawing.Point(0, 464);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(935, 160);
+            this.listBox1.Size = new System.Drawing.Size(935, 166);
             this.listBox1.TabIndex = 18;
+            this.listBox1.Click += new System.EventHandler(this.listBox1_Click);
             // 
             // dataGridView1
             // 
@@ -137,14 +143,14 @@
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(172)))), ((int)(((byte)(254)))));
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(10)))), ((int)(((byte)(59)))));
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(10)))), ((int)(((byte)(59)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(0, 105);
             this.dataGridView1.Name = "dataGridView1";
@@ -183,6 +189,17 @@
             this.label2.Text = "Result";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // btnValidate
+            // 
+            this.btnValidate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnValidate.Image = global::AutomateMapping.Properties.Resources.icons8_refresh_24;
+            this.btnValidate.Location = new System.Drawing.Point(902, 438);
+            this.btnValidate.Name = "btnValidate";
+            this.btnValidate.Size = new System.Drawing.Size(27, 30);
+            this.btnValidate.TabIndex = 35;
+            this.btnValidate.TabStop = false;
+            // 
             // pictureBox2
             // 
             this.pictureBox2.Image = global::AutomateMapping.Properties.Resources.icons8_system_report_36;
@@ -202,13 +219,14 @@
             this.btnExe.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.btnExe.Image = global::AutomateMapping.Properties.Resources.icons8_services_24;
             this.btnExe.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnExe.Location = new System.Drawing.Point(810, 646);
+            this.btnExe.Location = new System.Drawing.Point(814, 649);
             this.btnExe.Name = "btnExe";
             this.btnExe.Size = new System.Drawing.Size(105, 42);
             this.btnExe.TabIndex = 29;
             this.btnExe.Text = "Execute";
             this.btnExe.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.btnExe.UseVisualStyleBackColor = false;
+            this.btnExe.Click += new System.EventHandler(this.btnExe_Click);
             // 
             // btnLog
             // 
@@ -220,7 +238,7 @@
             this.btnLog.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.btnLog.Image = global::AutomateMapping.Properties.Resources.icons8_exit_24;
             this.btnLog.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnLog.Location = new System.Drawing.Point(607, 646);
+            this.btnLog.Location = new System.Drawing.Point(607, 649);
             this.btnLog.Name = "btnLog";
             this.btnLog.Size = new System.Drawing.Size(190, 42);
             this.btnLog.TabIndex = 28;
@@ -234,6 +252,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(172)))), ((int)(((byte)(254)))));
             this.ClientSize = new System.Drawing.Size(935, 736);
+            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.btnValidate);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.label2);
@@ -241,7 +261,6 @@
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnExe);
             this.Controls.Add(this.btnLog);
-            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.panel5);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "MainHispeed";
@@ -256,6 +275,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnMinimize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnValidate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -277,5 +297,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox btnValidate;
     }
 }

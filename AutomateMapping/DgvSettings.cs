@@ -12,8 +12,9 @@ namespace AutomateMapping
 {
     class DgvSettings
     {
-        public void SetDgv(DataGridView dataGridView, string file, string sheetName, List<string> lstHeader)
+        public int SetDgv(DataGridView dataGridView, string file, string sheetName, List<string> lstHeader)
         {
+            int status = 0;
             Control.CheckForIllegalCrossThreadCalls = false;
             try
             {
@@ -58,9 +59,18 @@ namespace AutomateMapping
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Cannot read data from file " + file + "\r\n" +
-                    "Please check file." + "\r\n" + ex.Message);
+                if(ex.Message.Contains("could not find the object '"+sheetName+"'"))
+                {
+                    status = -1;
+                }
+                else
+                {
+                    throw new Exception("Cannot read data from file " + file + "\r\n" + "Error Message : " + "\r\n" + ex.Message);
+                }
+
             }
+
+            return status;
         }
     }
 }

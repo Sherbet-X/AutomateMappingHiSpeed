@@ -133,6 +133,16 @@ namespace AutomateMapping.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_refresh_24 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-refresh-24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_services_24 {
             get {
                 object obj = ResourceManager.GetObject("icons8-services-24", resourceCulture);
