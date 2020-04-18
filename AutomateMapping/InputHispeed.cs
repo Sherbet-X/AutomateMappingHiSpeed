@@ -136,7 +136,7 @@ namespace AutomateMapping
             }
             else
             {
-                MainHispeed main = new MainHispeed(ConnectionProd, filename, fileDesc, implementer, txtUr.Text);
+                MainHispeed main = new MainHispeed(ConnectionProd, filename, fileDesc, implementer, txtUr.Text, txtOutput.Text);
 
                 this.Hide();
                 main.Show();

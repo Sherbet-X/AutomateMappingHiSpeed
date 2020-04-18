@@ -22,6 +22,7 @@ namespace AutomateMapping
             this.ConnectionTemp = connTemp;
         }
 
+        #region "Get Data"
         //Get Description from file New MKT
         public Dictionary<string, string> GetDescription(string file)
         {
@@ -272,6 +273,28 @@ namespace AutomateMapping
             return dataTable;
         }
 
+        public DataTable GetProdType()
+        {
+            DataTable dataTable = new DataTable();
+
+            try
+            {
+                string query = "SELECT VALUE1, VALUE2,VALUE3 FROM TRUE9_BPT_VALIDATE WHERE TYPE = 'MEDIA' AND NAME1 = 'MEDIA'";
+                OracleDataAdapter adapter = new OracleDataAdapter(query, ConnectionTemp);
+                adapter.Fill(dataTable);
+
+            }
+            catch (Exception)
+            {
+                string msg = "Cannot get prodtype from database.";
+
+                MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return dataTable;
+        }
+        #endregion
+
         public string[] CheckSpeed(Dictionary<int, string[]> lstSpeed4Chk, string mkt, string speed)
         {
             string[] msg = new string[3];
@@ -305,7 +328,7 @@ namespace AutomateMapping
             {
                 if(speedID != suffixID)
                 {
-                    msg[2] = "Suffix MKT Code and speed are conflicting";
+                    msg[2] = "Suffix and download speed of MKT: "+mkt+" not matching!!";
                 }
                 else
                 {
@@ -345,7 +368,7 @@ namespace AutomateMapping
                     if(speed2K == -1)
                     {
                         //write log invalid UOM
-                        result.Add(speedID, "Invalid UOM");
+                        result.Add(speedID, "Invalid UOM of speed: " + speed + ".");
                     }
                     else
                     {
@@ -394,12 +417,16 @@ namespace AutomateMapping
 
                                     string[] arr = { speed2K.ToString(), "ignore" };
                                     this.GetSpeedFromDB.Add(speedID,arr);
+
+                                    result.Add(-1, "Not found speedID: " + speedID + " on Master Data.");
                                 }
                             }
                             else if (dialog == DialogResult.No)
                             {
                                 string[] arr = { speed2K.ToString(), "ignore" };
                                 this.GetSpeedFromDB.Add(speedID, arr);
+
+                                result.Add(-1, "Not found speedID: " + speedID + " on Master Data.");
                             }
                             else
                             {
@@ -411,7 +438,7 @@ namespace AutomateMapping
                             if(status == "ignore")
                             {
                                 //write log not found speedID in database
-                                result.Add(-1, "Not found SpeedID in database");
+                                result.Add(-1, "Not found speedID: " + speedID + " on Master Data.");
                             }
                             else
                             {
@@ -423,13 +450,13 @@ namespace AutomateMapping
                 else
                 {
                     //write log not found UOM
-                    result.Add(speedID, "Not found UOM.");
+                    result.Add(speedID, "Not found UOM of speed: " + speed + ".");
                 }              
             }
             else
             {
                 //write log wrong format speed
-                result.Add(speedID, "MKT Code format is not supported");
+                result.Add(speedID, "Speed:"+speed+" format is not supported");
             }
 
             return result;
@@ -477,7 +504,7 @@ namespace AutomateMapping
                         }
                         else
                         {
-                            result.Add(-1, "MKT Code format is not supported");
+                            result.Add(-1, "Suffix of MKT: "+mkt+" is Wrong!!");
                         }
                     }
 
@@ -527,12 +554,14 @@ namespace AutomateMapping
 
                                     string[] arr = { speed2K.ToString(), "ignore" };
                                     this.GetSpeedFromDB.Add(Convert.ToInt32(suffixMkt), arr);
+                                    result.Add(Convert.ToInt32(suffixMkt), "Not found SpeedID: "+suffixMkt+" on Master Data.");
                                 }
                             }
                             else if (dialog == DialogResult.No)
                             {
                                 string[] arr = { speed2K.ToString(), "ignore" };
                                 this.GetSpeedFromDB.Add(Convert.ToInt32(suffixMkt), arr);
+                                result.Add(Convert.ToInt32(suffixMkt), "Not found SpeedID: " + suffixMkt + " on Master Data.");
                             }
                             else
                             {
@@ -543,8 +572,7 @@ namespace AutomateMapping
                         {
                             if (status == "ignore")
                             {
-                                //write log not found speedID in database
-                                result.Add(-1, "Not found SpeedID in database");
+                                result.Add(-1, "Not found SpeedID: "+suffixMkt+" on Master Data.");
                             }
                             else
                             {
@@ -556,15 +584,15 @@ namespace AutomateMapping
             }
             else
             {
-                result.Add(-1, "MKT Code format is not supported");
+                result.Add(-1, "MKT Code:"+mkt+" format is not supported");
             }
 
             return result;
         }     
-        private int ConvertUOM2K(string speed, string uom)
+        public int ConvertUOM2K(string speed, string uom)
         {
-            int convSpeed = Convert.ToInt32(Regex.Replace(speed, "[^0-9]", ""));
-            uom = uom.ToUpper();
+            int convSpeed = Convert.ToInt32(Regex.Replace(speed.Trim(), "[^0-9]", ""));
+            uom = uom.ToUpper().Trim();
 
             if (uom == "G")
             {
@@ -626,7 +654,7 @@ namespace AutomateMapping
                             string[] arr = { extra, "ignore" };
                             this.GetExtraProfile.Add(arr);
 
-                            msg = "Cannot insert new extra profile : " + extra + " into database";
+                            msg = "Cannot insert new extra profile : " + extra + " on Master Date";
                         }
                     }
                     else if (dialog == DialogResult.No)
@@ -634,7 +662,7 @@ namespace AutomateMapping
                         string[] arr = { extra, "ignore" };
                         this.GetExtraProfile.Add(arr);
 
-                        msg = "Not found extra profile : " + extra + " in database";
+                        msg = "Not found extra profile : " + extra + " on Master Data";
                     }
                     else
                     {
@@ -694,7 +722,7 @@ namespace AutomateMapping
                             string[] arr = { subProfile, "ignore" };
                             this.GetSubProfile.Add(arr);
 
-                            msg = "Cannot insert new SubProfile : " + subProfile + " into database";
+                            msg = "Cannot insert new SubProfile : " + subProfile + " on Master Data";
                         }
                     }
                     else if (dialog == DialogResult.No)
@@ -702,7 +730,7 @@ namespace AutomateMapping
                         string[] arr = { subProfile, "ignore" };
                         this.GetSubProfile.Add(arr);
 
-                        msg = "Not found SubProfile : " + subProfile + " in database";
+                        msg = "Not found SubProfile : " + subProfile + " on Master Data";
                     }
                     else
                     {
@@ -735,7 +763,7 @@ namespace AutomateMapping
                 if(lstOrder[i].ToUpper().Trim() != "NEW" &&
                     lstOrder[i].ToUpper().Trim() != "CHANGE")
                 {
-                    msg = "Order type is invalid";
+                    msg = "Order type :"+ lstOrder[i]+" is invalid";
                 }
             }
 
@@ -802,7 +830,7 @@ namespace AutomateMapping
                                 string[] arr = { ch, "ignore" };
                                 this.GetChannelFromDB.Add(arr);
 
-                                msg = "Cannot insert new sale channel : " + ch + " into database";
+                                msg = "Cannot insert new sale channel : " + ch + " on master data";
                             }
                         }
                         else if (dialog == DialogResult.No)
@@ -810,7 +838,7 @@ namespace AutomateMapping
                             string[] arr = { ch, "ignore" };
                             this.GetChannelFromDB.Add(arr);
 
-                            msg = "Not found sale channel : " + ch + " in database";
+                            msg = "Not found sale channel : " + ch + " on master data";
                         }
                         else
                         {
