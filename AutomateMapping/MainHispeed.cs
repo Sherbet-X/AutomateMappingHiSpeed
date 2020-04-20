@@ -18,7 +18,7 @@ namespace AutomateMapping
     {
         private OracleConnection ConnectionProd;
         private OracleConnection ConnectionTemp;
-        private string filename , fileDesc, implementer, urNo, outputPath, validateLog, sysLog;
+        private string filename , fileDesc, implementer, urNo, outputPath, validateLog, sysLog, func;
         Dictionary<string, string> lstPname = new Dictionary<string, string>();
         List<string[]> lstChannel = new List<string[]>();
         List<string[]> lstSubProfile = new List<string[]>();
@@ -56,6 +56,8 @@ namespace AutomateMapping
 
         private void MainHispeed_Load(object sender, EventArgs e)
         {
+            progressBar1.Hide();
+            labelPercent.Visible = false;
             try
             {
                 ConnectionTemp = new OracleConnection();
@@ -105,19 +107,21 @@ namespace AutomateMapping
                     }
                     else
                     {
-                        ValidateFile("Campaign");
+                        func = "Campaign";
                     }
                 }
                 else
                 {
-                    ValidateFile("Hispeed");
+                    func = "Hispeed";
                 }
+
+                backgroundWorker1.RunWorkerAsync(func);
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 //show message throw excep
                 //show message ex.message
-            }                   
+            }
         }
 
         private void ValidateFile(string type)
@@ -163,6 +167,8 @@ namespace AutomateMapping
                     tableProdType = validation.GetProdType();
                 }
 
+                backgroundWorker1.ReportProgress(20);
+
                 for (int i = 0; i < dataGridView1.RowCount; i++)
                 {
                     string mkt = dataGridView1.Rows[i].Cells[1].Value.ToString().Trim();
@@ -196,7 +202,7 @@ namespace AutomateMapping
                         validateLog += msgSpeed[1] + "\r\n";
                     }
 
-                    if(msgSpeed[2] != "Success")
+                    if(msgSpeed[2] != "Success" && msgSpeed[2] != null)
                     {
                         listBox1.Items.Add(msgSpeed[2]);
                         indexListbox.Add(i);
@@ -299,6 +305,8 @@ namespace AutomateMapping
                         validateLog += msgContract + "\r\n";
                     }
                     #endregion
+
+                    backgroundWorker1.ReportProgress((int)20 + (i * 80 / dataGridView1.RowCount));
                 }
             }
             else
@@ -843,6 +851,58 @@ namespace AutomateMapping
             btnExe.Location = new Point(w - 125, h - 87);
             btnLog.Location = new Point(w - 330, h - 87);
 
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            string process = e.Argument.ToString();
+
+            ValidateFile(process);
+        }
+
+        private void btnValidate_Click(object sender, EventArgs e)
+        {
+            dataGridView1.EndEdit();
+            dataGridView1.Update();
+
+            backgroundWorker1.RunWorkerAsync(func);
+
+            dataGridView1.Refresh();
+        }
+
+        private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            bool isSelected = ((e.State & DrawItemState.Selected) == DrawItemState.Selected);
+
+            if (e.Index > -1)
+            {
+                /* If the item is selected set the background color to SystemColors.Highlight 
+                 or else set the color to either WhiteSmoke or White depending if the item index is even or odd */
+                Color color = isSelected ? SystemColors.Highlight :
+                    e.Index % 2 == 0 ? Color.PaleVioletRed : Color.PeachPuff;
+
+                // Background item brush
+                SolidBrush backgroundBrush = new SolidBrush(color);
+                // Text color brush
+                SolidBrush textBrush = new SolidBrush(e.ForeColor);
+
+                // Draw the background
+                e.Graphics.FillRectangle(backgroundBrush, e.Bounds);
+                // Draw the text
+                e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), e.Font, textBrush, e.Bounds, StringFormat.GenericDefault);
+
+                // Clean up
+                backgroundBrush.Dispose();
+                textBrush.Dispose();
+            }
+
+            e.DrawFocusRectangle();
+        }
+
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progressBar1.Value = e.ProgressPercentage;
+            labelPercent.Text = progressBar1.Value.ToString() + "%";
         }
 
         private void btnMaximize_Click(object sender, EventArgs e)
