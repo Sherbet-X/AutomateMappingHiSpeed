@@ -678,12 +678,6 @@ namespace AutomateMapping
         {
             string msg = "Success";
 
-            //if (subProfile == "NA" || subProfile == "N/A" || subProfile == "-" 
-            //    || subProfile == "" || subProfile == "NULL")
-            //{
-            //    subProfile = null;
-            //}
-
             if(subProfile.StartsWith("STL"))
             {
                 subProfile = "STL (stand alone)";

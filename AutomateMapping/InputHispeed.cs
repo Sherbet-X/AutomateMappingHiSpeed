@@ -145,13 +145,6 @@ namespace AutomateMapping
             Cursor.Current = Cursors.Default;
         }
 
-        private void panel5_MouseDown(object sender, MouseEventArgs e)
-        {
-            mov = 1;
-            movX = e.X;
-            movY = e.Y;
-        }
-
         private void btnLogout_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -162,6 +155,13 @@ namespace AutomateMapping
         private void labelClose_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void panel5_MouseDown(object sender, MouseEventArgs e)
+        {
+            mov = 1;
+            movX = e.X;
+            movY = e.Y;
         }
 
         private void panel5_MouseMove(object sender, MouseEventArgs e)

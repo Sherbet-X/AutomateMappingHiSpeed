@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.OracleClient;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,7 @@ namespace AutomateMapping
         DataTable tableContract = new DataTable();
         DataTable tableProdType = new DataTable();
         List<int> indexListbox = new List<int>();
+        int mov, movX, movY;
 
         Validation validation;
         public MainHispeed(OracleConnection con, string file, string fDesc, string user, string ur, string fileOut)
@@ -56,13 +58,15 @@ namespace AutomateMapping
 
         private void MainHispeed_Load(object sender, EventArgs e)
         {
-            progressBar1.Hide();
-            labelPercent.Visible = false;
             try
             {
+                btnExe.Enabled = false;
                 ConnectionTemp = new OracleConnection();
-                string connStringTmp = "Data Source=(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = 172.19.193.20)(PORT = 1560))" +
-                       "(CONNECT_DATA = (SID = TEST03)));User Id= TRUREF71; Password= TRUREF71;";
+                //string connStringTmp = "Data Source=(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = 172.19.193.20)(PORT = 1560))" +
+                //       "(CONNECT_DATA = (SID = TEST03)));User Id= TRUREF71; Password= TRUREF71;";
+
+                string connStringTmp = @"Data Source=(DESCRIPTION =(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 172.19.217.162)(PORT = 1559))) " +
+                                    "(CONNECT_DATA =(SERVICE_NAME = CVMDEV)));User Id= EPCSUPUSR; Password=EPCSUPUSR_55;";
 
                 ConnectionTemp.ConnectionString = connStringTmp;
                 ConnectionTemp.Open();
@@ -90,6 +94,7 @@ namespace AutomateMapping
 
                 if (i == -1)
                 {
+                    lstHeader.Clear();
                     //set header view
                     lstHeader.Add("Type");
                     lstHeader.Add("Campaign Name");
@@ -128,6 +133,7 @@ namespace AutomateMapping
         {
             InitialValue();
             validation = new Validation(ConnectionProd, ConnectionTemp);
+            backgroundWorker1.ReportProgress(3);
 
             if (type == "Hispeed")
             {
@@ -184,7 +190,7 @@ namespace AutomateMapping
 
                     #region "Speed"
                     string[] msgSpeed = validation.CheckSpeed(lstSpeedMast, mkt, speed);
-                    if(msgSpeed[0] != "Success")
+                    if (msgSpeed[0] != "Success")
                     {
                         listBox1.Items.Add(msgSpeed[0]);
                         indexListbox.Add(i);
@@ -202,7 +208,7 @@ namespace AutomateMapping
                         validateLog += msgSpeed[1] + "\r\n";
                     }
 
-                    if(msgSpeed[2] != "Success" && msgSpeed[2] != null)
+                    if (msgSpeed[2] != "Success" && msgSpeed[2] != null)
                     {
                         listBox1.Items.Add(msgSpeed[2]);
                         indexListbox.Add(i);
@@ -215,7 +221,7 @@ namespace AutomateMapping
 
                     #region"Extra Profile"
                     string msgExtra = validation.CheckExtra(lstExtraProfile, extra);
-                    if(msgExtra != "Success")
+                    if (msgExtra != "Success")
                     {
                         listBox1.Items.Add(msgExtra);
                         indexListbox.Add(i);
@@ -265,7 +271,7 @@ namespace AutomateMapping
                     string msgDate = validation.CheckDate(start, end);
                     if (msgDate != "Success")
                     {
-                        if(msgDate == "Start Date fotmat is not supported")
+                        if (msgDate == "Start Date fotmat is not supported")
                         {
                             listBox1.Items.Add(msgDate);
                             indexListbox.Add(i);
@@ -306,12 +312,94 @@ namespace AutomateMapping
                     }
                     #endregion
 
-                    backgroundWorker1.ReportProgress((int)20 + (i * 80 / dataGridView1.RowCount));
+                    backgroundWorker1.ReportProgress((int)20 + ((i + 1) * 80 / dataGridView1.RowCount));
                 }
             }
             else
             {
                 //Campaign
+                for (int i = 0; i < dataGridView1.RowCount; i++)
+                {
+                    string requestType = dataGridView1.Rows[i].Cells[0].Value.ToString().Trim();
+                    string campaignName = dataGridView1.Rows[i].Cells[1].Value.ToString().Trim();
+                    string tolPackage = dataGridView1.Rows[i].Cells[2].Value.ToString().Trim();
+                    string tolDiscount = dataGridView1.Rows[i].Cells[3].Value.ToString().Trim();
+                    string tvsPackage = dataGridView1.Rows[i].Cells[4].Value.ToString().Trim();
+                    string tvsDiscount = dataGridView1.Rows[i].Cells[5].Value.ToString().Trim();
+
+                    if (String.IsNullOrEmpty(campaignName) == false &&
+                        String.IsNullOrEmpty(tolPackage) == false)
+                    {
+                        if (requestType == "Insert" || requestType.Contains("Update"))
+                        {
+                            if (String.IsNullOrEmpty(tvsPackage))
+                            {
+                                //write log
+                                listBox1.Items.Add("Not found TVS_Package of '" + tolPackage + "'");
+                                indexListbox.Add(i);
+                                hilightRow("Campaign", "tvsPack", i);
+
+                                validateLog += "Not found TVS_Package of '" + tolPackage + "'" + "\r\n";
+                            }
+                            else
+                            {
+                                //CHECK SUB PROFILE
+                                string txt = "SELECT P.BUNDLE_CAMPAIGN, C.TOL_PACKAGE,C.CAMPAIGN_NAME, " +
+                                    "P.P_CODE || '-' || S.SPEED_ID AS MKTCODE FROM HISPEED_PROMOTION P, HISPEED_SPEED_PROMOTION S, " +
+                                    "CAMPAIGN_MAPPING C WHERE P.P_ID = S.P_ID AND TOL_PACKAGE = P_CODE || '-' || SPEED_ID AND " +
+                                    "TOL_PACKAGE = '" + tolPackage + "' AND CAMPAIGN_NAME = '" + campaignName + "'";
+
+                                OracleCommand command = new OracleCommand(txt, ConnectionProd);
+                                OracleDataReader reader = command.ExecuteReader();
+                                if (reader.HasRows)
+                                {
+                                    for (int j = i + 1; j < dataGridView1.RowCount; j++)
+                                    {
+                                        string requestTypeN = dataGridView1.Rows[j].Cells[0].Value.ToString().Trim();
+                                        string campaignNameN = dataGridView1.Rows[j].Cells[1].Value.ToString().Trim();
+                                        string tolPackageN = dataGridView1.Rows[j].Cells[2].Value.ToString().Trim();
+                                        string tolDiscountN = dataGridView1.Rows[j].Cells[3].Value.ToString().Trim();
+                                        string tvsPackageN = dataGridView1.Rows[j].Cells[4].Value.ToString().Trim();
+                                        string tvsDiscountN = dataGridView1.Rows[j].Cells[5].Value.ToString().Trim();
+
+                                        if (requestType == requestTypeN && campaignName == campaignNameN &&
+                                            tolPackage == tolPackageN && tolDiscount == tolDiscountN && tvsPackage == tvsPackageN
+                                            && tvsDiscount == tvsDiscountN)
+                                        {
+                                            listBox1.Items.Add("Duplicate record: " + i + " and record: " + j);
+                                            indexListbox.Add(i); 
+                                            dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.Yellow;
+                                            dataGridView1.Rows[j].DefaultCellStyle.BackColor = Color.Yellow;
+
+                                            validateLog += "Duplicate record: " + i + " and record: " + j + "\r\n";                                            
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    listBox1.Items.Add("TOL_PACKAGE: "+tolPackage+" and CAMPAIGN: "+campaignName+
+                                        " not found on HISPEED_PROMOTION");
+                                    indexListbox.Add(i);
+                                    dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.Red;
+
+                                    validateLog += "TOL_PACKAGE: " + tolPackage + " and CAMPAIGN: " + campaignName +
+                                        " not found on HISPEED_PROMOTION" + "\r\n";
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //write log
+                            listBox1.Items.Add("Request type is wrong!");
+                            indexListbox.Add(i);
+                            hilightRow("Campaign", "type", i);
+
+                            validateLog += "Request type is wrong!" + "\r\n";
+                        }
+                    }
+
+                    backgroundWorker1.ReportProgress((int)3 + ((i + 1) * 80 / dataGridView1.RowCount));
+                }
             }
         }
 
@@ -764,6 +852,93 @@ namespace AutomateMapping
             }
         }
 
+        private void MappingCampaign()
+        {
+            OracleCommand cmd;
+            OracleTransaction transaction = null;
+            cmd = ConnectionProd.CreateCommand();
+
+            for (int i = 0; i < dataGridView1.RowCount; i++)
+            {
+                string requestType = dataGridView1.Rows[i].Cells[0].Value.ToString().Trim();
+                string campaignName = dataGridView1.Rows[i].Cells[1].Value.ToString().Trim();
+                string tolPackage = dataGridView1.Rows[i].Cells[2].Value.ToString().Trim();
+                string tolDiscount = dataGridView1.Rows[i].Cells[3].Value.ToString().Trim();
+                string tvsPackage = dataGridView1.Rows[i].Cells[4].Value.ToString().Trim();
+                string tvsDiscount = dataGridView1.Rows[i].Cells[5].Value.ToString().Trim();
+
+                if (String.IsNullOrEmpty(campaignName) == false &&
+                    String.IsNullOrEmpty(tolPackage) == false)
+                {
+                    using (transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted))
+                    {
+                        try
+                        {
+                            string txt = "SELECT * FROM CAMPAIGN_MAPPING WHERE TOL_PACKAGE = '" + tolPackage + "' AND TOL_DISCOUNT = '" +
+                                     tolDiscount + "' AND TVS_PACKAGE = '" + tvsPackage + "' AND TVS_DISCOUNT = '" + tvsDiscount + "' AND STATUS IN('A', 'I')";
+
+                            OracleCommand command = new OracleCommand(txt, ConnectionProd);
+                            OracleDataReader reader = command.ExecuteReader();
+                            reader.Read();
+                            string status = reader["STATUS"].ToString();
+
+                            if (requestType == "Insert")
+                            {
+                                if (reader.HasRows)
+                                {
+                                    if (status == "A")
+                                    {
+                                        //write log
+                                        //Already exists data in the database"
+                                    }
+                                    else
+                                    {
+                                        cmd.CommandText = "UPDATE CAMPAIGN_MAPPING SET STATUS = 'A' WHERE TOL_PACKAGE = '" + tolPackage +
+                                            "' AND TOL_DISCOUNT = '" + tolDiscount + "' AND TVS_PACKAGE = '" + tvsPackage +
+                                            "' AND TVS_DISCOUNT = '" + tvsDiscount + "'";
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                }
+                                else
+                                {
+                                    //insert new campaign
+                                    cmd.CommandText = "INSERT INTO CAMPAIGN_MAPPING(CAMPAIGN_NAME, TOL_PACKAGE, TOL_DISCOUNT, " +
+                                        "TVS_PACKAGE, TVS_DISCOUNT, STATUS) VALUES('" + campaignName + "', '" + tolPackage + "', '" + tolDiscount +
+                                        "', '" + tvsPackage + "', '" + tvsDiscount + "', 'A')";
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+                            else
+                            {
+                                if(reader.HasRows)
+                                {
+                                    if(status == "A")
+                                    {
+                                        cmd.CommandText = "UPDATE CAMPAIGN_MAPPING SET STATUS = 'I' WHERE TOL_PACKAGE = '" + tolPackage +
+                                            "' AND TOL_DISCOUNT = '" + tolDiscount + "' AND TVS_PACKAGE = '" + tvsPackage +
+                                            "' AND TVS_DISCOUNT = '" + tvsDiscount + "'";
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                }
+                                else
+                                {
+                                    //write log
+                                    //Not found data of this campaign in database
+                                }
+                            }
+
+                            transaction.Commit();
+                        }
+                        catch (Exception)
+                        {
+                            transaction.Rollback();
+                            //write log detail ex.message
+                        }
+                    }               
+                }
+            }
+        }
+
         private void InitialValue()
         {
             //Clear selection
@@ -820,6 +995,9 @@ namespace AutomateMapping
             Dictionary<string, int> indexHisp = new Dictionary<string, int>
             {{"mkt",1 },{"speed",2},{"subProfile",3},{"extra",4},{"order",6},{"channel",7},{"start",10},{"end",11},{"entry",12}, {"install",13} };
 
+            Dictionary<string, int> indexCamp = new Dictionary<string, int>
+            {{"type",0 },{"name",1},{"tolPack",2},{"tolDisc",3},{"tvsPack",4},{"tvsDisc",5} };
+
             if (type.Equals("VAS"))
             {
                 int indexCol = indexVas[key];
@@ -830,9 +1008,14 @@ namespace AutomateMapping
                 int indexCol = indexDisc[key];
                 dataGridView1.Rows[indexRow].Cells[indexCol].Style.BackColor = Color.Red;
             }
-            else
+            else if(type.Equals("Hispeed"))
             {
                 int indexCol = indexHisp[key];
+                dataGridView1.Rows[indexRow].Cells[indexCol].Style.BackColor = Color.Red;
+            }
+            else if (type.Equals("Campaign"))
+            {
+                int indexCol = indexCamp[key];
                 dataGridView1.Rows[indexRow].Cells[indexCol].Style.BackColor = Color.Red;
             }
 
@@ -859,6 +1042,11 @@ namespace AutomateMapping
 
             ValidateFile(process);
         }
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            toolStripProgressBar1.Value = e.ProgressPercentage;
+        }
+
 
         private void btnValidate_Click(object sender, EventArgs e)
         {
@@ -868,6 +1056,26 @@ namespace AutomateMapping
             backgroundWorker1.RunWorkerAsync(func);
 
             dataGridView1.Refresh();
+        }
+
+        private void panel5_MouseDown(object sender, MouseEventArgs e)
+        {
+            mov = 1;
+            movX = e.X;
+            movY = e.Y;
+        }
+
+        private void panel5_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (mov == 1)
+            {
+                this.SetDesktopLocation(MousePosition.X - movX, MousePosition.Y - movY);
+            }
+        }
+
+        private void panel5_MouseUp(object sender, MouseEventArgs e)
+        {
+            mov = 0;
         }
 
         private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
@@ -898,13 +1106,6 @@ namespace AutomateMapping
 
             e.DrawFocusRectangle();
         }
-
-        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            progressBar1.Value = e.ProgressPercentage;
-            labelPercent.Text = progressBar1.Value.ToString() + "%";
-        }
-
         private void btnMaximize_Click(object sender, EventArgs e)
         {
             if (this.WindowState != FormWindowState.Maximized)

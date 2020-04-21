@@ -211,7 +211,7 @@
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(266, 23);
             this.txtUser.TabIndex = 37;
-            this.txtUser.Text = "KATEKAEW_E010D2607";
+            this.txtUser.Text = "EPCSUPUSR";
             this.txtUser.WordWrap = false;
             // 
             // txtPassword
@@ -225,7 +225,7 @@
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(266, 23);
             this.txtPassword.TabIndex = 39;
-            this.txtPassword.Text = "kk-0090";
+            this.txtPassword.Text = "EPCSUPUSR_55";
             this.txtPassword.WordWrap = false;
             // 
             // label4
