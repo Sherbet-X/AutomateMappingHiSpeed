@@ -70,7 +70,7 @@ namespace AutomateMapping
 
                         try
                         {
-                            cmd.CommandText = "INSERT INTO TRUE9_BPT_RESERVE_ID VALUES('" + type + "', 'N', '" + minID + "', null, '" +
+                            cmd.CommandText = "INSERT INTO TRUE9_BPT_RESERVE_ID VALUES('" + type + "', 'N', '" + minID + "', null , '" +
                                 urNo + "', '" + implementer + "', sysdate)";
 
                             cmd.CommandType = CommandType.Text;
@@ -125,21 +125,37 @@ namespace AutomateMapping
             OracleDataReader readerReserve = cmd.ExecuteReader();
             readerReserve.Read();
 
-            int max, min;
+            int maxReserv, maxProd;
             if (type == "Hispeed")
             {
-                min = Convert.ToInt32(reader[0]);
-                max = Convert.ToInt32(readerReserve[0]);
+                if(reader.IsDBNull(0))
+                {
+                    maxProd = 0;
+                }
+                else
+                {
+                    maxProd = Convert.ToInt32(reader[0]);
+                }
+
+                if(readerReserve.IsDBNull(0))
+                {
+                    maxReserv = 0;
+                }
+                else
+                {
+                    maxReserv = Convert.ToInt32(readerReserve[0]);
+                }
+
             }
             else
             {
                 string minid = Convert.ToString(reader[0]).Substring(prefixID.Length);
                 string maxid = Convert.ToString(readerReserve[0]).Substring(prefixID.Length);
-                min = Convert.ToInt32(minid);
-                max = Convert.ToInt32(maxid);
+                maxProd = Convert.ToInt32(minid);
+                maxReserv = Convert.ToInt32(maxid);
             }
 
-            if (min <= max)
+            if ((maxProd + 1) <= maxReserv)
             {
                 MessageBox.Show("There is a conflict ID between production and reserve table[TRUE9_BPT_RESERVE_ID]" + "\r\n"
                     + "Please review and confirm the information");
@@ -154,34 +170,100 @@ namespace AutomateMapping
                 Environment.Exit(0);
             }
 
-            return min;
+            return maxProd;
         }
 
-        public void updateID(OracleConnection ConnectionTemp, string minID, string maxID, string type, string implementer, string urNO)
+        public void UpdateReserveID(OracleConnection ConnectionTemp, OracleConnection ConnectionProd, string type, string ur)
         {
-            OracleCommand cmd = ConnectionTemp.CreateCommand();
-
-            using (OracleTransaction transaction = ConnectionTemp.BeginTransaction(IsolationLevel.ReadCommitted))
+            OracleCommand cmd = null;
+            string prefixID, col, table;
+            if (type == "Hispeed")
             {
-                cmd.Transaction = transaction;
+                prefixID = "20";
+                col = "P_ID";
+                table = "HISPEED_PROMOTION";
+            }
+            else if (type == "Disc")
+            {
+                prefixID = "DC";
+                col = "DC_ID";
+                table = "DISCOUNT_CRITERIA_MAPPING";
+            }
+            else
+            {
+                prefixID = "VAS";
+                col = "DC_ID";
+                table = "DISCOUNT_CRITERIA_MAPPING";
+            }
 
-                try
+            cmd = new OracleCommand("SELECT MAX(" + col + ") FROM " + table + " WHERE " + col + " LIKE '" + prefixID + "%'", ConnectionProd);
+            OracleDataReader reader = cmd.ExecuteReader();
+            reader.Read();
+
+            cmd = new OracleCommand("SELECT MIN_ID FROM TRUE9_BPT_RESERVE_ID WHERE TYPE_NAME = '" + type + "' AND COMPLETE_FLAG = 'N' " +
+                                "AND UR_NO = '" + ur + "'", ConnectionTemp);
+            OracleDataReader readerReserve = cmd.ExecuteReader();
+            readerReserve.Read();
+
+            int minReserv, maxProd;
+            if (type == "Hispeed")
+            {
+                if (reader.IsDBNull(0))
                 {
-                    cmd.CommandText = "UPDATE TRUE9_BPT_RESERVE_ID SET COMPLETE_FLAG = 'Y', MIN_ID = '" + minID + "', MAX_ID = '" +
-                        maxID + "' WHERE TYPE_NAME = '" + type + "' AND UR_NO = '" + urNO + "' AND USERNAME = '" + implementer + "'";
-
-                    cmd.CommandType = CommandType.Text;
-
-                    cmd.ExecuteNonQuery();
-                    transaction.Commit();
+                    maxProd = 0;
                 }
-                catch (Exception ex)
+                else
                 {
-                    transaction.Rollback();
-                    MessageBox.Show("Cannot reserve MinID into table[TRUE9_BPT_RESERVE_ID]" + "\r\n" +
-                        "Please check error message and manual reserve ID into table[TRUE9_BPT_RESERVE_ID]" + "Error Detail : " + ex.Message,
-                        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    maxProd = Convert.ToInt32(reader[0]);
                 }
+
+                if (readerReserve.IsDBNull(0))
+                {
+                    minReserv = 0;
+                }
+                else
+                {
+                    minReserv = Convert.ToInt32(readerReserve[0]);
+                }
+
+                if(minReserv != 0)
+                {
+                    if ((maxProd + 1) == minReserv)
+                    {
+                        //delete
+                        string qryDel = "DELETE FROM TRUE9_BPT_RESERVE_ID WHERE TYPE_NAME = '" + type + "' AND COMPLETE_FLAG = 'N' " +
+                                    "AND MIN_ID = '" + minReserv + "' AND UR_NO = '" + ur + "'";
+                        cmd = new OracleCommand(qryDel, ConnectionTemp);
+                        cmd.ExecuteNonQuery();
+                    }
+                    else
+                    {
+                        //update
+                        OracleTransaction transaction = ConnectionTemp.BeginTransaction(IsolationLevel.ReadCommitted);
+                        try
+                        {
+                            cmd = ConnectionTemp.CreateCommand();
+                            cmd.Transaction = transaction;
+                            cmd.CommandText = "UPDATE TRUE9_BPT_RESERVE_ID SET COMPLETE_FLAG = 'Y' , MAX_ID = '" + maxProd + "' " +
+                                        "WHERE TYPE_NAME = '" + type + "' AND MIN_ID = '" + minReserv + "' AND UR_NO = '" + ur + "'";
+                            cmd.ExecuteNonQuery();
+                            transaction.Commit();
+                        }
+                        catch(Exception ex)
+                        {
+                            transaction.Rollback();
+                            MessageBox.Show("Cannot reserve MIN_ID into table[TRUE9_BPT_RESERVE_ID]" + "\r\n" +
+                                "Please manual update data into table[TRUE9_BPT_RESERVE_ID]" + "\r\n" + "Error Detail : "
+                                + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }                    
+                }
+                else
+                {
+                    MessageBox.Show("Cannot reserve MIN_ID into table[TRUE9_BPT_RESERVE_ID]" + "\r\n" +
+                                "Please manual update data into table[TRUE9_BPT_RESERVE_ID]", "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }             
             }
         }
     }

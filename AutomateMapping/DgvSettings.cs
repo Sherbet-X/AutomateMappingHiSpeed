@@ -12,9 +12,9 @@ namespace AutomateMapping
 {
     class DgvSettings
     {
-        public int SetDgv(DataGridView dataGridView, string file, string sheetName, List<string> lstHeader)
+        public bool SetDgv(DataGridView dataGridView, string file, string sheetName, List<string> lstHeader)
         {
-            int status = 0;
+            bool hasTable = true;
             Control.CheckForIllegalCrossThreadCalls = false;
             try
             {
@@ -61,7 +61,7 @@ namespace AutomateMapping
             {
                 if(ex.Message.Contains("could not find the object '"+sheetName+"'"))
                 {
-                    status = -1;
+                    hasTable = false;
                 }
                 else
                 {
@@ -70,7 +70,7 @@ namespace AutomateMapping
 
             }
 
-            return status;
+            return hasTable;
         }
     }
 }

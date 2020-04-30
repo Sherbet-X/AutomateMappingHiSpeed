@@ -39,13 +39,17 @@ namespace AutomateMapping
 
                 foreach (DataRow dr in dt.Rows)
                 {
-                    string mkt = dr[1].ToString();
-                    string name = dr[3].ToString();
-
-                    if (String.IsNullOrEmpty(mkt) == false && String.IsNullOrEmpty(name) == false)
+                    if (dr[0] != null && dr[2] != null)
                     {
-                        lstPname.Add(mkt, name);
+                        string mkt = dr[0].ToString();
+                        string name = dr[2].ToString();
+
+                        if (String.IsNullOrEmpty(mkt) == false && String.IsNullOrEmpty(name) == false)
+                        {
+                            lstPname.Add(mkt, name);
+                        }
                     }
+
                 }
             }
 
@@ -77,7 +81,7 @@ namespace AutomateMapping
 
             try
             {
-                string query = "SELECT VALUE1 FROM TRUE9_BPT_VALIDATE WHERE TYPE = 'SALE CHANNEL' AND NAME1 = 'SALE CHANNEL'";
+                string query = "SELECT VALUE1 FROM TRUE9_BPT_VALIDATE WHERE TYPE = 'SALE_CHANNEL' AND NAME1 = 'SALE_CHANNEL'";
                 OracleCommand cmd = new OracleCommand(query, ConnectionTemp);
                 OracleDataReader reader = cmd.ExecuteReader();
 
@@ -344,119 +348,132 @@ namespace AutomateMapping
             int speedID = -1;
             string status = "";
 
-            if (speed.Contains('/'))
+            try
             {
-                string[] splitSpeed = speed.Split('/');
-                string download = splitSpeed[0].Trim();
-                string upload = splitSpeed[1].Trim();
-
-                if(int.TryParse(upload, out _) == false)
+                if (speed.Contains('/'))
                 {
-                    string uomDownload;
+                    string[] splitSpeed = speed.Split('/');
+                    string download = splitSpeed[0].Trim();
+                    string upload = splitSpeed[1].Trim();
 
-                    if (int.TryParse(download, out _) == false)
+                    if (int.TryParse(upload, out _) == false)
                     {
-                        uomDownload = Regex.Replace(download, "[0-9]", "");
-                    }
-                    else
-                    {
-                        uomDownload = Regex.Replace(upload, "[0-9]", "");
-                    }
+                        string uomDownload;
 
-                    int speed2K = ConvertUOM2K(download, uomDownload);
-
-                    if(speed2K == -1)
-                    {
-                        //write log invalid UOM
-                        result.Add(speedID, "Invalid UOM of speed: " + speed + ".");
-                    }
-                    else
-                    {
-                        foreach (KeyValuePair<int, string[]> keyValuePair in lstSpeed4Chk)
+                        if (int.TryParse(download, out _) == false)
                         {
-                            string[] val = keyValuePair.Value;
-
-                            if (val[0] == speed2K.ToString())
-                            {
-                                speedID = keyValuePair.Key;
-                                status = val[1];
-                                break;
-                            }
-                        }
-
-                        if (speedID == -1)
-                        {
-                            DialogResult dialog = MessageBox.Show("Do you want to insert new speed into DB[Hispeed Speed]?"+
-                                "Detail :"+"\r\n"+"SpeedID = "+speedID+" Desc = "+speed2K, "Confirmation",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-
-                            if (dialog == DialogResult.Yes)
-                            {
-                                //insert speed into table
-                                OracleTransaction transaction = null;
-                                speedID = Convert.ToInt32(Regex.Replace(download, "[^0-9]", ""));
-                                string cmd = "INSERT INTO HISPEED_SPEED VALUES (" + speedID + ",'" + speed2K + "','" +
-                                speed2K + "K','" + speed2K + "')";
-                              
-                                try
-                                {
-                                    transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted);
-                                    OracleCommand command = new OracleCommand(cmd, ConnectionProd);
-                                    command.Transaction = transaction;
-                                    command.ExecuteNonQuery();
-
-                                    transaction.Commit();
-
-                                    this.GetSpeedFromDB = GetSpeed();
-
-                                    result.Add(speedID, "Success")
-;                                }
-                                catch (Exception ex)
-                                {
-                                    transaction.Rollback();
-
-                                    string[] arr = { speed2K.ToString(), "ignore" };
-                                    this.GetSpeedFromDB.Add(speedID,arr);
-
-                                    result.Add(-1, "Not found speedID: " + speedID + " on Master Data.");
-                                }
-                            }
-                            else if (dialog == DialogResult.No)
-                            {
-                                string[] arr = { speed2K.ToString(), "ignore" };
-                                this.GetSpeedFromDB.Add(speedID, arr);
-
-                                result.Add(-1, "Not found speedID: " + speedID + " on Master Data.");
-                            }
-                            else
-                            {
-                                Environment.Exit(0);
-                            }
+                            uomDownload = Regex.Replace(download, "[0-9]", "");
                         }
                         else
                         {
-                            if(status == "ignore")
+                            uomDownload = Regex.Replace(upload, "[0-9]", "");
+                        }
+
+                        int speed2K = ConvertUOM2K(download, uomDownload);
+
+                        if (speed2K == -1)
+                        {
+                            //write log invalid UOM
+                            result.Add(speedID, "Invalid UOM of speed: " + speed + ".");
+                        }
+                        else
+                        {
+                            foreach (KeyValuePair<int, string[]> keyValuePair in lstSpeed4Chk)
                             {
-                                //write log not found speedID in database
-                                result.Add(-1, "Not found speedID: " + speedID + " on Master Data.");
+                                string[] val = keyValuePair.Value;
+
+                                if (val[0] == speed2K.ToString())
+                                {
+                                    speedID = keyValuePair.Key;
+                                    status = val[1];
+                                    break;
+                                }
+                            }
+
+                            if (speedID == -1)
+                            {
+                                speedID = Convert.ToInt32(Regex.Replace(download, "[^0-9]", ""));
+                                if (uomDownload == "G")
+                                {
+                                    speedID = speedID * 1000;
+                                }
+
+                                DialogResult dialog = MessageBox.Show("Do you want to insert new speed into DB[Hispeed Speed]?" +
+                                    "Detail :" + "\r\n" + "SpeedID = " + speedID + " : Desc = " + speed2K, "Confirmation",
+                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                                if (dialog == DialogResult.Yes)
+                                {
+                                    //insert speed into table
+                                    OracleTransaction transaction = null;
+                                    string cmd = "INSERT INTO HISPEED_SPEED VALUES (" + speedID + ",'" + speed2K + "','" +
+                                    speed2K + "K','" + speed2K + "')";
+
+                                    try
+                                    {
+                                        transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted);
+                                        OracleCommand command = new OracleCommand(cmd, ConnectionProd);
+                                        command.Transaction = transaction;
+                                        command.ExecuteNonQuery();
+
+                                        string[] arr = { speed2K.ToString(), "DB" };
+                                        this.GetSpeedFromDB.Add(speedID, arr);
+
+                                        transaction.Commit();
+
+                                        result.Add(speedID, "Success");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        transaction.Rollback();
+
+                                        string[] arr = { speed2K.ToString(), "ignore" };
+                                        this.GetSpeedFromDB.Add(speedID, arr);
+
+                                        result.Add(-1, "Cannot insert new speedID : " + speedID + " on Master Data.");
+                                    }
+                                }
+                                else if (dialog == DialogResult.No)
+                                {
+                                    string[] arr = { speed2K.ToString(), "ignore" };
+                                    this.GetSpeedFromDB.Add(speedID, arr);
+
+                                    result.Add(-1, "Not found speedID: " + speedID + " on Master Data.");
+                                }
+                                else
+                                {
+                                    Environment.Exit(0);
+                                }
                             }
                             else
                             {
-                                result.Add(speedID, "Success");
+                                if (status == "ignore")
+                                {
+                                    //write log not found speedID in database
+                                    result.Add(-1, "Not found speedID: " + speedID + " on Master Data.");
+                                }
+                                else
+                                {
+                                    result.Add(speedID, "Success");
+                                }
                             }
                         }
+                    }
+                    else
+                    {
+                        //write log not found UOM
+                        result.Add(speedID, "Not found UOM of speed: " + speed + ".");
                     }
                 }
                 else
                 {
-                    //write log not found UOM
-                    result.Add(speedID, "Not found UOM of speed: " + speed + ".");
-                }              
+                    //write log wrong format speed
+                    result.Add(speedID, "Speed:" + speed + " format is not supported");
+                }
             }
-            else
+            catch(Exception ex)
             {
-                //write log wrong format speed
-                result.Add(speedID, "Speed:"+speed+" format is not supported");
+                result.Add(-1, "An error occurred while working with the database[Hispeed_Speed] : " + ex.Message);
             }
 
             return result;
@@ -466,125 +483,134 @@ namespace AutomateMapping
             int speedID = -1;
             Dictionary<int, string> result = new Dictionary<int, string>();
 
-            if (mkt.Contains("-"))
+            try
             {
-                string[] lstmkt = mkt.Split('-');
-                string suffixMkt = lstmkt[1].Trim();
-
-                if (suffixMkt == "00" || suffixMkt == "01")
+                if (mkt.Contains("-"))
                 {
-                    Dictionary<int, string> resultCheckUOM = CheckUOMSpeed(lstSpeed4Chk, speed);
+                    string[] lstmkt = mkt.Split('-');
+                    string suffixMkt = lstmkt[1].Trim();
 
-                    if (resultCheckUOM.ContainsKey(-1))
+                    if (suffixMkt == "00" || suffixMkt == "01")
                     {
-                        result.Add(-1, resultCheckUOM[-1]);
+                        Dictionary<int, string> resultCheckUOM = CheckUOMSpeed(lstSpeed4Chk, speed);
+
+                        if (resultCheckUOM.ContainsKey(-1))
+                        {
+                            result.Add(-1, resultCheckUOM[-1]);
+                        }
+                        else
+                        {
+                            speedID = resultCheckUOM.FirstOrDefault(x => x.Value == "Success").Key;
+
+                            result.Add(speedID, "Success");
+                        }
                     }
                     else
                     {
-                        speedID = resultCheckUOM.FirstOrDefault(x => x.Value == "Success").Key;
+                        int speed2K = 0;
+                        string status = "";
 
-                        result.Add(speedID, "Success");
+                        if (suffixMkt.EndsWith("G"))
+                        {
+                            suffixMkt = (Convert.ToInt32(suffixMkt.Substring(0, suffixMkt.Length - 1)) * 1000).ToString();
+                            speed2K = Convert.ToInt32(suffixMkt) * 1024;
+                        }
+                        else
+                        {
+                            if (int.TryParse(suffixMkt, out _))
+                            {
+                                speed2K = Convert.ToInt32(suffixMkt) * 1024;
+                            }
+                            else
+                            {
+                                result.Add(-1, "Suffix of MKT: " + mkt + " is Wrong!!");
+                            }
+                        }
+
+                        //Searching speedID from list
+                        if (speed2K != 0)
+                        {
+                            foreach (KeyValuePair<int, string[]> keyValuePair in lstSpeed4Chk)
+                            {
+                                string[] val = keyValuePair.Value;
+
+                                if (val[0] == speed2K.ToString())
+                                {
+                                    speedID = keyValuePair.Key;
+                                    status = val[1];
+                                    break;
+                                }
+                            }
+
+                            if (speedID == -1)
+                            {
+                                DialogResult dialog = MessageBox.Show("Do you want to insert new speed into DB[Hispeed Speed] ? " +
+                                    "Detail :" + "\r\n" + "SpeedID = " + suffixMkt + " : Desc = " + speed2K, "Confirmation",
+                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                                if (dialog == DialogResult.Yes)
+                                {
+                                    //insert new speedID
+                                    OracleTransaction transaction = null;
+                                    string cmd = "INSERT INTO HISPEED_SPEED VALUES (" + Convert.ToInt32(suffixMkt) + ",'" + speed2K + "','" +
+                                    speed2K + "K','" + speed2K + "')";
+
+                                    try
+                                    {
+                                        transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted);
+                                        OracleCommand command = new OracleCommand(cmd, ConnectionProd);
+                                        command.Transaction = transaction;
+                                        command.ExecuteNonQuery();
+
+                                        string[] arr = { speed2K.ToString(), "DB" };
+                                        this.GetSpeedFromDB.Add(Convert.ToInt32(suffixMkt), arr);
+
+                                        transaction.Commit();
+
+                                        result.Add(Convert.ToInt32(suffixMkt), "Success");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        transaction.Rollback();
+
+                                        string[] arr = { speed2K.ToString(), "ignore" };
+                                        this.GetSpeedFromDB.Add(Convert.ToInt32(suffixMkt), arr);
+                                        result.Add(Convert.ToInt32(suffixMkt), "Cannot insert new SpeedID: " + suffixMkt + " on Master Data.");
+                                    }
+                                }
+                                else if (dialog == DialogResult.No)
+                                {
+                                    string[] arr = { speed2K.ToString(), "ignore" };
+                                    this.GetSpeedFromDB.Add(Convert.ToInt32(suffixMkt), arr);
+                                    result.Add(Convert.ToInt32(suffixMkt), "Not found SpeedID: " + suffixMkt + " on Master Data.");
+                                }
+                                else
+                                {
+                                    Environment.Exit(0);
+                                }
+                            }
+                            else
+                            {
+                                if (status == "ignore")
+                                {
+                                    result.Add(-1, "Not found SpeedID: " + suffixMkt + " on Master Data.");
+                                }
+                                else
+                                {
+                                    result.Add(speedID, "Success");
+                                }
+                            }
+                        }
                     }
                 }
                 else
                 {
-                    int speed2K = 0;
-                    string status = "";
-
-                    if (suffixMkt.EndsWith("G"))
-                    {
-                        suffixMkt = suffixMkt.Substring(0, suffixMkt.Length - 1);
-                        speed2K = Convert.ToInt32(suffixMkt) * 1000 * 1024;
-                    }
-                    else
-                    {
-                        if (int.TryParse(suffixMkt, out _))
-                        {
-                            speed2K = Convert.ToInt32(suffixMkt) * 1024;                          
-                        }
-                        else
-                        {
-                            result.Add(-1, "Suffix of MKT: "+mkt+" is Wrong!!");
-                        }
-                    }
-
-                    //Searching speedID from list
-                    if(speed2K != 0)
-                    {
-                        foreach (KeyValuePair<int, string[]> keyValuePair in lstSpeed4Chk)
-                        {
-                            string[] val = keyValuePair.Value;
-
-                            if (val[0] == speed2K.ToString())
-                            {
-                                speedID = keyValuePair.Key;
-                                status = val[1];
-                                break;
-                            }
-                        }
-
-                        if (speedID == -1)
-                        {
-                            DialogResult dialog = MessageBox.Show("Do you want to insert new speed into DB[Hispeed Speed] ? "+
-                                "Detail :" + "\r\n" + "SpeedID = " +suffixMkt + " Desc = " + speed2K, "Confirmation",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-
-                            if (dialog == DialogResult.Yes)
-                            {
-                                //insert new speedID
-                                OracleTransaction transaction = null;
-                                string cmd = "INSERT INTO HISPEED_SPEED VALUES (" + Convert.ToInt32(suffixMkt) + ",'" + speed2K + "','" +
-                                speed2K + "K','" + speed2K + "')";
-
-                                try
-                                {
-                                    transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted);
-                                    OracleCommand command = new OracleCommand(cmd, ConnectionProd);
-                                    command.Transaction = transaction;
-                                    command.ExecuteNonQuery();
-
-                                    transaction.Commit();
-
-                                    result.Add(Convert.ToInt32(suffixMkt), "Success");
-                                    this.GetSpeedFromDB = GetSpeed();
-                                }
-                                catch (Exception ex)
-                                {
-                                    transaction.Rollback();
-
-                                    string[] arr = { speed2K.ToString(), "ignore" };
-                                    this.GetSpeedFromDB.Add(Convert.ToInt32(suffixMkt), arr);
-                                    result.Add(Convert.ToInt32(suffixMkt), "Not found SpeedID: "+suffixMkt+" on Master Data.");
-                                }
-                            }
-                            else if (dialog == DialogResult.No)
-                            {
-                                string[] arr = { speed2K.ToString(), "ignore" };
-                                this.GetSpeedFromDB.Add(Convert.ToInt32(suffixMkt), arr);
-                                result.Add(Convert.ToInt32(suffixMkt), "Not found SpeedID: " + suffixMkt + " on Master Data.");
-                            }
-                            else
-                            {
-                                Environment.Exit(0);
-                            }
-                        }
-                        else
-                        {
-                            if (status == "ignore")
-                            {
-                                result.Add(-1, "Not found SpeedID: "+suffixMkt+" on Master Data.");
-                            }
-                            else
-                            {
-                                result.Add(speedID, "Success");
-                            }
-                        }
-                    }
+                    result.Add(-1, "MKT Code:" + mkt + " format is not supported");
                 }
             }
-            else
+            catch(Exception ex)
             {
-                result.Add(-1, "MKT Code:"+mkt+" format is not supported");
+                result.Add(-1, "An error occurred while working with the database[Hispeed_Speed] : " + ex.Message);
             }
 
             return result;
@@ -637,7 +663,7 @@ namespace AutomateMapping
                             "'EXTRA_PROFILE', '" + extra + "')";
                         try
                         {
-                            transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted);
+                            transaction = ConnectionTemp.BeginTransaction(IsolationLevel.ReadCommitted);
                             OracleCommand command = new OracleCommand(cmd, ConnectionTemp);
                             command.Transaction = transaction;
                             command.ExecuteNonQuery();
@@ -683,7 +709,11 @@ namespace AutomateMapping
                 subProfile = "STL (stand alone)";
             }
 
-            if (String.IsNullOrEmpty(subProfile) == false)
+            if(String.IsNullOrEmpty(subProfile))
+            {
+                msg = "SubProfile is empty";
+            }
+            else
             {
                 bool hasSub= lstSubProfile.Any(p => p.SequenceEqual(new string[] { subProfile, "DB" }));
                 if (hasSub == false)
@@ -699,7 +729,7 @@ namespace AutomateMapping
                             "'SUB_PROFILE', '" + subProfile + "')";
                         try
                         {
-                            transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted);
+                            transaction = ConnectionTemp.BeginTransaction(IsolationLevel.ReadCommitted);
                             OracleCommand command = new OracleCommand(cmd, ConnectionTemp);
                             command.Transaction = transaction;
                             command.ExecuteNonQuery();
@@ -732,7 +762,7 @@ namespace AutomateMapping
                     }
                 }
             }
-
+            
             return msg;
         }
 
@@ -741,23 +771,30 @@ namespace AutomateMapping
             string[] lstOrder = null;
             string msg = "Success";
 
-            if (order.Contains(','))
+            if (String.IsNullOrEmpty(order))
             {
-                lstOrder = new string[2];
-                lstOrder = order.Split(',');
+                msg = "Order type is empty";
             }
             else
             {
-                lstOrder = new string[1];
-                lstOrder[0] = order;
-            }
-
-            for (int i = 0; i < lstOrder.Length; i++)
-            {
-                if(lstOrder[i].ToUpper().Trim() != "NEW" &&
-                    lstOrder[i].ToUpper().Trim() != "CHANGE")
+                if (order.Contains(','))
                 {
-                    msg = "Order type :"+ lstOrder[i]+" is invalid";
+                    lstOrder = new string[2];
+                    lstOrder = order.Split(',');
+                }
+                else
+                {
+                    lstOrder = new string[1];
+                    lstOrder[0] = order;
+                }
+
+                for (int i = 0; i < lstOrder.Length; i++)
+                {
+                    if (lstOrder[i].ToUpper().Trim() != "NEW" &&
+                        lstOrder[i].ToUpper().Trim() != "CHANGE")
+                    {
+                        msg = "Order type :" + lstOrder[i] + " is invalid";
+                    }
                 }
             }
 
@@ -774,8 +811,6 @@ namespace AutomateMapping
             }
             else
             {
-                channel = Regex.Replace(channel, "ALL", "DEFAULT", RegexOptions.IgnoreCase);
-
                 if (channel.Contains(","))
                 {
                     lstChannel = channel.Split(',');
@@ -793,50 +828,53 @@ namespace AutomateMapping
                 for (int i = 0; i < lstChannel.Length; i++)
                 {
                     string ch = lstChannel[i].Trim();
-                    bool hasChannel = lstChannelFromDB.Any(p => p.SequenceEqual(new string[] { ch, "DB" }));
-                    if (hasChannel == false)
+                    if (String.IsNullOrEmpty(ch) == false)
                     {
-                        DialogResult dialog = MessageBox.Show("Do you want to insert new channel to master table?" + "\r\n" +
-                                    "Detail :" + "\r\n" + "Sale_Channel = " + ch, "Confirmation",
-                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-
-                        if (dialog == DialogResult.Yes)
+                        bool hasChannel = lstChannelFromDB.Any(p => p.SequenceEqual(new string[] { ch, "DB" }));
+                        if (hasChannel == false)
                         {
-                            OracleTransaction transaction = null;
-                            string cmd = "INSERT INTO TRUE9_BPT_VALIDATE (TYPE, NAME1, VALUE1) VALUES('SALE_CHANNEL', " +
-                                "'SALE_CHANNEL', '" + ch + "')";
-                            try
+                            DialogResult dialog = MessageBox.Show("Do you want to insert new channel to master table?" + "\r\n" +
+                                        "Detail :" + "\r\n" + "Sale_Channel = " + ch, "Confirmation",
+                                        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                            if (dialog == DialogResult.Yes)
                             {
-                                transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted);
-                                OracleCommand command = new OracleCommand(cmd, ConnectionTemp);
-                                command.Transaction = transaction;
-                                command.ExecuteNonQuery();
+                                OracleTransaction transaction = null;
+                                string cmd = "INSERT INTO TRUE9_BPT_VALIDATE (TYPE, NAME1, VALUE1) VALUES('SALE_CHANNEL', " +
+                                    "'SALE_CHANNEL', '" + ch + "')";
+                                try
+                                {
+                                    transaction = ConnectionTemp.BeginTransaction(IsolationLevel.ReadCommitted);
+                                    OracleCommand command = new OracleCommand(cmd, ConnectionTemp);
+                                    command.Transaction = transaction;
+                                    command.ExecuteNonQuery();
 
-                                transaction.Commit();
+                                    transaction.Commit();
 
-                                string[] arr = { ch, "DB" };
-                                this.GetChannelFromDB.Add(arr);
+                                    string[] arr = { ch, "DB" };
+                                    this.GetChannelFromDB.Add(arr);
+                                }
+                                catch (Exception ex)
+                                {
+                                    transaction.Rollback();
+
+                                    string[] arr = { ch, "ignore" };
+                                    this.GetChannelFromDB.Add(arr);
+
+                                    msg = "Cannot insert new sale channel : " + ch + " on master data";
+                                }
                             }
-                            catch (Exception ex)
+                            else if (dialog == DialogResult.No)
                             {
-                                transaction.Rollback();
-
                                 string[] arr = { ch, "ignore" };
                                 this.GetChannelFromDB.Add(arr);
 
-                                msg = "Cannot insert new sale channel : " + ch + " on master data";
+                                msg = "Not found sale channel : " + ch + " on master data";
                             }
-                        }
-                        else if (dialog == DialogResult.No)
-                        {
-                            string[] arr = { ch, "ignore" };
-                            this.GetChannelFromDB.Add(arr);
-
-                            msg = "Not found sale channel : " + ch + " on master data";
-                        }
-                        else
-                        {
-                            Environment.Exit(0);
+                            else
+                            {
+                                Environment.Exit(0);
+                            }
                         }
                     }
                 }
@@ -889,7 +927,7 @@ namespace AutomateMapping
                         { }
                         else
                         {
-                            msg = "Date ia invalid";
+                            msg = "Date is invalid";
                         }
                     }
                     else
