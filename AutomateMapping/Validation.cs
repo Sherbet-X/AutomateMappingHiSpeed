@@ -411,17 +411,26 @@ namespace AutomateMapping
 
                                     try
                                     {
-                                        transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted);
-                                        OracleCommand command = new OracleCommand(cmd, ConnectionProd);
-                                        command.Transaction = transaction;
-                                        command.ExecuteNonQuery();
+                                        if (result.ContainsKey(speedID) == false)
+                                        {
+                                            transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted);
+                                            OracleCommand command = new OracleCommand(cmd, ConnectionProd);
+                                            command.Transaction = transaction;
+                                            command.ExecuteNonQuery();
 
-                                        string[] arr = { speed2K.ToString(), "DB" };
-                                        this.GetSpeedFromDB.Add(speedID, arr);
+                                            string[] arr = { speed2K.ToString(), "DB" };
+                                            this.GetSpeedFromDB.Add(speedID, arr);
 
-                                        transaction.Commit();
+                                            transaction.Commit();
 
-                                        result.Add(speedID, "Success");
+                                            result.Add(speedID, "Success");
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("SpeedID : " + speedID + " already exists in the database", "Existing SpeedID",
+                                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                            result.Add(-1, "SpeedID : " + speedID + " already exists in the database");
+                                        }
                                     }
                                     catch (Exception ex)
                                     {
