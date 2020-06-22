@@ -73,6 +73,36 @@ namespace AutomateMapping.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_close_window_18 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-close-window-18", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_close_window_24 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-close-window-24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_close18 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-close18", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_exit_24 {
             get {
                 object obj = ResourceManager.GetObject("icons8-exit-24", resourceCulture);
@@ -86,6 +116,16 @@ namespace AutomateMapping.Properties {
         internal static System.Drawing.Bitmap icons8_forward_button_24 {
             get {
                 object obj = ResourceManager.GetObject("icons8-forward-button-24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_home_24 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-home-24", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -1,31 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.OracleClient;
+using System.Data;
 
 namespace AutomateMapping
 {
     public partial class InputHispeed : Form
     {
+        #region "Private Field"
+        /// <summary>
+        /// implementer
+        /// </summary>
         private string implementer;
+        /// <summary>
+        /// Ur no
+        /// </summary>
+        private string urNo;
+        /// <summary>
+        /// Requirement file (xls)
+        /// </summary>
         private string filename;
+        /// <summary>
+        /// File New MKT Code for get PName
+        /// </summary>
         private string fileDesc;
+        /// <summary>
+        /// Output Path
+        /// </summary>
         private string folder;
+        /// <summary>
+        /// Connection of Production
+        /// </summary>
         private OracleConnection ConnectionProd;
-        //For move form
-        int mov, movX, movY;
-        public InputHispeed(OracleConnection con, string user)
+        /// <summary>
+        /// Variable for move form
+        /// </summary>
+        private int mov, movX, movY, w;
+        #endregion
+
+        #region "init"
+        public InputHispeed(OracleConnection con, string user, string ur)
         {
             InitializeComponent();
             implementer = user;
+            urNo = ur;
             ConnectionProd = con;
         }
+        #endregion
 
         #region "Drop Shadow"
         private const int CS_DropShadow = 0x00020000;
@@ -43,9 +65,19 @@ namespace AutomateMapping
 
         #endregion
 
+        #region  "Event Handler"
         private void InputHispeed_Load(object sender, EventArgs e)
         {
+            ToolTip toolTip = new ToolTip();
+            toolTip.ShowAlways = true;
+            toolTip.SetToolTip(btnLogout, "Log out");
+
             txtImp.Text = implementer;
+            txtUr.Text = urNo;
+
+            txtUr.Select();
+
+            w = this.Size.Width;
         }
 
         private void btnOpen_Click(object sender, EventArgs e)
@@ -62,7 +94,7 @@ namespace AutomateMapping
                 filename = openFileDialog1.FileName;
                 txtInput.Text = filename;
                 txtInput.SelectionStart = txtInput.Text.Length;
-                txtInput.SelectionLength = 0;
+                txtInput.ScrollToCaret();
             }
 
             Cursor.Current = Cursors.Default;
@@ -82,7 +114,7 @@ namespace AutomateMapping
                 fileDesc = openFileDialog2.FileName;
                 txtDescFile.Text = fileDesc;
                 txtDescFile.SelectionStart = txtDescFile.Text.Length;
-                txtDescFile.SelectionLength = 0;
+                txtDescFile.ScrollToCaret();
             }
 
             Cursor.Current = Cursors.Default;
@@ -100,7 +132,7 @@ namespace AutomateMapping
 
                 txtOutput.Text = folder;
                 txtOutput.SelectionStart = txtOutput.Text.Length;
-                txtOutput.SelectionLength = 0;
+                txtOutput.ScrollToCaret();
             }
 
             Cursor.Current = Cursors.Default;
@@ -110,7 +142,7 @@ namespace AutomateMapping
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            if(String.IsNullOrEmpty(txtDescFile.Text) ||
+            if (String.IsNullOrEmpty(txtDescFile.Text) ||
                 String.Equals(txtDescFile.Text, "X:/xxxx/xxxx/xxxx/file.xlsx"))
             {
                 fileDesc = null;
@@ -129,8 +161,8 @@ namespace AutomateMapping
             {
                 MessageBox.Show("Please input requirement file");
             }
-            else if (String.IsNullOrEmpty(txtOutput.Text) || 
-                String.Equals(txtOutput.Text,"X:/xxxx/xxxx/xxxx/file.xlsx"))
+            else if (String.IsNullOrEmpty(txtOutput.Text) ||
+                String.Equals(txtOutput.Text, "X:/xxxx/xxxx/xxxx/file.xlsx"))
             {
                 MessageBox.Show("Please select output path");
             }
@@ -145,23 +177,60 @@ namespace AutomateMapping
             Cursor.Current = Cursors.Default;
         }
 
-        private void btnLogout_Click(object sender, EventArgs e)
-        {
-            this.Close();
-            Login login = new Login();
-            login.Show();
-        }
-
-        private void labelClose_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
         private void panel5_MouseDown(object sender, MouseEventArgs e)
         {
             mov = 1;
             movX = e.X;
             movY = e.Y;
+        }
+
+        private void InputHispeed_SizeChanged(object sender, EventArgs e)
+        {
+            Rectangle rec = Screen.PrimaryScreen.WorkingArea;
+
+            if (rec.Height < 900)
+            {
+                if (w == 0)
+                {
+                    this.Size = new Size(this.Size.Width, btnNext.Location.Y + 98);
+                }
+                else
+                {
+                    this.Size = new Size(w, btnNext.Location.Y + 98);
+                }
+
+            }
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void btnMinimize_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void InputHispeed_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (ConnectionProd != null)
+            {
+                if (ConnectionProd.State == ConnectionState.Open)
+                {
+                    ConnectionProd.Close();
+                    ConnectionProd.Dispose();
+                }
+            }
+
+            GC.Collect();
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            Login login = new Login();
+            login.Show();
         }
 
         private void panel5_MouseMove(object sender, MouseEventArgs e)
@@ -176,5 +245,7 @@ namespace AutomateMapping
         {
             mov = 0;
         }
+
+        #endregion"
     }
 }

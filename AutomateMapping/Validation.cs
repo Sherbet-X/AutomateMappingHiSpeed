@@ -4,16 +4,20 @@ using System.Data;
 using System.Data.OleDb;
 using System.Data.OracleClient;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AutomateMapping
 {
     class Validation
     {
+        /// <summary>
+        /// Connection of Production
+        /// </summary>
         private OracleConnection ConnectionProd;
+        /// <summary>
+        /// Connection of CVMDev
+        /// </summary>
         private OracleConnection ConnectionTemp;
 
         public Validation(OracleConnection connProd, OracleConnection connTemp)
@@ -299,6 +303,7 @@ namespace AutomateMapping
         }
         #endregion
 
+        #region "Check Data"
         public string[] CheckSpeed(Dictionary<int, string[]> lstSpeed4Chk, string mkt, string speed)
         {
             string[] msg = new string[3];
@@ -964,7 +969,7 @@ namespace AutomateMapping
                     dDate = DateTime.FromOADate(d);
                     date = dDate.ToString("dd/MM/yyyy");
                 }
-                else if (date == "-")
+                else if (date == "-" || String.IsNullOrEmpty(date))
                 {
                     date = null;
                 }
@@ -998,5 +1003,6 @@ namespace AutomateMapping
 
             return msg;
         }
+        #endregion
     }
 }

@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.OleDb;
 using System.Data.OracleClient;
-using System.Data.SqlTypes;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -19,22 +15,66 @@ namespace AutomateMapping
 {
     public partial class MainHispeed : Form
     {
+        #region "Private Field"
+        /// <summary>
+        /// Connection of Production
+        /// </summary>
         private OracleConnection ConnectionProd;
+        /// <summary>
+        /// Connection of CVMDEV (Database for validate data)
+        /// </summary>
         private OracleConnection ConnectionTemp;
+
         private string filename , fileDesc, implementer, urNo, outputPath, validateLog, logHispeed, 
             logCampaign, func, expHisp, expCamp, id, tolPack, tvsPack;
+        /// <summary>
+        /// Keep PName value
+        /// Key : MKT, Value : Description
+        /// </summary>
         Dictionary<string, string> lstPname = new Dictionary<string, string>();
+        /// <summary>
+        /// List channel from DB Master
+        /// </summary>
         List<string[]> lstChannel = new List<string[]>();
+        /// <summary>
+        /// List SubProfile from DB Master
+        /// </summary>
         List<string[]> lstSubProfile = new List<string[]>();
+        /// <summary>
+        /// List Speed from DB Master
+        /// </summary>
         Dictionary<int, string[]> lstSpeedMast = new Dictionary<int, string[]>();
+        /// <summary>
+        /// List ExtraProfile from DB Master
+        /// </summary>
         List<string[]> lstExtraProfile = new List<string[]>();
+        /// <summary>
+        /// List Contract from DB Master
+        /// </summary>
         DataTable tableContract = new DataTable();
+        /// <summary>
+        /// List Prodtype from DB Master
+        /// </summary>
         DataTable tableProdType = new DataTable();
+        /// <summary>
+        /// Keep index of listbox(log viewer)
+        /// </summary>
         List<int> indexListbox = new List<int>();
+        /// <summary>
+        /// List of sheetName from file requirement
+        /// </summary>
+        List<string> sheets = new List<string>();
+        /// <summary>
+        /// Variable for move form
+        /// </summary>
         int mov, movX, movY;
-        bool hasSheetHisp, hasSheetCamp;
-
+        /// <summary>
+        /// Validation class
+        /// </summary>
         Validation validation;
+        #endregion
+
+        #region "init"
         public MainHispeed(OracleConnection con, string file, string fDesc, string user, string ur, string fileOut)
         {
             InitializeComponent();
@@ -45,6 +85,7 @@ namespace AutomateMapping
             urNo = ur;
             outputPath = fileOut;
         }
+        #endregion
 
         #region "Drop Shadow"
         private const int CS_DropShadow = 0x00020000;
@@ -60,8 +101,49 @@ namespace AutomateMapping
         }
         #endregion
 
+        #region "Event Handler"
         private void MainHispeed_Load(object sender, EventArgs e)
         {
+            dataGridView1.Hide();
+            Application.UseWaitCursor = true;
+            Cursor.Current = Cursors.WaitCursor;
+
+            toolStripStatusLabel1.ForeColor = Color.White;
+            btnLog.Visible = true;
+            btnExe.Enabled = true;
+
+            double widthRatio = Screen.PrimaryScreen.Bounds.Width;
+            double heightRatio = Screen.PrimaryScreen.Bounds.Height;
+
+            //Different resolutions cause different screen display and widescreen cannot start maximize
+            //Set default screen when starting first time
+            if (widthRatio >= 1366 && heightRatio >= 768)
+            {
+                this.WindowState = FormWindowState.Maximized;
+                dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Normal;
+                this.Size = new Size((int)(widthRatio + 74), (int)(heightRatio + 16));
+                dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            }
+
+            toolStripStatusLabel1.Text = "Loding Excel File...";
+
+            #region "Set ToolTip"
+            toolTip1.ShowAlways = true;
+            toolTip1.SetToolTip(btnValidate, "Click to validate again");
+
+            ToolTip toolTip2 = new ToolTip();
+            toolTip2.ShowAlways = true;
+            toolTip2.SetToolTip(btnHome, "Back to home page");
+
+            ToolTip toolTip3 = new ToolTip();
+            toolTip3.ShowAlways = true;
+            toolTip3.SetToolTip(btnLogout, "Log out");
+            #endregion
+
             try
             {
                 ConnectionTemp = new OracleConnection();
@@ -72,31 +154,38 @@ namespace AutomateMapping
                 ConnectionTemp.ConnectionString = connStringTmp;
                 ConnectionTemp.Open();
 
+                //Get all sheet name from excel file
+                sheets = ToExcelsSheetList(filename);
+
                 DgvSettings dgvSettings = new DgvSettings();
                 List<string> lstHeader = new List<string>();
 
-                //Set header view hispeed promotion
-                lstHeader.Add("Media");
-                lstHeader.Add("MKTCode");
-                lstHeader.Add("Speed");
-                lstHeader.Add("Sub Profile");
-                lstHeader.Add("Extra Profile");
-                lstHeader.Add("Price");
-                lstHeader.Add("Order Type");
-                lstHeader.Add("Channel");
-                lstHeader.Add("Modem Type");
-                lstHeader.Add("Docsis Type");
-                lstHeader.Add("Effective");
-                lstHeader.Add("Expire");
-                lstHeader.Add("Entry Code");
-                lstHeader.Add("Install Code");
+                if (sheets.Contains("HiSpeed Promotion"))
+                {
+                    //Set header view hispeed promotion
+                    lstHeader.Add("Media");
+                    lstHeader.Add("MKTCode");
+                    lstHeader.Add("Speed");
+                    lstHeader.Add("Sub Profile");
+                    lstHeader.Add("Extra Profile");
+                    lstHeader.Add("Price");
+                    lstHeader.Add("Order Type");
+                    lstHeader.Add("Channel");
+                    lstHeader.Add("Modem Type");
+                    lstHeader.Add("Docsis Type");
+                    lstHeader.Add("Effective");
+                    lstHeader.Add("Expire");
+                    lstHeader.Add("Entry Code");
+                    lstHeader.Add("Install Code");
 
-                hasSheetHisp = dgvSettings.SetDgv(dataGridView1, filename, "HiSpeed Promotion$B3:O", lstHeader);
-
-                if (hasSheetHisp == false)
+                    dgvSettings.SetDgv(dataGridView1, filename, "HiSpeed Promotion$B3:O", lstHeader);
+                    dataGridView1.Show();
+                    func = "Hispeed";
+                }
+                else if(sheets.Contains("Campaign Mapping"))
                 {
                     lstHeader.Clear();
-                    //set header view
+
                     lstHeader.Add("Type");
                     lstHeader.Add("Campaign Name");
                     lstHeader.Add("TOL Package");
@@ -104,34 +193,380 @@ namespace AutomateMapping
                     lstHeader.Add("TVS Package");
                     lstHeader.Add("TVS Discount");
 
-                    hasSheetCamp = dgvSettings.SetDgv(dataGridView1, filename, "Campaign Mapping$B2:G", lstHeader);
-
-                    if (hasSheetCamp == false)
-                    {
-                        MessageBox.Show("Sheet name : 'HiSpeed Promotion' and 'Campaign Mapping' Not Found!!");
-                        Application.Exit();
-                    }
-                    else
-                    {
-                        func = "Campaign";
-                    }
+                    dgvSettings.SetDgv(dataGridView1, filename, "Campaign Mapping$B2:G", lstHeader);
+                    dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    dataGridView1.Show();
+                    func = "Campaign";
                 }
                 else
                 {
-                    func = "Hispeed";
+                    MessageBox.Show("Sheet name : 'HiSpeed Promotion' and 'Campaign Mapping' Not Found!!");
+                    Application.Exit();
+                }
+
+                if (dataGridView1.AutoSizeColumnsMode != DataGridViewAutoSizeColumnsMode.Fill)
+                {
+                    dataGridView1.BackgroundColor = Color.White;
+                }
+                else
+                {
+                    dataGridView1.BackgroundColor = Color.FromArgb(79, 172, 254);
                 }
 
                 backgroundWorker1.RunWorkerAsync(func);
+                
             }
             catch (Exception ex)
             {
-                //show message throw excep
-                //show message ex.message
+                MessageBox.Show(ex.Message,"Loding Data Failed!!",MessageBoxButtons.OK,MessageBoxIcon.Error);
+            }
+            finally
+            {
+                toolStripStatusLabel1.Text = "";
+                Application.UseWaitCursor = false;
+                Cursor.Current = Cursors.Default;
             }
         }
 
+        private void MainHispeed_SizeChanged(object sender, EventArgs e)
+        {
+            int w = this.Size.Width;
+            int h = this.Size.Height;
+
+            btnClose.Location = new Point(w - 50, 0);
+            btnMaximize.Location = new Point(btnClose.Location.X - 50, 0);
+            btnMinimize.Location = new Point(btnMaximize.Location.X - 50, 0);
+            btnLogout.Location = new Point(btnMinimize.Location.X - 50, 0);
+
+            dataGridView1.Size = new Size(w, (int)(((h / 2) * 2) / 3));
+            listBox1.Location = new Point(0, dataGridView1.Height + 161);
+            listBox1.Size = new Size(w, (int)(((h / 2) * 2) / 3) - 45);
+
+            btnValidate.Location = new Point(w - 39, listBox1.Location.Y - 31);
+            btnHome.Location = new Point(w - 81, listBox1.Location.Y - 31);
+
+            btnExe.Location = new Point(w - 152, listBox1.Location.Y + listBox1.Height + 30);
+            btnLog.Location = new Point(btnExe.Location.X - 210, listBox1.Location.Y + listBox1.Height + 30);
+
+            labelLogViewer.Location = new Point(12, listBox1.Location.Y - 45);
+            labelHead.Location = new Point(58, 12);
+
+            if (dataGridView1.AutoSizeColumnsMode != DataGridViewAutoSizeColumnsMode.Fill)
+            {
+                dataGridView1.BackgroundColor = Color.White;
+            }
+            else
+            {
+                dataGridView1.BackgroundColor = Color.FromArgb(79, 172, 254);
+            }
+
+            labelFunction.Location = new Point(40, dataGridView1.Location.Y - 43);
+        }
+
+        private void labelClose_Click(object sender, EventArgs e)
+        {
+            if (backgroundWorker1.IsBusy)
+            {
+                backgroundWorker1.CancelAsync();
+            }
+            if (backgroundWorker2.IsBusy)
+            {
+                backgroundWorker2.CancelAsync();
+            }
+            if (backgroundWorker3.IsBusy)
+            {
+                backgroundWorker3.CancelAsync();
+            }
+
+            Environment.Exit(0);
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            Login login = new Login();
+            login.Show();
+        }
+
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+            InputHispeed inputHispeed = new InputHispeed(ConnectionProd, implementer, urNo);
+            this.Close();
+            inputHispeed.Show();
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            if (backgroundWorker1.IsBusy)
+            {
+                backgroundWorker1.CancelAsync();
+            }
+            if (backgroundWorker2.IsBusy)
+            {
+                backgroundWorker2.CancelAsync();
+            }
+            if (backgroundWorker3.IsBusy)
+            {
+                backgroundWorker3.CancelAsync();
+            }
+
+            Application.Exit();
+        }
+
+        private void btnMinimize_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void btnMaximize_Click(object sender, EventArgs e)
+        {
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            double widthRatio = Screen.PrimaryScreen.Bounds.Width;
+            double heightRatio = Screen.PrimaryScreen.Bounds.Height;
+            int w = Size.Width;
+
+            if (this.WindowState != FormWindowState.Maximized)
+            {
+                this.WindowState = FormWindowState.Maximized;
+            }
+            else
+            {
+                this.WindowState = FormWindowState.Normal;
+
+                if (widthRatio > 1366 && heightRatio > 768)
+                {
+                    this.Size = new Size(w, btnExe.Location.Y + 75);
+                }
+                else
+                {
+                    btnExe.Location = new Point(btnExe.Location.X, statusStrip1.Location.Y - 46);
+                    btnLog.Location = new Point(btnLog.Location.X, statusStrip1.Location.Y - 46);
+                }
+            }
+        }
+
+        private void btnValidate_Click(object sender, EventArgs e)
+        {
+            dataGridView1.EndEdit();
+            dataGridView1.Update();
+            btnExe.Enabled = true;
+            btnLog.Visible = true;
+
+            if (backgroundWorker1.IsBusy)
+            {
+                backgroundWorker1.CancelAsync();
+            }
+
+            backgroundWorker1.RunWorkerAsync(func);
+
+            dataGridView1.Refresh();
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            string process = e.Argument.ToString();
+
+            if (process == "Hispeed")
+            {
+                ValidateHiSpeed();
+            }
+
+            if (process == "Campaign")
+            {
+                ValidateCampaign();
+            }
+        }
+        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            toolStripProgressBar1.Value = e.ProgressPercentage;
+        }
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            toolStripStatusLabel1.Text = "Validation Completed!!";
+            toolStripProgressBar1.Value = 0;
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
+        {
+            string process = e.Argument.ToString();
+            if (process == "Hispeed")
+            {
+                MappingHiSpeed();
+            }
+            else if (process == "Campaign")
+            {
+                MappingCampaign();
+            }
+        }
+        private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            toolStripProgressBar1.Value = e.ProgressPercentage;
+        }
+        private void backgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            toolStripStatusLabel1.Text = "";
+        }
+
+        private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
+        {
+            if (String.IsNullOrEmpty(id) == false)
+            {
+                ExportHiSpeed();
+            }
+            else if (String.IsNullOrEmpty(logHispeed) == false)
+            {
+                string logPath = outputPath + "\\Log_HiSpeedPromotion_" + urNo.ToUpper() + ".txt";
+                using (StreamWriter writer = new StreamWriter(logPath, true))
+                {
+                    writer.Write(logHispeed);
+                }
+            }
+
+            if (String.IsNullOrEmpty(tolPack) == false)
+            {
+                if (backgroundWorker3.IsBusy)
+                {
+                    backgroundWorker3.CancelAsync();
+                }
+
+                ExportCampaign();
+            }
+        }
+
+        private void backgroundWorker3_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            toolStripProgressBar1.Value = e.ProgressPercentage;
+        }
+
+        private void backgroundWorker3_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            toolStripStatusLabel1.Text = "Finish!!";
+            toolStripProgressBar1.Value = 0;
+
+            if (String.IsNullOrEmpty(logHispeed) == false || String.IsNullOrEmpty(logCampaign) == false)
+            {
+                MessageBox.Show("Please read log file.", "Successfully", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                MessageBox.Show("The data has been exported successfully", "Successfully", MessageBoxButtons.OK);
+            }
+
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void listBox1_Click(object sender, EventArgs e)
+        {
+            dataGridView1.ClearSelection();
+            if (listBox1.SelectedItem != null)
+            {
+                int selected = listBox1.SelectedIndex;
+                dataGridView1.Rows[indexListbox[selected]].Selected = true;
+                dataGridView1.FirstDisplayedScrollingRowIndex = indexListbox[selected];
+                dataGridView1.Focus();
+            }
+        }
+
+        private void btnExe_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(validateLog))
+            {
+                btnLog.Visible = false;
+                btnExe.Enabled = false;
+
+                if (func == "Hispeed" && (String.IsNullOrEmpty(id)))
+                {
+                    backgroundWorker2.RunWorkerAsync("Hispeed");
+                }
+                else if (func == "Campaign")
+                {
+                    if (backgroundWorker2.IsBusy == true)
+                    {
+                        backgroundWorker2.CancelAsync();
+                    }
+
+                    backgroundWorker2.RunWorkerAsync("Campaign");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please review this file carefully before clicking button execute!!");
+            }
+
+        }
+
+        private void btnLog_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(validateLog))
+            {
+                MessageBox.Show("The verification process is complete. No errors occurred during process.");
+            }
+            else
+            {
+                string strFilePath = outputPath + "\\LOG_VALIDATE_" + urNo.ToUpper() + "_" + DateTime.Now.ToString("ddMMyyyy") + ".txt";
+                using (StreamWriter writer = new StreamWriter(strFilePath, true))
+                {
+                    writer.Write(validateLog);
+                }
+
+                MessageBox.Show("Log file has been written successfully." + "\r\n" + "Program will be closing");
+
+                Application.Exit();
+            }
+        }
+
+        private void MainHispeed_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(ConnectionProd != null)
+            {
+                if (ConnectionProd.State == ConnectionState.Open)
+                {
+                    ConnectionProd.Close();
+                    ConnectionProd.Dispose();
+                }
+            }
+
+            if(ConnectionTemp != null)
+            {
+                if(ConnectionTemp.State == ConnectionState.Open)
+                {
+                    ConnectionTemp.Close();
+                    ConnectionTemp.Dispose();
+                }
+            }
+
+            GC.Collect();
+        }
+
+        private void panel5_MouseDown(object sender, MouseEventArgs e)
+        {
+            mov = 1;
+            movX = e.X;
+            movY = e.Y;
+        }
+
+        private void panel5_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (mov == 1)
+            {
+                this.SetDesktopLocation(MousePosition.X - movX, MousePosition.Y - movY);
+            }
+        }
+
+        private void panel5_MouseUp(object sender, MouseEventArgs e)
+        {
+            mov = 0;
+        }
+        #endregion
+
+        #region "Private Method"
         private void ValidateHiSpeed()
         {
+            Application.UseWaitCursor = true;
+            Cursor.Current = Cursors.WaitCursor;
+
+            labelFunction.Text = "Hi-Speed Promotion";
             toolStripStatusLabel1.Text = "Checking HiSpeed...";
 
             InitialValue();
@@ -331,10 +766,24 @@ namespace AutomateMapping
                     backgroundWorker1.ReportProgress(20 + ((i + 1) * 80 / dataGridView1.RowCount));
                 }
             }
+
+            if (String.IsNullOrEmpty(validateLog))
+            {
+                btnLog.Visible = false;
+            }
+
+            Application.UseWaitCursor = false;
+            Cursor.Current = Cursors.Default;
+
+            this.Refresh();
         }
 
         private void ValidateCampaign()
         {
+            Application.UseWaitCursor = true;
+            Cursor.Current = Cursors.WaitCursor;
+
+            labelFunction.Text = "Campaign Mapping";
             toolStripStatusLabel1.Text = "Checking Campaign...";
 
             InitialValue();
@@ -428,10 +877,23 @@ namespace AutomateMapping
 
                 backgroundWorker1.ReportProgress((i + 1) * 100 / dataGridView1.RowCount);
             }
+
+            if (String.IsNullOrEmpty(validateLog))
+            {
+                btnLog.Visible = false;
+            }
+
+            Application.UseWaitCursor = false;
+            Cursor.Current = Cursors.Default;
+
+            this.Refresh();
         }
 
         private void MappingHiSpeed()
         {
+            Application.UseWaitCursor = true;
+            Cursor.Current = Cursors.WaitCursor;
+
             toolStripStatusLabel1.Text = "Inserting Hi-Speed...";
 
             ReserveID reserveID = new ReserveID();
@@ -488,19 +950,19 @@ namespace AutomateMapping
                     lstOrder[0] = order;
                 }
 
-                //Get P_Name
-                string p_name = GetPName(dataGridView1.Rows[i].Cells[1].Value.ToString().Trim());
-                if(p_name == dataGridView1.Rows[i].Cells[1].Value.ToString().Trim())
-                {
-                    listBox1.Items.Add("Not found description of MKT [P_NAME] in file or database!!");
-                    indexListbox.Add(i);
-                    dataGridView1.Rows[i].Cells[1].Style.BackColor = Color.Yellow;
-                }
-
                 //SubProfile = STL
                 if(sub.StartsWith("STL"))
                 {
                     sub = "N";
+                }
+
+                //Get P_Name
+                string p_name = GetPName(dataGridView1.Rows[i].Cells[1].Value.ToString().Trim());
+                if (p_name == dataGridView1.Rows[i].Cells[1].Value.ToString().Trim())
+                {
+                    listBox1.Items.Add("Not found description of MKT [P_NAME] in file or database!!");
+                    indexListbox.Add(i);
+                    dataGridView1.Rows[i].Cells[1].Style.BackColor = Color.Yellow;
                 }
 
                 //Convert upload speed
@@ -559,54 +1021,72 @@ namespace AutomateMapping
 
             //Update ReserveID
             reserveID.UpdateReserveID(ConnectionTemp, ConnectionProd, "Hispeed", urNo);
-
-            //validate campaign
-            DgvSettings dgvSettings = new DgvSettings();
-            List<string> lstHeader = new List<string>();
-
-            lstHeader.Clear();
-            //set header view
-            lstHeader.Add("Type");
-            lstHeader.Add("Campaign Name");
-            lstHeader.Add("TOL Package");
-            lstHeader.Add("TOL Discount");
-            lstHeader.Add("TVS Package");
-            lstHeader.Add("TVS Discount");
-
-            InitialValue();
-            dataGridView1.DataSource = null;
-            hasSheetCamp = dgvSettings.SetDgv(dataGridView1, filename, "Campaign Mapping$B2:G", lstHeader);
-
             backgroundWorker2.ReportProgress(100);
 
-            if (hasSheetCamp == false && hasSheetHisp == false)
-            {
-                MessageBox.Show("Sheet name : 'HiSpeed Promotion' and 'Campaign Mapping' Not Found!!");
-            }
-            else if(hasSheetCamp == false && hasSheetHisp == true)
-            {
-                //export hispeed
-                backgroundWorker3.RunWorkerAsync();
-            }
-            else if(hasSheetCamp == true )
+            Application.UseWaitCursor = false;
+            Cursor.Current = Cursors.Default;
+
+            if (sheets.Contains("Campaign Mapping"))
             {
                 DialogResult dialogResult = MessageBox.Show("The process mapping Hi-Speed promotion has been completed." + "\r\n" +
                     "Do you want to go to the process mapping campaign?", "Complete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Yes)
                 {
+                    Cursor.Current = Cursors.WaitCursor;
+                    this.UseWaitCursor = true;
+
+                    btnExe.Enabled = true;
+                    btnLog.Visible = true;
+
+                    func = "Campaign";
                     //validate campaign
+                    DgvSettings dgvSettings = new DgvSettings();
+                    List<string> lstHeader = new List<string>();
+
+                    lstHeader.Clear();
+
+                    lstHeader.Add("Type");
+                    lstHeader.Add("Campaign Name");
+                    lstHeader.Add("TOL Package");
+                    lstHeader.Add("TOL Discount");
+                    lstHeader.Add("TVS Package");
+                    lstHeader.Add("TVS Discount");
+
+                    InitialValue();
+
+                    dataGridView1.DataSource = null;
+
+                    dgvSettings.SetDgv(dataGridView1, filename, "Campaign Mapping$B2:G", lstHeader);
+                    dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                    //validate campaign
+                    if (backgroundWorker1.IsBusy)
+                    {
+                        backgroundWorker1.CancelAsync();
+                    }
+                    backgroundWorker1.RunWorkerAsync(func);
+                }
+                else
+                {
+                    if(backgroundWorker2.IsBusy)
+                    {
+                        backgroundWorker2.CancelAsync();
+                    }
                     if(backgroundWorker1.IsBusy)
                     {
                         backgroundWorker1.CancelAsync();
                     }
-                    backgroundWorker1.RunWorkerAsync("Campaign");
-                }
-                else
-                {
+
                     //export hispeed
                     backgroundWorker3.RunWorkerAsync();
                 }
             }
+            else
+            {
+                //export hispeed
+                backgroundWorker3.RunWorkerAsync();
+            }
+
         }
 
         private void NewHiSpeedData(List<string> data)
@@ -659,7 +1139,7 @@ namespace AutomateMapping
                         }
                     }
 
-                    ////Get Contract
+                    //Get Contract
                     string term = "", entry = "", install = "";
                     foreach (DataRow row in tableContract.Rows)
                     {
@@ -675,59 +1155,81 @@ namespace AutomateMapping
                         }
                     }
 
-                    //insert new data
-                    cmd = ConnectionProd.CreateCommand();
-                    OracleTransaction transaction = null;
-                    using (transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted))
+                    if (prodType == "")
                     {
-                        try
+                        logHispeed += "Failed to insert ID: " + minID + " MKT: " + mkt + " Order: " + order + " Speed: "
+                                + suffix + " into database" + "\r\n" +
+                                "Detail : Incorrect media" + "\r\n" + "\r\n";
+                    }
+                    else if(Convert.ToDateTime(start) >= DateTime.Now == false)
+                    {
+                        logHispeed += "Cannot to insert ID: " + minID + " MKT: " + mkt + " Order: " + order + " Speed: "
+                                + suffix + " into database" + "\r\n" +
+                                "Detail : StartDate < Sysdate" + "\r\n" + "\r\n";
+                    }
+                    else
+                    {
+                        //insert new data
+                        cmd = ConnectionProd.CreateCommand();
+                        OracleTransaction transaction = null;
+
+                        if (start == DateTime.Now.ToString("dd/MM/yyyy"))
                         {
-                            cmd.Transaction = transaction;
-                            //Insert into hispeed_promotion
-                            cmd.CommandText = "INSERT INTO HISPEED_PROMOTION VALUES (" + minID + ", '" + mkt + "', '" + mkt + "', '" + pName +
-                                "', '" + pName + "', '" + order + "', 'Active','"+ extra +"','',0,0,'Y','Y','',0,'N','0','Y','Y','N','" + prodType +
-                                "', sysdate, sysdate, '" + term + "',0,'TI', TO_DATE('" + start + "','dd/mm/yyyy'), " +
-                                "TO_DATE('" + end + "','dd/mm/yyyy'), 'M', '" + mkt + "','N','N','Y', '" + entry + "', '" +
-                                install + "','" + modem + "','N','" + sub + "','')";
-                            expHisp += cmd.CommandText + ";" + "\r\n";
-                            cmd.ExecuteNonQuery();
-
-                            //Insert into hispeed_speed_promotion
-                            cmd.CommandText = "INSERT INTO HISPEED_SPEED_PROMOTION  VALUES (" + suffix + ", " + minID + ", " + 
-                                price + ", null, 'Y', '" + suffix + "', '" + modem + "', " +"'" + uploadK + "', '" + docsis + "')";
-                            expHisp += cmd.CommandText + ";" + "\r\n";
-                            cmd.ExecuteNonQuery();
-
-                            string[] arrChannel;
-                            if(channel.Contains(","))
+                            start = DateTime.Now.ToString();
+                        }
+                        
+                        using (transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted))
+                        {
+                            try
                             {
-                                arrChannel = channel.Split(',');
-                            }
-                            else
-                            {
-                                arrChannel = new string[1];
-                                arrChannel[0] = channel;
-                            }
-
-                            //Insert into hispeed_channel_promotion
-                            for (int i = 0; i < arrChannel.Length; i++)
-                            {
-                                cmd.CommandText = "INSERT INTO HISPEED_CHANNEL_PROMOTION VALUES(" + minID + ", '" + arrChannel[i].Trim() + 
-                                    "', TO_DATE('" + start + "','dd/MM/yyyy'), TO_DATE('" + end + "','dd/MM/yyyy'), 'S')";
+                                cmd.Transaction = transaction;
+                                //Insert into hispeed_promotion
+                                cmd.CommandText = "INSERT INTO HISPEED_PROMOTION VALUES (" + minID + ", '" + mkt + "', '" + mkt + "', '" + pName +
+                                    "', '" + pName + "', '" + order + "', 'Active','" + extra + "','',0,0,'Y','Y','',0,'N','0','Y','Y','N','" + prodType +
+                                    "', sysdate, sysdate, '" + term + "',0,'TI', TO_DATE('" + start + "','dd/mm/yyyy'), " +
+                                    "TO_DATE('" + end + "','dd/mm/yyyy'), 'M', '" + mkt + "','N','N','Y', '" + entry + "', '" +
+                                    install + "','" + modem + "','N','" + sub + "','')";
                                 expHisp += cmd.CommandText + ";" + "\r\n";
                                 cmd.ExecuteNonQuery();
-                            }
-                            expHisp += "\r\n";
-     
-                            transaction.Commit();
 
-                            id += "," + minID;
-                        }
-                        catch (Exception ex)
-                        {
-                            transaction.Rollback();
-                            logHispeed += "Failed to insert ID:" + minID + " MKT:" + mkt + " Order:" + order + " Speed:" + suffix + " into database" + "\r\n" +
-                                "Detail :" + ex.Message + "\r\n" + "\r\n";
+                                //Insert into hispeed_speed_promotion
+                                cmd.CommandText = "INSERT INTO HISPEED_SPEED_PROMOTION  VALUES (" + suffix + ", " + minID + ", " +
+                                    price + ", null, 'Y', '" + suffix + "', '" + modem + "', " + "'" + uploadK + "', '" + docsis + "')";
+                                expHisp += cmd.CommandText + ";" + "\r\n";
+                                cmd.ExecuteNonQuery();
+
+                                string[] arrChannel;
+                                if (channel.Contains(","))
+                                {
+                                    arrChannel = channel.Split(',');
+                                }
+                                else
+                                {
+                                    arrChannel = new string[1];
+                                    arrChannel[0] = channel;
+                                }
+
+                                //Insert into hispeed_channel_promotion
+                                for (int i = 0; i < arrChannel.Length; i++)
+                                {
+                                    cmd.CommandText = "INSERT INTO HISPEED_CHANNEL_PROMOTION VALUES(" + minID + ", '" + arrChannel[i].Trim() +
+                                        "', TO_DATE('" + start + "','dd/MM/yyyy'), TO_DATE('" + end + "','dd/MM/yyyy'), 'S')";
+                                    expHisp += cmd.CommandText + ";" + "\r\n";
+                                    cmd.ExecuteNonQuery();
+                                }
+                                expHisp += "\r\n";
+
+                                transaction.Commit();
+
+                                id += "," + minID;
+                            }
+                            catch (Exception ex)
+                            {
+                                transaction.Rollback();
+                                logHispeed += "Failed to insert ID: " + minID + " MKT: " + mkt + " Order: " + order + " Speed: "
+                                    + suffix + " into database" + "\r\n" +
+                                    "Detail :" + ex.Message + "\r\n" + "\r\n";
+                            }
                         }
                     }
                 }
@@ -778,11 +1280,11 @@ namespace AutomateMapping
                                 else
                                 {
                                     Dictionary<string, string[]> lstChannelDB = new Dictionary<string, string[]>();
-                                    OracleCommand command = new OracleCommand("SELECT * FROM HISPEED_CHANNEL_PROMOTION WHERE P_ID = " + 
-                                        id, ConnectionProd);
-                                    OracleDataReader dataReader = command.ExecuteReader();
 
-                                    while (dataReader.Read())
+                                    cmd.CommandText = "SELECT* FROM HISPEED_CHANNEL_PROMOTION WHERE P_ID = " + id;
+                                    reader = cmd.ExecuteReader();
+
+                                    while (reader.Read())
                                     {
                                         string[] date = new string[2];
                                         date[0] = reader["START_DATE"].ToString();
@@ -804,21 +1306,40 @@ namespace AutomateMapping
                                     for (int i = 0; i < lstCh.Length; i++)
                                     {
                                         string ch = lstCh[i].Trim();
+                                        DateTime startDB = new DateTime();
+                                        DateTime endDB = new DateTime();
+                                        DateTime startF = new DateTime();
+                                        DateTime endF = new DateTime();
+
                                         if (lstChannelDB.Keys.Contains(ch))
                                         {
                                             string[] date = lstChannelDB[ch];
-                                            DateTime startDB = Convert.ToDateTime(date[0]);
-                                            DateTime endDB = Convert.ToDateTime(date[1]);
+                                            if (String.IsNullOrEmpty(date[0]) == false)
+                                            {
+                                                startDB = Convert.ToDateTime(date[0]);
+                                            }
 
-                                            DateTime startF = Convert.ToDateTime(start);
-                                            DateTime endF = Convert.ToDateTime(end);
+                                            if (String.IsNullOrEmpty(date[1]) == false)
+                                            {
+                                                endDB = Convert.ToDateTime(date[1]);
+                                            }
+
+                                            if (String.IsNullOrEmpty(start) == false)
+                                            {
+                                                startF = Convert.ToDateTime(start);
+                                            }
+
+                                            if (String.IsNullOrEmpty(end) == false)
+                                            {
+                                                endF = Convert.ToDateTime(end);
+                                            }
 
                                             if (endDB < DateTime.Now)
                                             {
                                                 if (startF == DateTime.Now)
                                                 {
                                                     //update startdate == datetime.now
-                                                    cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET START_DATE = sysdate "+
+                                                    cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET START_DATE = sysdate " +
                                                         "WHERE P_ID = " + id;
                                                     expHisp += cmd.CommandText + ";" + "\r\n";
                                                     cmd.ExecuteNonQuery();
@@ -828,7 +1349,7 @@ namespace AutomateMapping
                                                     if (startF > DateTime.Now)
                                                     {
                                                         //update start date by date on file
-                                                        cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET START_DATE = TO_DATE('" + 
+                                                        cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET START_DATE = TO_DATE('" +
                                                             start + "', 'dd/MM/yyyy') WHERE P_ID = " + id;
                                                         expHisp += cmd.CommandText + ";" + "\r\n";
                                                         cmd.ExecuteNonQuery();
@@ -888,7 +1409,7 @@ namespace AutomateMapping
                                         else
                                         {
                                             //insert new chnnel
-                                            cmd.CommandText = "INSERT INTO HISPEED_CHANNEL_PROMOTION VALUES(" + id + ", '" + 
+                                            cmd.CommandText = "INSERT INTO HISPEED_CHANNEL_PROMOTION VALUES(" + id + ", '" +
                                                 ch + "', TO_DATE('" + start + "','dd/MM/yyyy'), TO_DATE('" + end + "','dd/MM/yyyy'), 'S')";
                                             expHisp += cmd.CommandText + ";" + "\r\n";
                                             cmd.ExecuteNonQuery();
@@ -956,7 +1477,7 @@ namespace AutomateMapping
                 {
                     transaction.Rollback();
 
-                    logHispeed += "Failed to update data ID" + id + " MKT: " + mkt + " Speed: " + suffix + " into database" + "\r\n" +
+                    logHispeed += "Failed to update data ID: " + id + " MKT: " + mkt + " Speed: " + suffix + " into database" + "\r\n" +
                                 "Detail :" + ex.Message + "\r\n" + "\r\n";
                 }
             }
@@ -964,6 +1485,9 @@ namespace AutomateMapping
 
         private void MappingCampaign()
         {
+            Cursor.Current = Cursors.WaitCursor;
+            this.UseWaitCursor = true;
+
             toolStripStatusLabel1.Text = "Inserting Campaign...";
 
             OracleTransaction transaction = null;
@@ -985,11 +1509,30 @@ namespace AutomateMapping
                     {
                         cmd = ConnectionProd.CreateCommand();
                         cmd.Transaction = transaction;
-                        string status = "";
+                        string status = "", valTOLDisc, valTVSDisc;
+
+                        if(String.IsNullOrEmpty(tolDiscount))
+                        {
+                            valTOLDisc = "IS NULL";
+                        }
+                        else
+                        {
+                            valTOLDisc = "= '" + tolDiscount + "'";
+                        }
+
+                        if(String.IsNullOrEmpty(tvsDiscount))
+                        {
+                            valTVSDisc = "IS NULL";
+                        }
+                        else
+                        {
+                            valTVSDisc = "= '" + tvsDiscount + "'";
+                        }
+
                         try
                         {
-                            string txt = "SELECT * FROM CAMPAIGN_MAPPING WHERE TOL_PACKAGE = '" + tolPackage + "' AND TOL_DISCOUNT = '" +
-                                     tolDiscount + "' AND TVS_PACKAGE = '" + tvsPackage + "' AND TVS_DISCOUNT = '" + tvsDiscount + "' AND STATUS IN('A', 'I')";
+                            string txt = "SELECT * FROM CAMPAIGN_MAPPING WHERE TOL_PACKAGE = '" + tolPackage + "' AND TOL_DISCOUNT " + valTOLDisc +
+                                     " AND TVS_PACKAGE = '" + tvsPackage + "' AND TVS_DISCOUNT " + valTVSDisc + " AND STATUS IN('A', 'I')";
 
                             //OracleCommand command = new OracleCommand(txt, ConnectionProd);
                             cmd.CommandText = txt;
@@ -1003,16 +1546,16 @@ namespace AutomateMapping
                                     status = reader["STATUS"].ToString();
                                     if (status == "A")
                                     {
-                                        //Already exists data in the database"
-                                        logCampaign += "Already exists data TOL_PACKAGE: " + tolPackage + " Campaign_Name: " + campaignName +
-                                            " TOL_DISCOUNT: " + tolDiscount + " TVS_PACKAGE: " + tvsPackage + " TVS_DISCOUNT: " +
-                                            tvsDiscount + "\r\n" + "\r\n";
+                                        //Already exists data in the database
+                                        logCampaign += "Already exists data TOL_PACKAGE: '" + tolPackage + "' Campaign_Name: '" + campaignName +
+                                            "' TOL_DISCOUNT: '" + tolDiscount + "' TVS_PACKAGE: '" + tvsPackage + "' TVS_DISCOUNT: '" +
+                                            tvsDiscount + "'" + "\r\n";
                                     }
                                     else
                                     {
                                         cmd.CommandText = "UPDATE CAMPAIGN_MAPPING SET STATUS = 'A' WHERE TOL_PACKAGE = '" + tolPackage +
-                                            "' AND TOL_DISCOUNT = '" + tolDiscount + "' AND TVS_PACKAGE = '" + tvsPackage +
-                                            "' AND TVS_DISCOUNT = '" + tvsDiscount + "'";
+                                            "' AND TOL_DISCOUNT " + valTOLDisc + " AND TVS_PACKAGE = '" + tvsPackage +
+                                            "' AND TVS_DISCOUNT " + valTVSDisc;
                                         expCamp += cmd.CommandText + ";" + "\r\n";
                                         cmd.ExecuteNonQuery();
                                     }
@@ -1037,17 +1580,17 @@ namespace AutomateMapping
                                     if (status == "A")
                                     {
                                         cmd.CommandText = "UPDATE CAMPAIGN_MAPPING SET STATUS = 'I' WHERE TOL_PACKAGE = '" + tolPackage +
-                                            "' AND TOL_DISCOUNT = '" + tolDiscount + "' AND TVS_PACKAGE = '" + tvsPackage +
-                                            "' AND TVS_DISCOUNT = '" + tvsDiscount + "'";
+                                            "' AND TOL_DISCOUNT " + valTOLDisc + " AND TVS_PACKAGE = '" + tvsPackage +
+                                            "' AND TVS_DISCOUNT " + valTVSDisc;
                                         expCamp += cmd.CommandText + ";" + "\r\n";
                                         cmd.ExecuteNonQuery();
                                     }
                                 }
                                 else
                                 {
-                                    logCampaign += "Not found data TOL_PACKAGE: " + tolPackage + " Campaign_Name: " + campaignName +
-                                            " TOL_DISCOUNT: " + tolDiscount + " TVS_PACKAGE: " + tvsPackage + " TVS_DISCOUNT: " +
-                                            tvsDiscount + " in database" + "\r\n" + "\r\n";
+                                    logCampaign += "Not found data TOL_PACKAGE: '" + tolPackage + "' Campaign_Name: '" + campaignName +
+                                            "' TOL_DISCOUNT: '" + tolDiscount + "' TVS_PACKAGE: '" + tvsPackage + "' TVS_DISCOUNT: '" +
+                                            tvsDiscount + "' in database" + "\r\n";
                                 }
                             }
 
@@ -1060,9 +1603,9 @@ namespace AutomateMapping
                         {
                             transaction.Rollback();
 
-                            logCampaign += "Failed to insert or update data TOL_PACKAGE: " + tolPackage + " Campaign_Name: " + campaignName +
-                                            " TOL_DISCOUNT: " + tolDiscount + " TVS_PACKAGE: " + tvsPackage + " TVS_DISCOUNT: " +
-                                            tvsDiscount + " in database" + "\r\n" + "\r\n";
+                            logCampaign += "Failed to insert or update data TOL_PACKAGE: '" + tolPackage + "' Campaign_Name: '" + campaignName +
+                                            "' TOL_DISCOUNT: '" + tolDiscount + "' TVS_PACKAGE: '" + tvsPackage + "' TVS_DISCOUNT: '" +
+                                            tvsDiscount + "' in database" + "\r\n";
                         }
                     }               
                 }
@@ -1070,10 +1613,16 @@ namespace AutomateMapping
 
             backgroundWorker3.RunWorkerAsync();
 
+            this.UseWaitCursor = false;
+            Cursor.Current = Cursors.Default;
+
         }
 
         private void ExportHiSpeed()
         {
+            Application.UseWaitCursor = true;
+            Cursor.Current = Cursors.WaitCursor;
+
             toolStripStatusLabel1.Text = "Exporting Hi-Speed Promotion...";
 
             Excel.Application xlApp;
@@ -1174,17 +1723,36 @@ namespace AutomateMapping
             GC.WaitForPendingFinalizers();
 
             //export script
-            string strFilePath = outputPath + "\\Script_HiSpeedPromotion_" + urNo.ToUpper() + ".txt";
-            using (StreamWriter writer = new StreamWriter(strFilePath, true))
+            if (String.IsNullOrEmpty(expHisp) == false)
             {
-                writer.Write(expHisp);
+                string sqlPath = outputPath + "\\Script_HiSpeedPromotion_" + urNo.ToUpper() + ".txt";
+                using (StreamWriter writer = new StreamWriter(sqlPath, true))
+                {
+                    writer.Write(expHisp);
+                }
+            }
+
+            //export log
+            if(String.IsNullOrEmpty(logHispeed) == false)
+            {
+                string logPath = outputPath + "\\Log_HiSpeedPromotion_" + urNo.ToUpper() + ".txt";
+                using (StreamWriter writer = new StreamWriter(logPath, true))
+                {
+                    writer.Write(logHispeed);
+                }
             }
 
             backgroundWorker3.ReportProgress(100);
+
+            Cursor.Current = Cursors.Default;
+            Application.UseWaitCursor = false;
         }
 
         private void ExportCampaign()
         {
+            Application.UseWaitCursor = true;
+            Cursor.Current = Cursors.WaitCursor;
+
             toolStripStatusLabel1.Text = "Exporting Campaign...";
 
             Excel.Application xlApp;
@@ -1226,7 +1794,6 @@ namespace AutomateMapping
                 backgroundWorker3.ReportProgress(8 + ((i + 1) * 12 / dt.Columns.Count));
             }
 
-
             sheet.get_Range("A1", "W1").Interior.Color = Excel.XlRgbColor.rgbAquamarine;
             sheet.get_Range("A1", "W1").Cells.Borders.Weight = Excel.XlBorderWeight.xlMedium;
 
@@ -1252,33 +1819,29 @@ namespace AutomateMapping
             GC.WaitForPendingFinalizers();
 
             //export script
-            string strFilePath = outputPath + "\\Script_Campaign_" + urNo.ToUpper() + ".txt";
-            using (StreamWriter writer = new StreamWriter(strFilePath, true))
+            if (String.IsNullOrEmpty(expCamp) == false)
             {
-                writer.Write(expCamp);
-            }
-
-            backgroundWorker3.ReportProgress(100);
-        }
-
-        private void InitialValue()
-        {
-            //Clear selection
-            dataGridView1.ClearSelection();
-            for (int i = 0; i < dataGridView1.RowCount; i++)
-            {
-                for (int j = 0; j < dataGridView1.ColumnCount; j++)
+                string strFilePath = outputPath + "\\Script_Campaign_" + urNo.ToUpper() + ".txt";
+                using (StreamWriter writer = new StreamWriter(strFilePath, true))
                 {
-                    dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.Empty;
+                    writer.Write(expCamp);
                 }
             }
 
-            //Clear list index
-            indexListbox.Clear();
-            //Clear listbox
-            listBox1.Items.Clear();
+            //export log
+            if (String.IsNullOrEmpty(logCampaign) == false)
+            {
+                string logPath = outputPath + "\\Log_Campaign_" + urNo.ToUpper() + ".txt";
+                using (StreamWriter writer = new StreamWriter(logPath, true))
+                {
+                    writer.Write(logCampaign);
+                }
+            }
 
-            validateLog = "";
+            backgroundWorker3.ReportProgress(100);
+
+            Cursor.Current = Cursors.Default;
+            Application.UseWaitCursor = false;
         }
 
         /// <summary>
@@ -1301,26 +1864,77 @@ namespace AutomateMapping
             }
             else
             {
-                string txt = "SELECT X.ATTRIB_04 MKT, S.NAME FROM SIEBEL.S_PROD_INT S , SIEBEL.S_PROD_INT_X  X WHERE S.ROW_ID " +
+                //string txt = "SELECT X.ATTRIB_04 MKT, S.NAME FROM SIEBEL.S_PROD_INT S , SIEBEL.S_PROD_INT_X  X WHERE S.ROW_ID " +
+                //        " = X.ROW_ID AND X.ATTRIB_04 = '" + mkt + "'";
+
+                string txt = "SELECT X.ATTRIB_04 MKT, S.NAME FROM S_PROD_INT S , S_PROD_INT_X  X WHERE S.ROW_ID " +
                         " = X.ROW_ID AND X.ATTRIB_04 = '" + mkt + "'";
 
-                //OracleCommand command = new OracleCommand(txt, ConnectionProd);
-                //OracleDataReader reader = command.ExecuteReader();
-                //reader.Read();
-                //if (reader.HasRows)
-                //{
-                //    pName = reader["NAME"].ToString();
-                //    reader.Close();
-                //}
-                //else
-                //{
-                //    pName = mkt;
-                //}
-
-                pName = mkt;
+                OracleCommand command = new OracleCommand(txt, ConnectionProd);
+                OracleDataReader reader = command.ExecuteReader();
+                reader.Read();
+                if (reader.HasRows)
+                {
+                    pName = reader["NAME"].ToString();
+                    reader.Close();
+                }
+                else
+                {
+                    pName = mkt;
+                }
             }
 
             return pName;
+        }
+
+        /// <summary>
+        /// Get SheetName from file
+        /// </summary>
+        /// <param name="excelFilePath"></param>
+        /// <returns></returns>
+        private static List<string> ToExcelsSheetList(string excelFilePath)
+        {
+            List<string> sheets = new List<string>();
+            using (OleDbConnection connection =
+                    new OleDbConnection((excelFilePath.TrimEnd().ToLower().EndsWith("x"))
+                    ? "Provider=Microsoft.ACE.OLEDB.12.0;Data Source='" + excelFilePath + "';" + "Extended Properties='Excel 12.0 Xml;HDR=YES;'"
+                    : "provider=Microsoft.Jet.OLEDB.4.0;Data Source='" + excelFilePath + "';Extended Properties=Excel 8.0;"))
+            {
+                connection.Open();
+                DataTable dt = connection.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                foreach (DataRow drSheet in dt.Rows)
+                    if (drSheet["TABLE_NAME"].ToString().Contains("$"))
+                    {
+                        string s = drSheet["TABLE_NAME"].ToString();
+                        sheets.Add(s.StartsWith("'") ? s.Substring(1, s.Length - 3) : s.Substring(0, s.Length - 1));
+                    }
+                connection.Close();
+            }
+
+            return sheets;
+        }
+
+        private void InitialValue()
+        {
+            //Clear selection
+            dataGridView1.ClearSelection();
+
+            for (int i = 0; i < dataGridView1.RowCount; i++)
+            {
+                for (int j = 0; j < dataGridView1.ColumnCount; j++)
+                {
+                    dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.Empty;
+                }
+
+                dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.Empty;
+            }
+
+            //Clear list index
+            indexListbox.Clear();
+            //Clear listbox
+            listBox1.Items.Clear();
+
+            validateLog = "";
         }
 
         private void hilightRow(string type, string key, int indexRow)
@@ -1357,262 +1971,7 @@ namespace AutomateMapping
                 int indexCol = indexCamp[key];
                 dataGridView1.Rows[indexRow].Cells[indexCol].Style.BackColor = Color.Red;
             }
-
         }
-
-        private void MainHispeed_SizeChanged(object sender, EventArgs e)
-        {
-            int w = this.Size.Width;
-            int h = this.Size.Height;
-
-            btnClose.Location = new Point(w - 22, 13);
-            btnMaximize.Location = new Point(w - 46, 13);
-            btnMinimize.Location = new Point(w - 75, 13);
-
-            btnValidate.Location = new Point(w-35, h - 327);
-            btnExe.Location = new Point(w - 125, h - 87);
-            btnLog.Location = new Point(w - 330, h - 87);
-
-        }
-
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
-            string process = e.Argument.ToString();
-            
-            if(process == "Hispeed")
-            {
-                ValidateHiSpeed();
-            }
-
-            if(process == "Campaign")
-            {
-                ValidateCampaign();
-            }
-        }
-        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            toolStripProgressBar1.Value = e.ProgressPercentage;
-        }
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            toolStripStatusLabel1.Text = "";
-            //if (e.Cancelled)
-            //{
-            //    lblStatus.Text = "Process was cancelled";
-            //}
-            //else if (e.Error != null)
-            //{
-            //    lblStatus.Text = "There was an error running the process. The thread aborted";
-            //}
-            //else
-            //{
-            //    lblStatus.Text = "Process was completed";
-            //}
-        }
-
-        private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
-        {
-            string process = e.Argument.ToString();
-            if (process == "Hispeed")
-            {
-                MappingHiSpeed();
-            }
-            else if (process == "Campaign")
-            {
-                MappingCampaign();
-            }
-        }
-        private void backgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            toolStripProgressBar1.Value = e.ProgressPercentage;
-        }
-        private void backgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            toolStripStatusLabel1.Text = "";
-        }
-
-        private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
-        {
-            if (String.IsNullOrEmpty(id) == false)
-            {
-                ExportHiSpeed();
-            }
-
-            if (String.IsNullOrEmpty(tolPack) == false)
-            {
-                if (backgroundWorker3.IsBusy)
-                {
-                    backgroundWorker3.CancelAsync();
-                }
-
-                ExportCampaign();
-            }
-        }
-
-        private void backgroundWorker3_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            toolStripProgressBar1.Value = e.ProgressPercentage;
-        }
-
-        private void backgroundWorker3_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            toolStripStatusLabel1.Text = "";
-            MessageBox.Show("The data has been exported successfully", "Successfully", MessageBoxButtons.OK);
-        }
-
-        private void btnValidate_Click(object sender, EventArgs e)
-        {
-            dataGridView1.EndEdit();
-            dataGridView1.Update();
-
-            if(backgroundWorker1.IsBusy)
-            {
-                backgroundWorker1.CancelAsync();
-            }
-
-            backgroundWorker1.RunWorkerAsync(func);
-
-            dataGridView1.Refresh();
-        }
-
-        private void panel5_MouseDown(object sender, MouseEventArgs e)
-        {
-            mov = 1;
-            movX = e.X;
-            movY = e.Y;
-        }
-
-        private void panel5_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (mov == 1)
-            {
-                this.SetDesktopLocation(MousePosition.X - movX, MousePosition.Y - movY);
-            }
-        }
-
-        private void panel5_MouseUp(object sender, MouseEventArgs e)
-        {
-            mov = 0;
-        }
-
-        private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            bool isSelected = ((e.State & DrawItemState.Selected) == DrawItemState.Selected);
-
-            if (e.Index > -1)
-            {
-                /* If the item is selected set the background color to SystemColors.Highlight 
-                 or else set the color to either WhiteSmoke or White depending if the item index is even or odd */
-                Color color = isSelected ? SystemColors.Highlight :
-                    e.Index % 2 == 0 ? Color.PaleVioletRed : Color.PeachPuff;
-
-                // Background item brush
-                SolidBrush backgroundBrush = new SolidBrush(color);
-                // Text color brush
-                SolidBrush textBrush = new SolidBrush(e.ForeColor);
-
-                // Draw the background
-                e.Graphics.FillRectangle(backgroundBrush, e.Bounds);
-                // Draw the text
-                e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), e.Font, textBrush, e.Bounds, StringFormat.GenericDefault);
-
-                // Clean up
-                backgroundBrush.Dispose();
-                textBrush.Dispose();
-            }
-
-            e.DrawFocusRectangle();
-        }
-        private void btnMaximize_Click(object sender, EventArgs e)
-        {
-            if (this.WindowState != FormWindowState.Maximized)
-            {
-                this.WindowState = FormWindowState.Maximized;
-            }
-            else
-            {
-                this.WindowState = FormWindowState.Normal;
-            }
-        }
-
-        private void btnMinimize_Click(object sender, EventArgs e)
-        {
-            this.WindowState = FormWindowState.Minimized;
-        }
-
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            if (backgroundWorker1.IsBusy)
-            {
-                backgroundWorker1.CancelAsync();
-            }
-            if (backgroundWorker2.IsBusy)
-            {
-                backgroundWorker2.CancelAsync();
-            }
-            if (backgroundWorker3.IsBusy)
-            {
-                backgroundWorker3.CancelAsync();
-            }
-
-            Environment.Exit(0);
-        }
-
-        private void listBox1_Click(object sender, EventArgs e)
-        {
-            dataGridView1.ClearSelection();
-            if (listBox1.SelectedItem != null)
-            {
-                int selected = listBox1.SelectedIndex;
-                dataGridView1.Rows[indexListbox[selected]].Selected = true;
-                dataGridView1.FirstDisplayedScrollingRowIndex = indexListbox[selected];
-                dataGridView1.Focus();
-            }
-        }
-
-        private void btnExe_Click(object sender, EventArgs e)
-        {
-            if(String.IsNullOrEmpty(validateLog))
-            {
-                if (hasSheetHisp && (String.IsNullOrEmpty(id)))
-                {
-                    backgroundWorker2.RunWorkerAsync("Hispeed");
-                }
-                else if(hasSheetCamp)
-                {
-                    if (backgroundWorker2.IsBusy == true)
-                    {
-                        
-                    }
-                    backgroundWorker2.CancelAsync();
-                    backgroundWorker2.RunWorkerAsync("Campaign");
-                }
-            }
-            else
-            {
-                MessageBox.Show("Please review this file carefully before clicking button execute!!");
-            }
-
-        }
-
-        private void btnLog_Click(object sender, EventArgs e)
-        {
-            if(String.IsNullOrEmpty(validateLog))
-            {
-                MessageBox.Show("The verification process is complete. No errors occurred during process.");
-            }
-            else
-            {
-                string strFilePath = outputPath + "\\LOG_VALIDATE_" + urNo.ToUpper() +"_"+DateTime.Now.ToString("ddMMyyyy") +".txt";
-                using (StreamWriter writer = new StreamWriter(strFilePath, true))
-                {
-                    writer.Write(validateLog);
-                }
-
-                MessageBox.Show("Log file has been written successfully." + "\r\n" + "Program will be closing");
-
-                Application.Exit();
-            }
-        }
+        #endregion
     }
 }

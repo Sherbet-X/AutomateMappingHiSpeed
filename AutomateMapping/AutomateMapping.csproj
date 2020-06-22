@@ -171,5 +171,17 @@
   <ItemGroup>
     <None Include="Resources\icons8-refresh-24.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-home-24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-close-window-18.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-close18.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-close-window-24.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

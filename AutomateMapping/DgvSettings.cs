@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AutomateMapping
 {
     class DgvSettings
     {
-        public bool SetDgv(DataGridView dataGridView, string file, string sheetName, List<string> lstHeader)
+        public void SetDgv(DataGridView dataGridView, string file, string sheetName, List<string> lstHeader)
         {
-            bool hasTable = true;
             Control.CheckForIllegalCrossThreadCalls = false;
             try
             {
@@ -42,7 +38,6 @@ namespace AutomateMapping
                     dataGridView.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(100, 61, 167);
                     dataGridView.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                     dataGridView.AutoResizeColumns();
-                    dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                     dataGridView.EnableHeadersVisualStyles = false;
 
                     //remove emtry row
@@ -59,18 +54,9 @@ namespace AutomateMapping
             }
             catch (Exception ex)
             {
-                if(ex.Message.Contains("could not find the object '"+sheetName+"'"))
-                {
-                    hasTable = false;
-                }
-                else
-                {
-                    throw new Exception("Cannot read data from file " + file + "\r\n" + "Error Message : " + "\r\n" + ex.Message);
-                }
-
+                throw new Exception("Cannot read data from file " + file + "\r\n" + "Error Message : " + "\r\n" + ex.Message);
             }
 
-            return hasTable;
         }
     }
 }
