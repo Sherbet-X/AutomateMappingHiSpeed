@@ -63,9 +63,49 @@ namespace AutomateMapping.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_1st_36 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_1st_36", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_administrative_tools_32 {
             get {
                 object obj = ResourceManager.GetObject("icons8-administrative-tools-32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_back_arrow_24 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-back-arrow-24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_circled_2_c_36 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_circled_2_c_36", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_circled_3_c_36 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_circled_3_c_36", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -226,6 +266,86 @@ namespace AutomateMapping.Properties {
         internal static System.Drawing.Bitmap login641 {
             get {
                 object obj = ResourceManager.GetObject("login641", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap numeric_1_circle {
+            get {
+                object obj = ResourceManager.GetObject("numeric-1-circle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap numeric_1_circle_36 {
+            get {
+                object obj = ResourceManager.GetObject("numeric-1-circle_36", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap numeric_2_circle_36 {
+            get {
+                object obj = ResourceManager.GetObject("numeric_2_circle_36", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap numeric_2_circle_outline {
+            get {
+                object obj = ResourceManager.GetObject("numeric-2-circle-outline", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap numeric_2_circle_outline_36 {
+            get {
+                object obj = ResourceManager.GetObject("numeric-2-circle-outline_36", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap numeric_3_circle_36 {
+            get {
+                object obj = ResourceManager.GetObject("numeric_3_circle_36", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap numeric_3_circle_outline {
+            get {
+                object obj = ResourceManager.GetObject("numeric-3-circle-outline", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap numeric_3_circle_outline_36 {
+            get {
+                object obj = ResourceManager.GetObject("numeric-3-circle-outline_36", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

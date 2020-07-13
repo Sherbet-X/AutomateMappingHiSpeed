@@ -68,6 +68,7 @@
             this.btnHispeed.TabIndex = 3;
             this.btnHispeed.Text = "Hi-Speed";
             this.btnHispeed.UseVisualStyleBackColor = false;
+            this.btnHispeed.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnHispeed_MouseClick);
             // 
             // panel1
             // 
@@ -98,6 +99,7 @@
             this.btnVas.TabIndex = 5;
             this.btnVas.Text = "VAS";
             this.btnVas.UseVisualStyleBackColor = false;
+            this.btnVas.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnVas_MouseClick);
             // 
             // btnDiscount
             // 
@@ -115,6 +117,7 @@
             this.btnDiscount.TabIndex = 4;
             this.btnDiscount.Text = "Discount";
             this.btnDiscount.UseVisualStyleBackColor = false;
+            this.btnDiscount.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnDiscount_MouseClick);
             // 
             // btnLogin
             // 
@@ -169,7 +172,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Roboto", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(440, 165);
+            this.label1.Location = new System.Drawing.Point(444, 156);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(359, 38);
@@ -209,6 +212,7 @@
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(397, 31);
             this.txtUser.TabIndex = 37;
+            this.txtUser.Text = "EPCSUPUSR";
             this.txtUser.WordWrap = false;
             // 
             // txtPassword
@@ -223,6 +227,7 @@
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(397, 31);
             this.txtPassword.TabIndex = 39;
+            this.txtPassword.Text = "EPCSUPUSR_55";
             this.txtPassword.WordWrap = false;
             this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyDown);
             // 
@@ -241,33 +246,33 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = global::AutomateMapping.Properties.Resources.login641;
-            this.pictureBox1.Location = new System.Drawing.Point(574, 62);
+            this.pictureBox1.Location = new System.Drawing.Point(577, 76);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(64, 64);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 41;
             this.pictureBox1.TabStop = false;
             // 
             // pictureBox4
             // 
             this.pictureBox4.Image = global::AutomateMapping.Properties.Resources.key_241;
-            this.pictureBox4.Location = new System.Drawing.Point(402, 482);
+            this.pictureBox4.Location = new System.Drawing.Point(415, 483);
             this.pictureBox4.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox4.TabIndex = 38;
             this.pictureBox4.TabStop = false;
             // 
             // pictureBox3
             // 
             this.pictureBox3.Image = global::AutomateMapping.Properties.Resources.user_24;
-            this.pictureBox3.Location = new System.Drawing.Point(402, 387);
+            this.pictureBox3.Location = new System.Drawing.Point(415, 392);
             this.pictureBox3.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox3.TabIndex = 35;
             this.pictureBox3.TabStop = false;
             // 

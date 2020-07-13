@@ -29,14 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.labelHead = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.btnLogout = new System.Windows.Forms.Button();
-            this.btnMinimize = new System.Windows.Forms.Button();
-            this.btnMaximize = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.labelFunction = new System.Windows.Forms.Label();
@@ -47,15 +43,19 @@
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.backgroundWorker3 = new System.ComponentModel.BackgroundWorker();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.labelLogViewer = new System.Windows.Forms.Button();
+            this.btnValidate = new System.Windows.Forms.Button();
+            this.btnHome = new System.Windows.Forms.Button();
             this.btnExe = new System.Windows.Forms.Button();
             this.btnLog = new System.Windows.Forms.Button();
-            this.labelLogViewer = new System.Windows.Forms.Button();
-            this.btnHome = new System.Windows.Forms.Button();
-            this.btnValidate = new System.Windows.Forms.Button();
+            this.btnLogout = new System.Windows.Forms.Button();
+            this.btnMinimize = new System.Windows.Forms.Button();
+            this.btnMaximize = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // labelHead
@@ -63,10 +63,9 @@
             this.labelHead.AutoSize = true;
             this.labelHead.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelHead.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.labelHead.Location = new System.Drawing.Point(75, 14);
-            this.labelHead.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelHead.Location = new System.Drawing.Point(35, 9);
             this.labelHead.Name = "labelHead";
-            this.labelHead.Size = new System.Drawing.Size(259, 24);
+            this.labelHead.Size = new System.Drawing.Size(165, 15);
             this.labelHead.TabIndex = 20;
             this.labelHead.Text = "Hi-Speed Package Mapping";
             // 
@@ -83,55 +82,12 @@
             this.panel5.Controls.Add(this.labelHead);
             this.panel5.Controls.Add(this.pictureBox1);
             this.panel5.Location = new System.Drawing.Point(0, 0);
-            this.panel5.Margin = new System.Windows.Forms.Padding(4);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1390, 54);
+            this.panel5.Size = new System.Drawing.Size(779, 36);
             this.panel5.TabIndex = 16;
             this.panel5.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel5_MouseDown);
             this.panel5.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel5_MouseMove);
             this.panel5.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel5_MouseUp);
-            // 
-            // btnLogout
-            // 
-            this.btnLogout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLogout.AutoSize = true;
-            this.btnLogout.FlatAppearance.BorderSize = 0;
-            this.btnLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLogout.Image = global::AutomateMapping.Properties.Resources.icons8_sign_out_18;
-            this.btnLogout.Location = new System.Drawing.Point(1186, 2);
-            this.btnLogout.Name = "btnLogout";
-            this.btnLogout.Size = new System.Drawing.Size(50, 50);
-            this.btnLogout.TabIndex = 39;
-            this.btnLogout.UseVisualStyleBackColor = true;
-            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
-            // 
-            // btnMinimize
-            // 
-            this.btnMinimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMinimize.AutoSize = true;
-            this.btnMinimize.FlatAppearance.BorderSize = 0;
-            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMinimize.Image = global::AutomateMapping.Properties.Resources.icons8_minimize_window_18;
-            this.btnMinimize.Location = new System.Drawing.Point(1237, 2);
-            this.btnMinimize.Name = "btnMinimize";
-            this.btnMinimize.Size = new System.Drawing.Size(50, 50);
-            this.btnMinimize.TabIndex = 40;
-            this.btnMinimize.UseVisualStyleBackColor = true;
-            this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
-            // 
-            // btnMaximize
-            // 
-            this.btnMaximize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMaximize.AutoSize = true;
-            this.btnMaximize.FlatAppearance.BorderSize = 0;
-            this.btnMaximize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMaximize.Image = global::AutomateMapping.Properties.Resources.icons8_maximize_window_18;
-            this.btnMaximize.Location = new System.Drawing.Point(1288, 2);
-            this.btnMaximize.Name = "btnMaximize";
-            this.btnMaximize.Size = new System.Drawing.Size(50, 50);
-            this.btnMaximize.TabIndex = 41;
-            this.btnMaximize.UseVisualStyleBackColor = true;
-            this.btnMaximize.Click += new System.EventHandler(this.btnMaximize_Click);
             // 
             // btnClose
             // 
@@ -141,24 +97,14 @@
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClose.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClose.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnClose.Location = new System.Drawing.Point(1340, 2);
+            this.btnClose.Location = new System.Drawing.Point(745, 1);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(50, 50);
+            this.btnClose.Size = new System.Drawing.Size(33, 33);
             this.btnClose.TabIndex = 42;
             this.btnClose.Text = "X";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::AutomateMapping.Properties.Resources.icons8_administrative_tools_32;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 3);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 28;
-            this.pictureBox1.TabStop = false;
             // 
             // listBox1
             // 
@@ -166,11 +112,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox1.Font = new System.Drawing.Font("Roboto", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 28;
-            this.listBox1.Location = new System.Drawing.Point(0, 454);
-            this.listBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.listBox1.ItemHeight = 18;
+            this.listBox1.Location = new System.Drawing.Point(0, 303);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(1390, 228);
+            this.listBox1.Size = new System.Drawing.Size(327, 112);
             this.listBox1.TabIndex = 18;
             this.listBox1.Click += new System.EventHandler(this.listBox1_Click);
             // 
@@ -183,20 +128,19 @@
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(172)))), ((int)(((byte)(254)))));
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(10)))), ((int)(((byte)(59)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(10)))), ((int)(((byte)(59)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 128);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
+            this.dataGridView1.Location = new System.Drawing.Point(0, 85);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
-            this.dataGridView1.Size = new System.Drawing.Size(1390, 244);
+            this.dataGridView1.Size = new System.Drawing.Size(779, 163);
             this.dataGridView1.TabIndex = 30;
             // 
             // labelFunction
@@ -204,10 +148,9 @@
             this.labelFunction.AutoSize = true;
             this.labelFunction.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelFunction.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.labelFunction.Location = new System.Drawing.Point(43, 82);
-            this.labelFunction.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelFunction.Location = new System.Drawing.Point(29, 55);
             this.labelFunction.Name = "labelFunction";
-            this.labelFunction.Size = new System.Drawing.Size(202, 27);
+            this.labelFunction.Size = new System.Drawing.Size(139, 18);
             this.labelFunction.TabIndex = 31;
             this.labelFunction.Text = "Hi-Speed Promotion";
             this.labelFunction.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -222,24 +165,23 @@
             this.toolStripProgressBar1,
             this.toolStripStatusLabel1});
             this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.statusStrip1.Location = new System.Drawing.Point(0, 842);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 371);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 21, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(1390, 32);
+            this.statusStrip1.Size = new System.Drawing.Size(594, 22);
             this.statusStrip1.TabIndex = 33;
             // 
             // toolStripProgressBar1
             // 
             this.toolStripProgressBar1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(514, 24);
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(343, 16);
             this.toolStripProgressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Font = new System.Drawing.Font("Roboto", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 25);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
             // 
             // backgroundWorker1
             // 
@@ -265,6 +207,53 @@
             this.backgroundWorker3.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker3_ProgressChanged);
             this.backgroundWorker3.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker3_RunWorkerCompleted);
             // 
+            // labelLogViewer
+            // 
+            this.labelLogViewer.AutoSize = true;
+            this.labelLogViewer.FlatAppearance.BorderSize = 0;
+            this.labelLogViewer.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(172)))), ((int)(((byte)(254)))));
+            this.labelLogViewer.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(172)))), ((int)(((byte)(254)))));
+            this.labelLogViewer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.labelLogViewer.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelLogViewer.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.labelLogViewer.Image = global::AutomateMapping.Properties.Resources.icons8_system_report_36;
+            this.labelLogViewer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelLogViewer.Location = new System.Drawing.Point(8, 267);
+            this.labelLogViewer.Margin = new System.Windows.Forms.Padding(2);
+            this.labelLogViewer.Name = "labelLogViewer";
+            this.labelLogViewer.Size = new System.Drawing.Size(135, 42);
+            this.labelLogViewer.TabIndex = 37;
+            this.labelLogViewer.Text = "  Log Viewer";
+            this.labelLogViewer.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.labelLogViewer.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.labelLogViewer.UseVisualStyleBackColor = true;
+            // 
+            // btnValidate
+            // 
+            this.btnValidate.FlatAppearance.BorderSize = 0;
+            this.btnValidate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnValidate.Image = global::AutomateMapping.Properties.Resources.icons8_refresh_24;
+            this.btnValidate.Location = new System.Drawing.Point(893, 275);
+            this.btnValidate.Margin = new System.Windows.Forms.Padding(2);
+            this.btnValidate.Name = "btnValidate";
+            this.btnValidate.Size = new System.Drawing.Size(25, 23);
+            this.btnValidate.TabIndex = 39;
+            this.btnValidate.UseVisualStyleBackColor = true;
+            this.btnValidate.Click += new System.EventHandler(this.btnValidate_Click);
+            // 
+            // btnHome
+            // 
+            this.btnHome.FlatAppearance.BorderSize = 0;
+            this.btnHome.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHome.Image = global::AutomateMapping.Properties.Resources.icons8_home_24;
+            this.btnHome.Location = new System.Drawing.Point(864, 275);
+            this.btnHome.Margin = new System.Windows.Forms.Padding(2);
+            this.btnHome.Name = "btnHome";
+            this.btnHome.Size = new System.Drawing.Size(25, 23);
+            this.btnHome.TabIndex = 38;
+            this.btnHome.UseVisualStyleBackColor = true;
+            this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
+            // 
             // btnExe
             // 
             this.btnExe.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -279,10 +268,9 @@
             this.btnExe.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.btnExe.Image = global::AutomateMapping.Properties.Resources.icons8_services_24;
             this.btnExe.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnExe.Location = new System.Drawing.Point(1172, 741);
-            this.btnExe.Margin = new System.Windows.Forms.Padding(4);
+            this.btnExe.Location = new System.Drawing.Point(633, 396);
             this.btnExe.Name = "btnExe";
-            this.btnExe.Size = new System.Drawing.Size(176, 63);
+            this.btnExe.Size = new System.Drawing.Size(117, 42);
             this.btnExe.TabIndex = 29;
             this.btnExe.Text = "Execute";
             this.btnExe.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
@@ -303,67 +291,77 @@
             this.btnLog.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.btnLog.Image = global::AutomateMapping.Properties.Resources.icons8_exit_24;
             this.btnLog.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnLog.Location = new System.Drawing.Point(861, 741);
-            this.btnLog.Margin = new System.Windows.Forms.Padding(4);
+            this.btnLog.Location = new System.Drawing.Point(426, 396);
             this.btnLog.Name = "btnLog";
-            this.btnLog.Size = new System.Drawing.Size(268, 63);
+            this.btnLog.Size = new System.Drawing.Size(179, 42);
             this.btnLog.TabIndex = 28;
             this.btnLog.Text = "Write Log and Exit";
             this.btnLog.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.btnLog.UseVisualStyleBackColor = false;
             this.btnLog.Click += new System.EventHandler(this.btnLog_Click);
             // 
-            // labelLogViewer
+            // btnLogout
             // 
-            this.labelLogViewer.AutoSize = true;
-            this.labelLogViewer.FlatAppearance.BorderSize = 0;
-            this.labelLogViewer.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(172)))), ((int)(((byte)(254)))));
-            this.labelLogViewer.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(172)))), ((int)(((byte)(254)))));
-            this.labelLogViewer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.labelLogViewer.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelLogViewer.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.labelLogViewer.Image = global::AutomateMapping.Properties.Resources.icons8_system_report_36;
-            this.labelLogViewer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelLogViewer.Location = new System.Drawing.Point(12, 401);
-            this.labelLogViewer.Name = "labelLogViewer";
-            this.labelLogViewer.Size = new System.Drawing.Size(178, 46);
-            this.labelLogViewer.TabIndex = 37;
-            this.labelLogViewer.Text = "  Log Viewer";
-            this.labelLogViewer.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.labelLogViewer.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.labelLogViewer.UseVisualStyleBackColor = true;
+            this.btnLogout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLogout.AutoSize = true;
+            this.btnLogout.FlatAppearance.BorderSize = 0;
+            this.btnLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLogout.Image = global::AutomateMapping.Properties.Resources.icons8_sign_out_18;
+            this.btnLogout.Location = new System.Drawing.Point(643, 1);
+            this.btnLogout.Margin = new System.Windows.Forms.Padding(2);
+            this.btnLogout.Name = "btnLogout";
+            this.btnLogout.Size = new System.Drawing.Size(33, 33);
+            this.btnLogout.TabIndex = 39;
+            this.btnLogout.UseVisualStyleBackColor = true;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
             // 
-            // btnHome
+            // btnMinimize
             // 
-            this.btnHome.FlatAppearance.BorderSize = 0;
-            this.btnHome.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnHome.Image = global::AutomateMapping.Properties.Resources.icons8_home_24;
-            this.btnHome.Location = new System.Drawing.Point(1296, 412);
-            this.btnHome.Name = "btnHome";
-            this.btnHome.Size = new System.Drawing.Size(38, 35);
-            this.btnHome.TabIndex = 38;
-            this.btnHome.UseVisualStyleBackColor = true;
-            this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
+            this.btnMinimize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMinimize.AutoSize = true;
+            this.btnMinimize.FlatAppearance.BorderSize = 0;
+            this.btnMinimize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMinimize.Image = global::AutomateMapping.Properties.Resources.icons8_minimize_window_18;
+            this.btnMinimize.Location = new System.Drawing.Point(677, 1);
+            this.btnMinimize.Margin = new System.Windows.Forms.Padding(2);
+            this.btnMinimize.Name = "btnMinimize";
+            this.btnMinimize.Size = new System.Drawing.Size(33, 33);
+            this.btnMinimize.TabIndex = 40;
+            this.btnMinimize.UseVisualStyleBackColor = true;
+            this.btnMinimize.Click += new System.EventHandler(this.btnMinimize_Click);
             // 
-            // btnValidate
+            // btnMaximize
             // 
-            this.btnValidate.FlatAppearance.BorderSize = 0;
-            this.btnValidate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnValidate.Image = global::AutomateMapping.Properties.Resources.icons8_refresh_24;
-            this.btnValidate.Location = new System.Drawing.Point(1340, 413);
-            this.btnValidate.Name = "btnValidate";
-            this.btnValidate.Size = new System.Drawing.Size(38, 35);
-            this.btnValidate.TabIndex = 39;
-            this.btnValidate.UseVisualStyleBackColor = true;
-            this.btnValidate.Click += new System.EventHandler(this.btnValidate_Click);
+            this.btnMaximize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnMaximize.AutoSize = true;
+            this.btnMaximize.FlatAppearance.BorderSize = 0;
+            this.btnMaximize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMaximize.Image = global::AutomateMapping.Properties.Resources.icons8_maximize_window_18;
+            this.btnMaximize.Location = new System.Drawing.Point(711, 1);
+            this.btnMaximize.Margin = new System.Windows.Forms.Padding(2);
+            this.btnMaximize.Name = "btnMaximize";
+            this.btnMaximize.Size = new System.Drawing.Size(33, 33);
+            this.btnMaximize.TabIndex = 41;
+            this.btnMaximize.UseVisualStyleBackColor = true;
+            this.btnMaximize.Click += new System.EventHandler(this.btnMaximize_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::AutomateMapping.Properties.Resources.icons8_administrative_tools_32;
+            this.pictureBox1.Location = new System.Drawing.Point(9, 7);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(21, 21);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 28;
+            this.pictureBox1.TabStop = false;
             // 
             // MainHispeed
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(172)))), ((int)(((byte)(254)))));
-            this.ClientSize = new System.Drawing.Size(1390, 874);
+            this.ClientSize = new System.Drawing.Size(594, 393);
             this.Controls.Add(this.labelLogViewer);
             this.Controls.Add(this.labelFunction);
             this.Controls.Add(this.btnValidate);
@@ -375,10 +373,9 @@
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.statusStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(0, 736);
+            this.MinimumSize = new System.Drawing.Size(0, 491);
             this.Name = "MainHispeed";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MainHispeed";
@@ -387,10 +384,10 @@
             this.SizeChanged += new System.EventHandler(this.MainHispeed_SizeChanged);
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

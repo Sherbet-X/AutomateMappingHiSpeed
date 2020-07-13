@@ -10,6 +10,7 @@ namespace AutomateMapping
     {
         private OracleConnection ConnectionProd;
         private bool flagHispeed = false;
+        private bool flagVAS = false;
         int mov, movX, movY;
 
         public Login()
@@ -103,6 +104,37 @@ namespace AutomateMapping
             GC.Collect();
         }
 
+        private void btnHispeed_MouseClick(object sender, MouseEventArgs e)
+        {
+            flagHispeed = true;
+            flagVAS = false;
+
+            btnHispeed.FlatStyle = FlatStyle.Flat;
+            btnHispeed.BackColor = Color.FromArgb(0, 242, 254);
+            btnHispeed.FlatAppearance.MouseOverBackColor = Color.FromArgb(0, 242, 254);
+
+            btnVas.BackColor = Color.FromArgb(22, 52, 85);
+            btnVas.FlatAppearance.BorderSize = 0;
+        }
+
+        private void btnVas_MouseClick(object sender, MouseEventArgs e)
+        {
+            flagVAS = true;
+            flagHispeed = false;
+
+            btnVas.FlatStyle = FlatStyle.Flat;
+            btnVas.BackColor = Color.FromArgb(0, 242, 254);
+            btnVas.FlatAppearance.MouseOverBackColor = Color.FromArgb(0, 242, 254);
+
+            btnHispeed.BackColor = Color.FromArgb(22, 52, 85);
+            btnHispeed.FlatAppearance.BorderSize = 0;
+        }
+
+        private void btnDiscount_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
         private void panel5_MouseDown(object sender, MouseEventArgs e)
         {
             mov = 1;
@@ -133,11 +165,11 @@ namespace AutomateMapping
                 {
                     ConnectionProd = new OracleConnection();
 
-                    //string connString = @"Data Source= (DESCRIPTION =(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 172.19.217.162)(PORT = 1559))) " +
-                    //                "(CONNECT_DATA =(SERVICE_NAME = CVMDEV)));User Id=" + user + "; Password=" + password + ";";
+                    string connString = @"Data Source= (DESCRIPTION =(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 172.19.217.162)(PORT = 1559))) " +
+                                    "(CONNECT_DATA =(SERVICE_NAME = CVMDEV)));User Id=" + user + "; Password=" + password + ";";
 
-                    string connString = @"Data Source= (DESCRIPTION =(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 150.4.2.2)(PORT = 1521)) )" +
-                       "(CONNECT_DATA =(SERVICE_NAME = TAPRD)));User ID=" + user + ";Password=" + password + ";";
+                    //string connString = @"Data Source= (DESCRIPTION =(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 150.4.2.2)(PORT = 1521)) )" +
+                    //   "(CONNECT_DATA =(SERVICE_NAME = TAPRD)));User ID=" + user + ";Password=" + password + ";";
 
                     ConnectionProd.ConnectionString = connString;
                     ConnectionProd.Open();
@@ -152,6 +184,13 @@ namespace AutomateMapping
                             this.Hide();
 
                             inputHispeed.Show();
+                        }
+                        else if(flagVAS == true)
+                        {
+                            InputVAS inputVAS = new InputVAS(ConnectionProd, user, "");
+                            this.Hide();
+
+                            inputVAS.Show();
                         }
                     }
                     else

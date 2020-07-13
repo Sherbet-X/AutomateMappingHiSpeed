@@ -911,7 +911,7 @@ namespace AutomateMapping
                 double price = Convert.ToDouble(dataGridView1.Rows[i].Cells[5].Value.ToString().Trim());
                 string order = dataGridView1.Rows[i].Cells[6].Value.ToString().Trim();
                 string channel = dataGridView1.Rows[i].Cells[7].Value.ToString();
-                string modem = dataGridView1.Rows[i].Cells[8].Value.ToString().Trim();
+                string modemType = dataGridView1.Rows[i].Cells[8].Value.ToString().Trim();
                 string docsis = dataGridView1.Rows[i].Cells[9].Value.ToString().Trim();
                 string start = dataGridView1.Rows[i].Cells[10].Value.ToString().Trim();
                 string end = dataGridView1.Rows[i].Cells[11].Value.ToString().Trim();
@@ -939,6 +939,7 @@ namespace AutomateMapping
                     }
                 }
 
+                //OrderType
                 string[] lstOrder;
                 if (order.Contains(","))
                 {
@@ -1003,7 +1004,7 @@ namespace AutomateMapping
                         lstData.Add(price.ToString());
                         lstData.Add(lstOrder[j]);
                         lstData.Add(channel);
-                        lstData.Add(modem);
+                        lstData.Add(modemType);
                         lstData.Add(docsis);
                         lstData.Add(start);
                         lstData.Add(end);
@@ -1100,7 +1101,7 @@ namespace AutomateMapping
             string price = data[5];
             string order = data[6];
             string channel = data[7];
-            string modem = data[8];
+            string modemType = data[8];
             string docsis = data[9];
             string start = data[10];
             string end = data[11];
@@ -1108,6 +1109,7 @@ namespace AutomateMapping
             string installF = data[13];
             string pName = data[14];
             string suffix = data[15];
+            string onetimeCode, modem;
 
             if (String.IsNullOrEmpty(channel))
             {
@@ -1155,6 +1157,26 @@ namespace AutomateMapping
                         }
                     }
 
+                    //OnetimeCode
+                    if(media == "FIBER_TO_HOME")
+                    {
+                        onetimeCode = "ENFP";
+                    }
+                    else
+                    {
+                        onetimeCode = "";
+                    }
+
+                    //modem
+                    if(order == "New")
+                    {
+                        modem = "BM";
+                    }
+                    else
+                    {
+                        modem = "BM,NM";
+                    }
+
                     if (prodType == "")
                     {
                         logHispeed += "Failed to insert ID: " + minID + " MKT: " + mkt + " Order: " + order + " Speed: "
@@ -1185,7 +1207,7 @@ namespace AutomateMapping
                                 cmd.Transaction = transaction;
                                 //Insert into hispeed_promotion
                                 cmd.CommandText = "INSERT INTO HISPEED_PROMOTION VALUES (" + minID + ", '" + mkt + "', '" + mkt + "', '" + pName +
-                                    "', '" + pName + "', '" + order + "', 'Active','" + extra + "','',0,0,'Y','Y','',0,'N','0','Y','Y','N','" + prodType +
+                                    "', '" + pName + "', '" + order + "', 'Active','" + extra + "','"+onetimeCode+"',0,0,'Y','Y','',0,'N','0','Y','Y','N','" + prodType +
                                     "', sysdate, sysdate, '" + term + "',0,'TI', TO_DATE('" + start + "','dd/mm/yyyy'), " +
                                     "TO_DATE('" + end + "','dd/mm/yyyy'), 'M', '" + mkt + "','N','N','Y', '" + entry + "', '" +
                                     install + "','" + modem + "','N','" + sub + "','')";
@@ -1194,7 +1216,7 @@ namespace AutomateMapping
 
                                 //Insert into hispeed_speed_promotion
                                 cmd.CommandText = "INSERT INTO HISPEED_SPEED_PROMOTION  VALUES (" + suffix + ", " + minID + ", " +
-                                    price + ", null, 'Y', '" + suffix + "', '" + modem + "', " + "'" + uploadK + "', '" + docsis + "')";
+                                    price + ", null, 'Y', '" + suffix + "', '" + modemType + "', " + "'" + uploadK + "', '" + docsis + "')";
                                 expHisp += cmd.CommandText + ";" + "\r\n";
                                 cmd.ExecuteNonQuery();
 

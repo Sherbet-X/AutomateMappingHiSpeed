@@ -40,11 +40,11 @@
       <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Interop.Microsoft.Office.Core">
-      <HintPath>..\..\..\..\Automate Mapping Tool\Coding\AutomateMappingTool\obj\Debug\Interop.Microsoft.Office.Core.dll</HintPath>
+      <HintPath>obj\Release\Interop.Microsoft.Office.Core.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Interop.Microsoft.Office.Interop.Excel">
-      <HintPath>..\..\..\..\Automate Mapping Tool\Coding\AutomateMappingTool\obj\Debug\Interop.Microsoft.Office.Interop.Excel.dll</HintPath>
+      <HintPath>obj\Release\Interop.Microsoft.Office.Interop.Excel.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
@@ -69,6 +69,12 @@
     <Compile Include="InputHispeed.Designer.cs">
       <DependentUpon>InputHispeed.cs</DependentUpon>
     </Compile>
+    <Compile Include="InputVAS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InputVAS.Designer.cs">
+      <DependentUpon>InputVAS.cs</DependentUpon>
+    </Compile>
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,9 +90,36 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReserveID.cs" />
+    <Compile Include="UserControlCriteria.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlCriteria.Designer.cs">
+      <DependentUpon>UserControlCriteria.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlNotAllow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlNotAllow.Designer.cs">
+      <DependentUpon>UserControlNotAllow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControlVASProduct.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlVASProduct.Designer.cs">
+      <DependentUpon>UserControlVASProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ValidateVASForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ValidateVASForm.Designer.cs">
+      <DependentUpon>ValidateVASForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Validation.cs" />
     <EmbeddedResource Include="InputHispeed.resx">
       <DependentUpon>InputHispeed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InputVAS.resx">
+      <DependentUpon>InputVAS.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
@@ -98,6 +131,18 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlCriteria.resx">
+      <DependentUpon>UserControlCriteria.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlNotAllow.resx">
+      <DependentUpon>UserControlNotAllow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControlVASProduct.resx">
+      <DependentUpon>UserControlVASProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ValidateVASForm.resx">
+      <DependentUpon>ValidateVASForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -119,33 +164,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\icons8-imac-exit-24.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\key-241.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\user-24.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\login641.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icons8-administrative-tools-32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icons8-home-48.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icons8-minimize-window-18.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icons8-maximize-window-18.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icons8-forward-button-24.png" />
-  </ItemGroup>
-  <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
       <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
       <VersionMajor>2</VersionMajor>
@@ -157,31 +175,22 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\icons8-services-24.png" />
+    <None Include="Resources\numeric-2-circle_36.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\icons8-exit-24.png" />
+    <None Include="Resources\numeric-3-circle_36.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\icons8-system-report-36.png" />
+    <None Include="Resources\icons8-back-arrow-24.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\icons8-sign-out-18.png" />
+    <None Include="Resources\icons8-1st-36.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\icons8-refresh-24.png" />
+    <None Include="Resources\icons8-circled-2-c-36.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\icons8-home-24.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icons8-close-window-18.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icons8-close18.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icons8-close-window-24.png" />
+    <None Include="Resources\icons8-circled-3-c-36.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

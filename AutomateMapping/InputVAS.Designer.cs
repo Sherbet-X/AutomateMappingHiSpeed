@@ -1,6 +1,6 @@
 ﻿namespace AutomateMapping
 {
-    partial class InputHispeed
+    partial class InputVAS
     {
         /// <summary>
         /// Required designer variable.
@@ -35,11 +35,8 @@
             this.label15 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.txtDescFile = new System.Windows.Forms.TextBox();
             this.txtInput = new System.Windows.Forms.TextBox();
-            this.btnOpenDesc = new System.Windows.Forms.Button();
             this.btnOpen = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -48,26 +45,24 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.txtOutput = new System.Windows.Forms.TextBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.label6 = new System.Windows.Forms.Label();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.txtOutput = new System.Windows.Forms.TextBox();
+            this.btnOutput = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
             this.btnNext = new System.Windows.Forms.Button();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel5
@@ -83,7 +78,7 @@
             this.panel5.Margin = new System.Windows.Forms.Padding(4);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(1258, 63);
-            this.panel5.TabIndex = 15;
+            this.panel5.TabIndex = 16;
             this.panel5.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel5_MouseDown);
             this.panel5.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel5_MouseMove);
             this.panel5.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel5_MouseUp);
@@ -140,9 +135,9 @@
             this.label15.Location = new System.Drawing.Point(53, 16);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(259, 24);
+            this.label15.Size = new System.Drawing.Size(133, 24);
             this.label15.TabIndex = 20;
-            this.label15.Text = "Hi-Speed Package Mapping";
+            this.label15.Text = "VASUPSPEED";
             this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pictureBox1
@@ -159,11 +154,8 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.txtDescFile);
             this.panel1.Controls.Add(this.txtInput);
-            this.panel1.Controls.Add(this.btnOpenDesc);
             this.panel1.Controls.Add(this.btnOpen);
-            this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
@@ -172,31 +164,18 @@
             this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.label12);
             this.panel1.Controls.Add(this.label13);
-            this.panel1.Location = new System.Drawing.Point(82, 136);
+            this.panel1.Location = new System.Drawing.Point(79, 172);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1102, 374);
-            this.panel1.TabIndex = 16;
-            // 
-            // txtDescFile
-            // 
-            this.txtDescFile.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtDescFile.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDescFile.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.txtDescFile.Location = new System.Drawing.Point(573, 291);
-            this.txtDescFile.Margin = new System.Windows.Forms.Padding(4);
-            this.txtDescFile.Multiline = true;
-            this.txtDescFile.Name = "txtDescFile";
-            this.txtDescFile.Size = new System.Drawing.Size(488, 25);
-            this.txtDescFile.TabIndex = 14;
-            this.txtDescFile.Text = "X:/xxxx/xxxx/xxxx/file.xlsx";
+            this.panel1.Size = new System.Drawing.Size(1102, 343);
+            this.panel1.TabIndex = 17;
             // 
             // txtInput
             // 
             this.txtInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtInput.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtInput.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.txtInput.Location = new System.Drawing.Point(573, 225);
+            this.txtInput.Location = new System.Drawing.Point(573, 230);
             this.txtInput.Margin = new System.Windows.Forms.Padding(4);
             this.txtInput.Multiline = true;
             this.txtInput.Name = "txtInput";
@@ -205,28 +184,13 @@
             this.txtInput.Text = "X:/xxxx/xxxx/xxxx/file.xlsx";
             this.txtInput.WordWrap = false;
             // 
-            // btnOpenDesc
-            // 
-            this.btnOpenDesc.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(147)))), ((int)(((byte)(210)))));
-            this.btnOpenDesc.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOpenDesc.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOpenDesc.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnOpenDesc.Location = new System.Drawing.Point(384, 278);
-            this.btnOpenDesc.Margin = new System.Windows.Forms.Padding(4);
-            this.btnOpenDesc.Name = "btnOpenDesc";
-            this.btnOpenDesc.Size = new System.Drawing.Size(159, 51);
-            this.btnOpenDesc.TabIndex = 7;
-            this.btnOpenDesc.Text = "Browse";
-            this.btnOpenDesc.UseVisualStyleBackColor = false;
-            this.btnOpenDesc.Click += new System.EventHandler(this.btnOpenDesc_Click);
-            // 
             // btnOpen
             // 
             this.btnOpen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(147)))), ((int)(((byte)(210)))));
             this.btnOpen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnOpen.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnOpen.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnOpen.Location = new System.Drawing.Point(384, 208);
+            this.btnOpen.Location = new System.Drawing.Point(384, 215);
             this.btnOpen.Margin = new System.Windows.Forms.Padding(4);
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.Size = new System.Drawing.Size(159, 51);
@@ -235,20 +199,10 @@
             this.btnOpen.UseVisualStyleBackColor = false;
             this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
-            // label5
-            // 
-            this.label5.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(110, 290);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(213, 24);
-            this.label5.TabIndex = 5;
-            this.label5.Text = "Description of MKT file";
-            // 
             // label4
             // 
             this.label4.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(110, 224);
+            this.label4.Location = new System.Drawing.Point(110, 229);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(178, 24);
@@ -322,12 +276,22 @@
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(222)));
             this.label13.ForeColor = System.Drawing.Color.Red;
-            this.label13.Location = new System.Drawing.Point(96, 218);
+            this.label13.Location = new System.Drawing.Point(96, 223);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(24, 29);
             this.label13.TabIndex = 12;
             this.label13.Text = "*";
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(52)))), ((int)(((byte)(85)))));
+            this.panel2.Controls.Add(this.label1);
+            this.panel2.Location = new System.Drawing.Point(109, 136);
+            this.panel2.Margin = new System.Windows.Forms.Padding(4);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(174, 69);
+            this.panel2.TabIndex = 19;
             // 
             // label1
             // 
@@ -342,28 +306,41 @@
             this.label1.Text = "INPUT";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // panel2
+            // panel4
             // 
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(52)))), ((int)(((byte)(85)))));
-            this.panel2.Controls.Add(this.label1);
-            this.panel2.Location = new System.Drawing.Point(112, 110);
-            this.panel2.Margin = new System.Windows.Forms.Padding(4);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(174, 69);
-            this.panel2.TabIndex = 18;
+            this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(52)))), ((int)(((byte)(85)))));
+            this.panel4.Controls.Add(this.label6);
+            this.panel4.Location = new System.Drawing.Point(109, 590);
+            this.panel4.Margin = new System.Windows.Forms.Padding(4);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(174, 69);
+            this.panel4.TabIndex = 20;
+            // 
+            // label6
+            // 
+            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label6.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.ForeColor = System.Drawing.Color.White;
+            this.label6.Location = new System.Drawing.Point(0, 0);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(174, 69);
+            this.label6.TabIndex = 18;
+            this.label6.Text = "OUTPUT";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.White;
             this.panel3.Controls.Add(this.txtOutput);
-            this.panel3.Controls.Add(this.button3);
+            this.panel3.Controls.Add(this.btnOutput);
             this.panel3.Controls.Add(this.label7);
             this.panel3.Controls.Add(this.label14);
-            this.panel3.Location = new System.Drawing.Point(86, 584);
+            this.panel3.Location = new System.Drawing.Point(79, 622);
             this.panel3.Margin = new System.Windows.Forms.Padding(4);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1100, 162);
-            this.panel3.TabIndex = 17;
+            this.panel3.Size = new System.Drawing.Size(1102, 162);
+            this.panel3.TabIndex = 21;
             // 
             // txtOutput
             // 
@@ -378,20 +355,20 @@
             this.txtOutput.TabIndex = 15;
             this.txtOutput.Text = "X:/xxxx/xxxx/xxxx/file.xlsx";
             // 
-            // button3
+            // btnOutput
             // 
-            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(147)))), ((int)(((byte)(210)))));
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.button3.Location = new System.Drawing.Point(381, 66);
-            this.button3.Margin = new System.Windows.Forms.Padding(4);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(159, 51);
-            this.button3.TabIndex = 8;
-            this.button3.Text = "Browse";
-            this.button3.UseVisualStyleBackColor = false;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.btnOutput.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(12)))), ((int)(((byte)(147)))), ((int)(((byte)(210)))));
+            this.btnOutput.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOutput.Font = new System.Drawing.Font("Roboto", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOutput.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.btnOutput.Location = new System.Drawing.Point(381, 66);
+            this.btnOutput.Margin = new System.Windows.Forms.Padding(4);
+            this.btnOutput.Name = "btnOutput";
+            this.btnOutput.Size = new System.Drawing.Size(159, 51);
+            this.btnOutput.TabIndex = 8;
+            this.btnOutput.Text = "Browse";
+            this.btnOutput.UseVisualStyleBackColor = false;
+            this.btnOutput.Click += new System.EventHandler(this.btnOutput_Click);
             // 
             // label7
             // 
@@ -415,50 +392,6 @@
             this.label14.TabIndex = 13;
             this.label14.Text = "*";
             // 
-            // panel4
-            // 
-            this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(52)))), ((int)(((byte)(85)))));
-            this.panel4.Controls.Add(this.label6);
-            this.panel4.Location = new System.Drawing.Point(116, 564);
-            this.panel4.Margin = new System.Windows.Forms.Padding(4);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(174, 69);
-            this.panel4.TabIndex = 19;
-            // 
-            // label6
-            // 
-            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(0, 0);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(174, 69);
-            this.label6.TabIndex = 18;
-            this.label6.Text = "OUTPUT";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // openFileDialog2
-            // 
-            this.openFileDialog2.FileName = "openFileDialog2";
-            // 
-            // statusStrip1
-            // 
-            this.statusStrip1.BackColor = System.Drawing.Color.SlateGray;
-            this.statusStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Visible;
-            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
-            this.statusStrip1.Location = new System.Drawing.Point(0, 902);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 21, 0);
-            this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.statusStrip1.Size = new System.Drawing.Size(1258, 22);
-            this.statusStrip1.TabIndex = 28;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
             // btnNext
             // 
             this.btnNext.AutoEllipsis = true;
@@ -472,86 +405,82 @@
             this.btnNext.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.btnNext.Image = global::AutomateMapping.Properties.Resources.icons8_forward_button_24;
             this.btnNext.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnNext.Location = new System.Drawing.Point(1020, 794);
+            this.btnNext.Location = new System.Drawing.Point(1017, 832);
             this.btnNext.Margin = new System.Windows.Forms.Padding(4);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(164, 62);
-            this.btnNext.TabIndex = 27;
+            this.btnNext.TabIndex = 28;
             this.btnNext.Text = "Next";
             this.btnNext.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.btnNext.UseVisualStyleBackColor = false;
             this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
-            // InputHispeed
+            // openFileDialog1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // InputVAS
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(172)))), ((int)(((byte)(254)))));
-            this.ClientSize = new System.Drawing.Size(1258, 924);
-            this.Controls.Add(this.statusStrip1);
+            this.ClientSize = new System.Drawing.Size(1258, 939);
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel5);
             this.Controls.Add(this.panel3);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.MinimizeBox = false;
-            this.Name = "InputHispeed";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "InputHispeed";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.InputHispeed_FormClosing);
-            this.Load += new System.EventHandler(this.InputHispeed_Load);
-            this.SizeChanged += new System.EventHandler(this.InputHispeed_SizeChanged);
+            this.MinimumSize = new System.Drawing.Size(0, 939);
+            this.Name = "InputVAS";
+            this.Text = "InputVAS";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.InputVAS_FormClosing);
+            this.Load += new System.EventHandler(this.InputVAS_Load);
+            this.SizeChanged += new System.EventHandler(this.InputVAS_SizeChanged);
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
+
         private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Button btnLogout;
+        private System.Windows.Forms.Button btnMinimize;
+        private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.TextBox txtInput;
         private System.Windows.Forms.Button btnOpen;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtImp;
         private System.Windows.Forms.TextBox txtUr;
-        private System.Windows.Forms.Button btnOpenDesc;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.TextBox txtOutput;
+        private System.Windows.Forms.Button btnOutput;
+        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button btnNext;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog2;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.TextBox txtInput;
-        private System.Windows.Forms.TextBox txtDescFile;
-        private System.Windows.Forms.TextBox txtOutput;
-        private System.Windows.Forms.Button btnClose;
-        private System.Windows.Forms.Button btnMinimize;
-        private System.Windows.Forms.Button btnLogout;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
