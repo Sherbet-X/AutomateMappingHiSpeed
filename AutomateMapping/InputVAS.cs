@@ -74,7 +74,7 @@ namespace AutomateMapping
             }
             else
             {
-                ValidateVASForm validateVASForm = new ValidateVASForm(ConnectionProd,filename,implementer,urNo,folder);
+                MainVASUpSpeed validateVASForm = new MainVASUpSpeed(ConnectionProd,filename,implementer,txtUr.Text,folder);
 
                 this.Hide();
                 validateVASForm.Show();
@@ -161,7 +161,18 @@ namespace AutomateMapping
                 {
                     this.Size = new Size(w, btnNext.Location.Y + 98);
                 }
+            }
 
+            if (label2.Height < 20)
+            {
+                label2.Size = new Size(label2.Width + 30, label2.Height + 4);
+                label2.Font = new Font("Roboto", 8);
+                label3.Size = new Size(label3.Width + 30, label3.Height + 4);
+                label3.Font = new Font("Roboto", 8);
+                label4.Size = new Size(label4.Width + 42, label4.Height + 4);
+                label4.Font = new Font("Roboto", 8);
+                label7.Size = new Size(label7.Width + 42, label7.Height + 4);
+                label7.Font = new Font("Roboto", 8);
             }
         }
 

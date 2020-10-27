@@ -43,7 +43,13 @@ namespace AutomateMapping
                     //remove emtry row
                     for (int i = 0; i < dataGridView.RowCount; i++)
                     {
-                        if (dataGridView.Rows[dataGridView.RowCount - 1].Cells[0].Value.ToString() == "")
+                        /*if (dataGridView.Rows[dataGridView.RowCount - 1].Cells[0].Value.ToString() == "")
+                        {
+                            dataGridView.Rows.RemoveAt(dataGridView.RowCount - 1);
+                            i--;
+                        }*/
+
+                        if(String.IsNullOrEmpty(dataGridView.Rows[dataGridView.RowCount - 1].Cells[0].Value.ToString()))
                         {
                             dataGridView.Rows.RemoveAt(dataGridView.RowCount - 1);
                             i--;
@@ -52,11 +58,13 @@ namespace AutomateMapping
 
                 }
             }
+            catch(NullReferenceException)
+            {}
             catch (Exception ex)
             {
                 throw new Exception("Cannot read data from file " + file + "\r\n" + "Error Message : " + "\r\n" + ex.Message);
             }
-
         }
+      
     }
 }

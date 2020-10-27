@@ -150,11 +150,11 @@ namespace AutomateMapping
 
             if (String.IsNullOrEmpty(txtUser.Text))
             {
-                MessageBox.Show("Please input Username.");
+                MessageBox.Show("Please fill in Username.");
             }
             else if (String.IsNullOrEmpty(txtPassword.Text))
             {
-                MessageBox.Show("Please input Password.");
+                MessageBox.Show("Please fill in Password.");
             }
             else
             {

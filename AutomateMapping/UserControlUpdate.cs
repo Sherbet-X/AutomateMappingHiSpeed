@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace AutomateMapping
 {
-    public partial class UserControlNotAllow : UserControl
+    public partial class UserControlUpdate : UserControl
     {
-        public UserControlNotAllow()
+        public UserControlUpdate()
         {
             InitializeComponent();
         }
@@ -32,6 +32,12 @@ namespace AutomateMapping
         private void dataGridView1_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             e.CellStyle.Font = new Font("Microsoft Sans Serif", 11, FontStyle.Bold);
+        }
+
+        private void UserControlUpdate_Load(object sender, EventArgs e)
+        {
+            dataGridView1.Refresh();
+            this.Refresh();
         }
     }
 }

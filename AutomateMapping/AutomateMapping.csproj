@@ -47,6 +47,7 @@
       <HintPath>obj\Release\Interop.Microsoft.Office.Interop.Excel.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -102,17 +103,23 @@
     <Compile Include="UserControlNotAllow.Designer.cs">
       <DependentUpon>UserControlNotAllow.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControlUpdate.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControlUpdate.Designer.cs">
+      <DependentUpon>UserControlUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControlVASProduct.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UserControlVASProduct.Designer.cs">
       <DependentUpon>UserControlVASProduct.cs</DependentUpon>
     </Compile>
-    <Compile Include="ValidateVASForm.cs">
+    <Compile Include="MainVASUpSpeed.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ValidateVASForm.Designer.cs">
-      <DependentUpon>ValidateVASForm.cs</DependentUpon>
+    <Compile Include="MainVASUpSpeed.Designer.cs">
+      <DependentUpon>MainVASUpSpeed.cs</DependentUpon>
     </Compile>
     <Compile Include="Validation.cs" />
     <EmbeddedResource Include="InputHispeed.resx">
@@ -138,11 +145,14 @@
     <EmbeddedResource Include="UserControlNotAllow.resx">
       <DependentUpon>UserControlNotAllow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControlUpdate.resx">
+      <DependentUpon>UserControlUpdate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControlVASProduct.resx">
       <DependentUpon>UserControlVASProduct.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ValidateVASForm.resx">
-      <DependentUpon>ValidateVASForm.cs</DependentUpon>
+    <EmbeddedResource Include="MainVASUpSpeed.resx">
+      <DependentUpon>MainVASUpSpeed.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -191,6 +201,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\icons8-circled-3-c-36.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-circled-4-36 outline.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-circled-4-36_Out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-circled-4-36.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-circled-4-36bk.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

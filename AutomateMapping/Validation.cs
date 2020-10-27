@@ -152,7 +152,7 @@ namespace AutomateMapping
             }
             catch (Exception)
             {
-                string msg = "Cannot get SubProfile from database.";
+                string msg = "Cannot get sub profile from database.";
 
                 MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -202,7 +202,7 @@ namespace AutomateMapping
             }
             catch (Exception)
             {
-                string msg = "Cannot get Extra Profile from database.";
+                string msg = "Cannot get extra profile from database.";
 
                 MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -300,6 +300,203 @@ namespace AutomateMapping
             }
 
             return dataTable;
+        }
+
+        List<string[]> _provFromDB;
+        public List<string[]> GetProvFromDB
+        {
+            get
+            {
+                if (this._provFromDB is null || this._provFromDB.Count <= 0)
+                {
+                    this._provFromDB = GetProvince();
+                }
+
+                return this._provFromDB;
+            }
+            set
+            {
+                this._provFromDB = value;
+            }
+        }
+        private List<string[]> GetProvince()
+        {
+            List<string[]> list = new List<string[]>();
+
+            try
+            {
+                string query = "SELECT DP_PROVINCE FROM DISCOUNT_CRITERIA_PROVINCE";
+                OracleCommand cmd = new OracleCommand(query, ConnectionProd);
+                OracleDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string[] arr = new string[2];
+                    arr[0] = reader.GetValue(0).ToString();
+                    arr[1] = "DB";
+
+                    list.Add(arr);
+                }
+
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                string msg = "Cannot get province from database.";
+
+                MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                list.Clear();
+            }
+
+            return list;
+        }
+
+        List<string[]> _lstType;
+        public List<string[]> GetVasType
+        {
+            get
+            {
+                if (this._lstType is null || this._lstType.Count <= 0)
+                {
+                    this._lstType = getVasType();
+                }
+
+                return this._lstType;
+            }
+            set
+            {
+                this._lstType = value;
+            }
+        }
+        private List<string[]> getVasType()
+        {
+            List<string[]> list = new List<string[]>();
+
+            try
+            {
+                string query = "SELECT VALUE1 FROM TRUE9_BPT_VALIDATE WHERE TYPE = 'VAS_TYPE' AND NAME1 = 'VAS_TYPE'";
+                OracleCommand cmd = new OracleCommand(query, ConnectionTemp);
+                OracleDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string[] arr = new string[2];
+                    arr[0] = reader.GetValue(0).ToString();
+                    arr[1] = "DB";
+
+                    list.Add(arr);
+                }
+
+                reader.Close();
+            }
+            catch (Exception)
+            {
+                string msg = "Cannot get VAS_TYPE from database.";
+
+                MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                list.Clear();
+            }
+            return list;
+        }
+
+        List<string[]> _lstGroup;
+        public List<string[]> GetVasGroup
+        {
+            get
+            {
+                if (this._lstGroup is null || this._lstGroup.Count <= 0)
+                {
+                    this._lstGroup = getVasGroup();
+                }
+
+                return this._lstGroup;
+            }
+            set
+            {
+                this._lstGroup = value;
+            }
+        }
+        private List<string[]> getVasGroup()
+        {
+            List<string[]> list = new List<string[]>();
+
+            try
+            {
+                string query = "SELECT VALUE1 FROM TRUE9_BPT_VALIDATE WHERE TYPE = 'VAS_GROUP' AND NAME1 = 'VAS_GROUP'";
+                OracleCommand cmd = new OracleCommand(query, ConnectionTemp);
+                OracleDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string[] arr = new string[2];
+                    arr[0] = reader.GetValue(0).ToString();
+                    arr[1] = "DB";
+
+                    list.Add(arr);
+                }
+
+                reader.Close();
+            }
+            catch (Exception)
+            {
+                string msg = "Cannot get VAS_GROUP from database.";
+
+                MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                list.Clear();
+            }
+            return list;
+        }
+
+        List<string[]> _lstVasChannel;
+        public List<string[]> GetVasChannel
+        {
+            get
+            {
+                if (this._lstVasChannel is null || this._lstVasChannel.Count <= 0)
+                {
+                    this._lstVasChannel = getVasChannel();
+                }
+
+                return this._lstVasChannel;
+            }
+            set
+            {
+                this._lstVasChannel = value;
+            }
+        }
+        private List<string[]> getVasChannel()
+        {
+            List<string[]> list = new List<string[]>();
+
+            try
+            {
+                string query = "SELECT VALUE1 FROM TRUE9_BPT_VALIDATE WHERE TYPE = 'VAS_CHANNEL' AND NAME1 = 'VAS_CHANNEL'";
+                OracleCommand cmd = new OracleCommand(query, ConnectionTemp);
+                OracleDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string[] arr = new string[2];
+                    arr[0] = reader.GetValue(0).ToString();
+                    arr[1] = "DB";
+
+                    list.Add(arr);
+                }
+
+                reader.Close();
+            }
+            catch (Exception)
+            {
+                string msg = "Cannot get VAS_Channel from database.";
+
+                MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                list.Clear();
+            }
+            return list;
         }
         #endregion
 
@@ -404,7 +601,7 @@ namespace AutomateMapping
                                 }
 
                                 DialogResult dialog = MessageBox.Show("Do you want to insert new speed into DB[Hispeed Speed]?" +
-                                    "Detail :" + "\r\n" + "SpeedID = " + speedID + " : Desc = " + speed2K, "Confirmation",
+                                    "Detail : SpeedID = " + speedID + " : Desc = " + speed2K, "Confirmation",
                                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
                                 if (dialog == DialogResult.Yes)
@@ -558,8 +755,8 @@ namespace AutomateMapping
 
                             if (speedID == -1)
                             {
-                                DialogResult dialog = MessageBox.Show("Do you want to insert new speed into DB[Hispeed Speed] ? " +
-                                    "Detail :" + "\r\n" + "SpeedID = " + suffixMkt + " : Desc = " + speed2K, "Confirmation",
+                                DialogResult dialog = MessageBox.Show("Do you want to insert new speed into DB[Hispeed_Speed]? " +
+                                    "Detail : SpeedID = " + suffixMkt + " : Desc = " + speed2K, "Confirmation",
                                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
                                 if (dialog == DialogResult.Yes)
@@ -667,7 +864,7 @@ namespace AutomateMapping
                 if (hasExtra == false)
                 {
                     DialogResult dialog = MessageBox.Show("Do you want to insert new extra profile?" + "\r\n" +
-                                "Detail :" + "\r\n" + "Extra Profile = " + extra, "Confirmation",
+                                "Detail : Extra Profile = " + extra, "Confirmation",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
                     if (dialog == DialogResult.Yes)
@@ -714,6 +911,168 @@ namespace AutomateMapping
             return msg;
         }
 
+        public string CheckType(List<string[]> lstVasType, string type)
+        {
+            string msg = "Success";
+
+            bool hasType = lstVasType.Any(p => p.SequenceEqual(new string[] { type, "DB" }));
+            if (hasType == false)
+            {
+                DialogResult dialog = MessageBox.Show("Do you want to insert new vas type?" + "\r\n" +
+                            "Detail : VAS_TYPE = " + type, "Confirmation",
+                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                if (dialog == DialogResult.Yes)
+                {
+                    OracleTransaction transaction = null;
+                    string cmd = "INSERT INTO TRUE9_BPT_VALIDATE (TYPE, NAME1, VALUE1) VALUES('VAS_TYPE', " +
+                        "'VAS_TYPE', '" + type + "')";
+                    try
+                    {
+                        transaction = ConnectionTemp.BeginTransaction(IsolationLevel.ReadCommitted);
+                        OracleCommand command = new OracleCommand(cmd, ConnectionTemp);
+                        command.Transaction = transaction;
+                        command.ExecuteNonQuery();
+
+                        transaction.Commit();
+
+                        string[] arr = { type, "DB" };
+                        this.GetVasType.Add(arr);
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+
+                        string[] arr = { type, "ignore" };
+                        this.GetVasType.Add(arr);
+
+                        msg = "Cannot insert new vas type : " + type + " on Master Date";
+                    }
+                }
+                else if (dialog == DialogResult.No)
+                {
+                    string[] arr = { type, "ignore" };
+                    this.GetVasType.Add(arr);
+
+                    msg = "Not found vas type : " + type + " on Master Data";
+                }
+                else
+                {
+                    Environment.Exit(0);
+                }
+            }
+
+            return msg;
+        }
+
+        public string CheckGroup(List<string[]> lstVasGroup, string group)
+        {
+            string msg = "Success";
+
+            bool hasGroup = lstVasGroup.Any(p => p.SequenceEqual(new string[] { group, "DB" }));
+            if (hasGroup == false)
+            {
+                DialogResult dialog = MessageBox.Show("Do you want to insert new vas group?" + "\r\n" +
+                            "Detail : VAS_GROUP = " + group, "Confirmation",
+                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                if (dialog == DialogResult.Yes)
+                {
+                    OracleTransaction transaction = null;
+                    string cmd = "INSERT INTO TRUE9_BPT_VALIDATE (TYPE, NAME1, VALUE1) VALUES('VAS_GROUP', " +
+                        "'VAS_GROUP', '" + group + "')";
+                    try
+                    {
+                        transaction = ConnectionTemp.BeginTransaction(IsolationLevel.ReadCommitted);
+                        OracleCommand command = new OracleCommand(cmd, ConnectionTemp);
+                        command.Transaction = transaction;
+                        command.ExecuteNonQuery();
+
+                        transaction.Commit();
+
+                        string[] arr = { group, "DB" };
+                        this.GetVasGroup.Add(arr);
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+
+                        string[] arr = { group, "ignore" };
+                        this.GetVasGroup.Add(arr);
+
+                        msg = "Cannot insert new vas group : " + group + " on Master Date";
+                    }
+                }
+                else if (dialog == DialogResult.No)
+                {
+                    string[] arr = { group, "ignore" };
+                    this.GetVasGroup.Add(arr);
+
+                    msg = "Not found vas group : " + group + " on Master Data";
+                }
+                else
+                {
+                    Environment.Exit(0);
+                }
+            }
+
+            return msg;
+        }
+
+        public string CheckVasChannel(List<string[]> lstVasChannel, string channel)
+        {
+            string msg = "Success";
+
+            bool hasChannel = lstVasChannel.Any(p => p.SequenceEqual(new string[] { channel, "DB" }));
+            if (hasChannel == false)
+            {
+                DialogResult dialog = MessageBox.Show("Do you want to insert new vas channel?" + "\r\n" +
+                            "Detail : VAS_CHANNEL = " + channel, "Confirmation",
+                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                if (dialog == DialogResult.Yes)
+                {
+                    OracleTransaction transaction = null;
+                    string cmd = "INSERT INTO TRUE9_BPT_VALIDATE (TYPE, NAME1, VALUE1) VALUES('VAS_CHANNEL', " +
+                        "'VAS_CHANNEL', '" + channel + "')";
+                    try
+                    {
+                        transaction = ConnectionTemp.BeginTransaction(IsolationLevel.ReadCommitted);
+                        OracleCommand command = new OracleCommand(cmd, ConnectionTemp);
+                        command.Transaction = transaction;
+                        command.ExecuteNonQuery();
+
+                        transaction.Commit();
+
+                        string[] arr = { channel, "DB" };
+                        this.GetVasChannel.Add(arr);
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+
+                        string[] arr = { channel, "ignore" };
+                        this.GetVasChannel.Add(arr);
+
+                        msg = "Cannot insert new vas channel : " + channel + " on Master Date";
+                    }
+                }
+                else if (dialog == DialogResult.No)
+                {
+                    string[] arr = { channel, "ignore" };
+                    this.GetVasChannel.Add(arr);
+
+                    msg = "Not found vas channel : " + channel + " on Master Data";
+                }
+                else
+                {
+                    Environment.Exit(0);
+                }
+            }
+
+            return msg;
+        }
+
         public string CheckSubProfile(List<string[]> lstSubProfile, string subProfile)
         {
             string msg = "Success";
@@ -733,7 +1092,7 @@ namespace AutomateMapping
                 if (hasSub == false)
                 {
                     DialogResult dialog = MessageBox.Show("Do you want to insert new SubProfile?" + "\r\n" +
-                                "Detail :" + "\r\n" + "SubProfile = " + subProfile, "Confirmation",
+                                "Detail : SubProfile = " + subProfile, "Confirmation",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
                     if (dialog == DialogResult.Yes)
@@ -819,6 +1178,7 @@ namespace AutomateMapping
         {
             string msg = "Success";
             string[] lstChannel = null;
+
             if (String.IsNullOrEmpty(channel) && String.IsNullOrEmpty(endDate))
             {
                 msg = "Channel and End Date is empty";
@@ -827,10 +1187,13 @@ namespace AutomateMapping
             {
                 if (channel.Contains(","))
                 {
-                    lstChannel = channel.Split(',');
-                    if (lstChannel.Contains("DEFAULT"))
+                    if (channel.Contains("DEFAULT") || channel.Contains("ALL"))
                     {
                         msg = "Channel 'ALL/DEFAULT' included with other channel in same MKT code";
+                    }
+                    else
+                    {
+                        lstChannel = channel.Split(',');
                     }
                 }
                 else
@@ -844,55 +1207,59 @@ namespace AutomateMapping
                     string ch = lstChannel[i].Trim();
                     if (String.IsNullOrEmpty(ch) == false)
                     {
-                        bool hasChannel = lstChannelFromDB.Any(p => p.SequenceEqual(new string[] { ch, "DB" }));
-                        if (hasChannel == false)
+                        if (ch != "ALL")
                         {
-                            DialogResult dialog = MessageBox.Show("Do you want to insert new channel to master table?" + "\r\n" +
-                                        "Detail :" + "\r\n" + "Sale_Channel = " + ch, "Confirmation",
-                                        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-
-                            if (dialog == DialogResult.Yes)
+                            bool hasChannel = lstChannelFromDB.Any(p => p.SequenceEqual(new string[] { ch, "DB" }));
+                            if (hasChannel == false)
                             {
-                                OracleTransaction transaction = null;
-                                string cmd = "INSERT INTO TRUE9_BPT_VALIDATE (TYPE, NAME1, VALUE1) VALUES('SALE_CHANNEL', " +
-                                    "'SALE_CHANNEL', '" + ch + "')";
-                                try
+                                DialogResult dialog = MessageBox.Show("Do you want to insert new channel to master table?" + "\r\n" +
+                                            "Detail : Sale_Channel = " + ch, "Confirmation",
+                                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                                if (dialog == DialogResult.Yes)
                                 {
-                                    transaction = ConnectionTemp.BeginTransaction(IsolationLevel.ReadCommitted);
-                                    OracleCommand command = new OracleCommand(cmd, ConnectionTemp);
-                                    command.Transaction = transaction;
-                                    command.ExecuteNonQuery();
+                                    OracleTransaction transaction = null;
+                                    string cmd = "INSERT INTO TRUE9_BPT_VALIDATE (TYPE, NAME1, VALUE1) VALUES('SALE_CHANNEL', " +
+                                        "'SALE_CHANNEL', '" + ch + "')";
+                                    try
+                                    {
+                                        transaction = ConnectionTemp.BeginTransaction(IsolationLevel.ReadCommitted);
+                                        OracleCommand command = new OracleCommand(cmd, ConnectionTemp);
+                                        command.Transaction = transaction;
+                                        command.ExecuteNonQuery();
 
-                                    transaction.Commit();
+                                        transaction.Commit();
 
-                                    string[] arr = { ch, "DB" };
-                                    this.GetChannelFromDB.Add(arr);
+                                        string[] arr = { ch, "DB" };
+                                        this.GetChannelFromDB.Add(arr);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        transaction.Rollback();
+
+                                        string[] arr = { ch, "ignore" };
+                                        this.GetChannelFromDB.Add(arr);
+
+                                        msg = "Cannot insert new sale channel : " + ch + " on master data";
+                                    }
                                 }
-                                catch (Exception ex)
+                                else if (dialog == DialogResult.No)
                                 {
-                                    transaction.Rollback();
-
                                     string[] arr = { ch, "ignore" };
                                     this.GetChannelFromDB.Add(arr);
 
-                                    msg = "Cannot insert new sale channel : " + ch + " on master data";
+                                    msg = "Not found sale channel : " + ch + " on master data";
                                 }
-                            }
-                            else if (dialog == DialogResult.No)
-                            {
-                                string[] arr = { ch, "ignore" };
-                                this.GetChannelFromDB.Add(arr);
-
-                                msg = "Not found sale channel : " + ch + " on master data";
-                            }
-                            else
-                            {
-                                Environment.Exit(0);
+                                else
+                                {
+                                    Environment.Exit(0);
+                                }
                             }
                         }
                     }
                 }
             }
+
             return msg;
         }
 
@@ -905,7 +1272,7 @@ namespace AutomateMapping
             {
                 if (String.IsNullOrEmpty(start) || start == "-")
                 {
-                    msg = "Start Date and End Date are empty";
+                    msg = "StartDate and EndDate are empty";
                 }
                 else
                 {
@@ -1003,6 +1370,230 @@ namespace AutomateMapping
 
             return msg;
         }
+
+        public string CheckAllowOffer(string offers)
+        {
+            string msg = "Success";
+            string[] lstOffer = null;
+
+            offers = Regex.Replace(offers, "ALL", "ALL", RegexOptions.IgnoreCase);
+
+            //check special character
+            if (Regex.IsMatch(offers, @"^[a-zA-Z0-9\,\-]+$"))
+            {
+                if (offers.Contains(","))
+                {
+                    if (lstOffer.Contains("ALL"))
+                    {
+                        //write log conflict mkt
+                        msg = "There is 'ALL' included with the list of main offer";
+                    }
+                    else
+                    {
+                        lstOffer = offers.Split(',');
+                    }
+                }
+                else
+                {
+                    lstOffer = new string[1];
+                    lstOffer[0] = offers;
+                }
+
+                for (int i = 0; i < lstOffer.Length; i++)
+                {
+                    if (lstOffer[i] != "ALL")
+                    {
+                        if (lstOffer[i].Contains('-') == false)
+                        {
+                            if(String.IsNullOrEmpty(lstOffer[i]) == false)
+                            {
+                                //write log wrong format
+                                msg = "The offer format is not supported";
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //write log format not supported
+                msg = "The format is not support (other special characters are not supported)";
+            }
+
+            return msg;
+        }
+
+        public string CheckProvince(string prov)
+        {
+            string msg = "Success";
+            string[] lstProv = null;
+
+            prov = Regex.Replace(prov, "ALL", "ALL", RegexOptions.IgnoreCase);
+
+            if (Regex.IsMatch(prov, @"^[a-zA-Z\,]+$"))
+            {
+                if (prov.Contains(','))
+                {
+                    if(lstProv.Contains("ALL"))
+                    {
+                        //write log conflict mkt
+                        msg = "There is 'ALL' included with the list of province";
+                    }
+                    else
+                    {
+                        lstProv = prov.Split(',');
+                    }
+                }
+                else
+                {
+                    lstProv = new string[1];
+                    lstProv[0] = prov;
+                }
+
+                for (int i = 0; i < lstProv.Length; i++)
+                {
+                    if (lstProv[i] != "ALL")
+                    {
+                        bool hasProv = _provFromDB.Any(p => p.SequenceEqual(new string[] { lstProv[i], "DB" }));
+
+                        if (hasProv == false)
+                        {
+                            //write log not found province
+                            msg = "Not found Province: " + lstProv[i] + " on Master Data.";
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                //write log contain special charecter
+                msg = "The format is not support (other special characters are not supported)";
+            }
+
+            return msg;
+        }
+
+        public string CheckAllowAdvMonth(string value)
+        {
+            string msg = "Success";
+
+            value = value.ToUpper().Trim();
+            if (!value.Equals("Y") && !value.Equals("N") && !value.Equals("ALL"))
+            {
+                //write log invalid data
+                msg = "Invalid value of Advance Month";
+            }
+
+            return msg;
+        }
+
+        public string[] CheckSpeedVAS(string from, string to)
+        {
+            string[] msg = { "Success", "Success", "Success" };
+
+            string uom;
+            int speedF = 99999, speedT = 99999;
+            bool hasLogF = false, hasLogT = false;
+
+            from = from.ToUpper();
+            to = to.ToUpper();
+
+            if(from != "ALL")
+            {
+                uom = Regex.Replace(from, "[0-9]", "");
+
+                if (!uom.Equals("K") && !uom.Equals("M") && !uom.Equals("G"))
+                {
+                    //write log
+                    hasLogF = true;
+                    msg[0] = "Invalid UOM of Speed(From): " + from + "." + "\r\n";
+                }
+                else
+                {
+                    speedF = ConvertUOM2K(from, uom);
+                }
+            }
+
+            if(to != "ALL")
+            {
+                uom = Regex.Replace(to, "[0-9]", "");
+
+                if (!uom.Equals("K") && !uom.Equals("M") && !uom.Equals("G"))
+                {
+                    //write log
+                    hasLogT = true;
+                    msg[1] = "Invalid UOM of Speed(To): " + to + "." + "\r\n";
+                }
+                else
+                {
+                    speedT = ConvertUOM2K(to, uom);
+                }
+            }
+
+            if (hasLogF == false && hasLogT == false)
+            {
+                if (from != "ALL" && to != "ALL")
+                {
+                    if (speedF <= speedT)
+                    { }
+                    else
+                    {
+                        //write log
+                        msg[2] = "Speed(To) must be more than Speed(From)";
+                    }
+
+                }
+            }
+
+            return msg;
+        }
+
+        public string[] CheckPrice(string from, string to)
+        {
+            string[] msg = { "Success", "Success", "Success" };
+            bool hasLogF = false, hasLogT = false;
+
+            from = from.ToUpper();
+            to = to.ToUpper();
+
+            if (from != "ALL")
+            {
+                if (double.TryParse(from, out _) == false)
+                {
+                    //write log
+                    hasLogF = true;
+                    msg[0] = "Price(From) is not a numeric";
+                }
+            }
+
+            if(to != "ALL")
+            {
+                if (double.TryParse(to, out _) == false)
+                {
+                    //write log
+                    hasLogT = true;
+                    msg[1] = "Price(To) is not a numeric";
+                }
+            }
+
+            if (hasLogF == false && hasLogT == false)
+            {
+                if (from != "ALL" && to != "ALL")
+                {
+                    if(Convert.ToDouble(from) <= Convert.ToDouble(to))
+                    { }
+                    else
+                    {
+                        //write log
+                        msg[2] = "Price(To) must be more than Price(From)";
+                    }
+                }
+            }
+
+            return msg;
+        }
+
         #endregion
 
         /// <summary>

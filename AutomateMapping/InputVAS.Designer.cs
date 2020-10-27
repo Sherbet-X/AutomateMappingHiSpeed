@@ -207,7 +207,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(178, 24);
             this.label4.TabIndex = 4;
-            this.label4.Text = "Set up package file";
+            this.label4.Text = "Requirement file";
             // 
             // label3
             // 

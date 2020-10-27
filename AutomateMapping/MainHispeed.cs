@@ -297,20 +297,12 @@ namespace AutomateMapping
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            if (backgroundWorker1.IsBusy)
+            DialogResult dialogResult = MessageBox.Show("Do you want to close this application?", "Automate Mapping Tool"
+                , MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+            if (dialogResult == DialogResult.OK)
             {
-                backgroundWorker1.CancelAsync();
+                Application.Exit();
             }
-            if (backgroundWorker2.IsBusy)
-            {
-                backgroundWorker2.CancelAsync();
-            }
-            if (backgroundWorker3.IsBusy)
-            {
-                backgroundWorker3.CancelAsync();
-            }
-
-            Application.Exit();
         }
 
         private void btnMinimize_Click(object sender, EventArgs e)
@@ -485,7 +477,7 @@ namespace AutomateMapping
                     {
                         backgroundWorker2.CancelAsync();
                     }
-
+                    
                     backgroundWorker2.RunWorkerAsync("Campaign");
                 }
             }
@@ -518,7 +510,20 @@ namespace AutomateMapping
 
         private void MainHispeed_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(ConnectionProd != null)
+            if (backgroundWorker1.IsBusy)
+            {
+                backgroundWorker1.CancelAsync();
+            }
+            if (backgroundWorker2.IsBusy)
+            {
+                backgroundWorker2.CancelAsync();
+            }
+            if (backgroundWorker3.IsBusy)
+            {
+                backgroundWorker3.CancelAsync();
+            }
+
+            if (ConnectionProd != null)
             {
                 if (ConnectionProd.State == ConnectionState.Open)
                 {
@@ -563,220 +568,230 @@ namespace AutomateMapping
         #region "Private Method"
         private void ValidateHiSpeed()
         {
-            Application.UseWaitCursor = true;
-            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                Application.UseWaitCursor = true;
+                Cursor.Current = Cursors.WaitCursor;
 
-            labelFunction.Text = "Hi-Speed Promotion";
-            toolStripStatusLabel1.Text = "Checking HiSpeed...";
+                labelFunction.Text = "Hi-Speed Promotion";
+                toolStripStatusLabel1.Text = "Checking HiSpeed...";
 
-            InitialValue();
-            validation = new Validation(ConnectionProd, ConnectionTemp);
-            backgroundWorker1.ReportProgress(3);
+                InitialValue();
+                validation = new Validation(ConnectionProd, ConnectionTemp);
+                backgroundWorker1.ReportProgress(3);
 
-            //Get Description
-            if (String.IsNullOrEmpty(fileDesc) == false)
-            {
-                lstPname = validation.GetDescription(fileDesc);
-            }
-            //Get Channel from DB
-            if (lstChannel.Count <= 0 || lstChannel is null)
-            {
-                lstChannel = validation.GetChannelFromDB;
-            }
-            //Get SubProfile from DB
-            if (lstSubProfile.Count <= 0)
-            {
-                lstSubProfile = validation.GetSubProfile;
-            }
-            //Get Extra profile from DB
-            if (lstExtraProfile.Count <= 0)
-            {
-                lstExtraProfile = validation.GetExtraProfile;
-            }
-            //Get speed from DB
-            if (lstSpeedMast.Count <= 0)
-            {
-                lstSpeedMast = validation.GetSpeedFromDB;
-            }
-            //Get contract from DB
-            if (tableContract.Rows.Count <= 0)
-            {
-                tableContract = validation.GetContract();
-            }
-            //Get prodtype from DB
-            if (tableProdType.Rows.Count <= 0)
-            {
-                tableProdType = validation.GetProdType();
-            }
-
-            backgroundWorker1.ReportProgress(20);
-
-            if (lstChannel.Count <= 0 || lstSubProfile.Count <= 0 || lstExtraProfile.Count <= 0 ||
-                lstSpeedMast.Count <= 0 || tableContract.Rows.Count <= 0 || tableProdType.Rows.Count <= 0)
-            {
-                MessageBox.Show("An error occurred while retrieving data from the database.Please try again!!");
-                backgroundWorker1.ReportProgress(0);
-            }
-            else
-            {
-                for (int i = 0; i < dataGridView1.RowCount; i++)
+                //Get Description
+                if (String.IsNullOrEmpty(fileDesc) == false)
                 {
-                    string mkt = dataGridView1.Rows[i].Cells[1].Value.ToString().Trim();
-                    string speed = dataGridView1.Rows[i].Cells[2].Value.ToString().Trim();
-                    string subProfile = dataGridView1.Rows[i].Cells[3].Value.ToString().Trim();
-                    string extra = dataGridView1.Rows[i].Cells[4].Value.ToString().ToUpper().Trim();
-                    string order = dataGridView1.Rows[i].Cells[6].Value.ToString().Trim();
-                    string channel = dataGridView1.Rows[i].Cells[7].Value.ToString().Trim();
-                    string start = dataGridView1.Rows[i].Cells[10].Value.ToString().Trim();
-                    string end = dataGridView1.Rows[i].Cells[11].Value.ToString().Trim();
-                    string entry = dataGridView1.Rows[i].Cells[12].Value.ToString().Trim();
-                    string install = dataGridView1.Rows[i].Cells[13].Value.ToString().Trim();
-
-                    #region "Speed"
-                    string[] msgSpeed = validation.CheckSpeed(lstSpeedMast, mkt, speed);
-                    if (msgSpeed[0] != "Success")
-                    {
-                        listBox1.Items.Add(msgSpeed[0]);
-                        indexListbox.Add(i);
-                        hilightRow("Hispeed", "mkt", i);
-
-                        validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgSpeed[0] + "\r\n";
-                    }
-
-                    if (msgSpeed[1] != "Success")
-                    {
-                        listBox1.Items.Add(msgSpeed[1]);
-                        indexListbox.Add(i);
-                        hilightRow("Hispeed", "speed", i);
-
-                        validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgSpeed[1] + "\r\n";
-                    }
-
-                    if (msgSpeed[2] != "Success" && msgSpeed[2] != null)
-                    {
-                        listBox1.Items.Add(msgSpeed[2]);
-                        indexListbox.Add(i);
-                        hilightRow("Hispeed", "mkt", i);
-                        hilightRow("Hispeed", "speed", i);
-
-                        validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgSpeed[2] + "\r\n";
-                    }
-                    #endregion
-
-                    #region"Extra Profile"
-                    string msgExtra = validation.CheckExtra(lstExtraProfile, extra);
-                    if (msgExtra != "Success")
-                    {
-                        listBox1.Items.Add(msgExtra);
-                        indexListbox.Add(i);
-                        hilightRow("Hispeed", "extra", i);
-
-                        validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgExtra + "\r\n";
-                    }
-                    #endregion
-
-                    #region "SubProfile"
-                    string msgSub = validation.CheckSubProfile(lstSubProfile, subProfile);
-                    if (msgSub != "Success")
-                    {
-                        listBox1.Items.Add(msgSub);
-                        indexListbox.Add(i);
-                        hilightRow("Hispeed", "subProfile", i);
-
-                        validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgSub + "\r\n";
-                    }
-                    #endregion
-
-                    #region "OrderType"
-                    order = Regex.Replace(order, "NEW", "New", RegexOptions.IgnoreCase);
-                    order = Regex.Replace(order, "CHANGE", "Change", RegexOptions.IgnoreCase);
-                    dataGridView1.Rows[i].Cells[6].Value = order;
-
-                    string msgOrder = validation.CheckOrderType(order);
-                    if (msgOrder != "Success")
-                    {
-                        listBox1.Items.Add(msgOrder);
-                        indexListbox.Add(i);
-                        hilightRow("Hispeed", "order", i);
-
-                        validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgOrder + "\r\n";
-                    }
-                    #endregion
-
-                    #region "Channel"
-                    channel = Regex.Replace(channel, "ALL", "DEFAULT", RegexOptions.IgnoreCase);
-                    dataGridView1.Rows[i].Cells[7].Value = channel;
-
-                    string msgChannel = validation.CheckChannel(lstChannel, channel, end);
-                    if (msgChannel != "Success")
-                    {
-                        listBox1.Items.Add(msgChannel);
-                        indexListbox.Add(i);
-                        hilightRow("Hispeed", "channel", i);
-
-                        validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgChannel + "\r\n";
-                    }
-                    #endregion
-
-                    #region "Date"
-                    string msgDate = validation.CheckDate(start, end);
-                    if (msgDate != "Success")
-                    {
-                        if (msgDate == "Start Date fotmat is not supported")
-                        {
-                            listBox1.Items.Add(msgDate);
-                            indexListbox.Add(i);
-                            hilightRow("Hispeed", "start", i);
-
-                            validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgDate + "\r\n";
-                        }
-                        else if (msgDate == "End Date fotmat is not supported")
-                        {
-                            listBox1.Items.Add(msgDate);
-                            indexListbox.Add(i);
-                            hilightRow("Hispeed", "end", i);
-
-                            validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgDate + "\r\n";
-                        }
-                        else
-                        {
-                            listBox1.Items.Add(msgDate);
-                            indexListbox.Add(i);
-                            hilightRow("Hispeed", "start", i);
-                            hilightRow("Hispeed", "end", i);
-
-                            validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgDate + "\r\n";
-                        }
-                    }
-                    #endregion
-
-                    #region "Contract"
-                    string msgContract = validation.CheckContract(tableContract, entry, install);
-                    if (msgContract != "Success")
-                    {
-                        listBox1.Items.Add(msgContract);
-                        indexListbox.Add(i);
-                        hilightRow("Hispeed", "entry", i);
-                        hilightRow("Hispeed", "install", i);
-
-                        validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgContract + "\r\n";
-                    }
-                    #endregion
-
-                    backgroundWorker1.ReportProgress(20 + ((i + 1) * 80 / dataGridView1.RowCount));
+                    lstPname = validation.GetDescription(fileDesc);
                 }
-            }
+                //Get Channel from DB
+                if (lstChannel.Count <= 0 || lstChannel is null)
+                {
+                    lstChannel = validation.GetChannelFromDB;
+                }
+                //Get SubProfile from DB
+                if (lstSubProfile.Count <= 0)
+                {
+                    lstSubProfile = validation.GetSubProfile;
+                }
+                //Get Extra profile from DB
+                if (lstExtraProfile.Count <= 0)
+                {
+                    lstExtraProfile = validation.GetExtraProfile;
+                }
+                //Get speed from DB
+                if (lstSpeedMast.Count <= 0)
+                {
+                    lstSpeedMast = validation.GetSpeedFromDB;
+                }
+                //Get contract from DB
+                if (tableContract.Rows.Count <= 0)
+                {
+                    tableContract = validation.GetContract();
+                }
+                //Get prodtype from DB
+                if (tableProdType.Rows.Count <= 0)
+                {
+                    tableProdType = validation.GetProdType();
+                }
 
-            if (String.IsNullOrEmpty(validateLog))
+                backgroundWorker1.ReportProgress(20);
+
+                if (lstChannel.Count <= 0 || lstSubProfile.Count <= 0 || lstExtraProfile.Count <= 0 ||
+                    lstSpeedMast.Count <= 0 || tableContract.Rows.Count <= 0 || tableProdType.Rows.Count <= 0)
+                {
+                    MessageBox.Show("An error occurred while retrieving data from the database.Please try again!!");
+                    backgroundWorker1.ReportProgress(0);
+                }
+                else
+                {
+                    for (int i = 0; i < dataGridView1.RowCount; i++)
+                    {
+                        string mkt = dataGridView1.Rows[i].Cells[1].Value.ToString().Trim();
+                        string speed = dataGridView1.Rows[i].Cells[2].Value.ToString().Trim();
+                        string subProfile = dataGridView1.Rows[i].Cells[3].Value.ToString().Trim();
+                        string extra = dataGridView1.Rows[i].Cells[4].Value.ToString().ToUpper().Trim();
+                        string order = dataGridView1.Rows[i].Cells[6].Value.ToString().Trim();
+                        string channel = dataGridView1.Rows[i].Cells[7].Value.ToString().Trim();
+                        string start = dataGridView1.Rows[i].Cells[10].Value.ToString().Trim();
+                        string end = dataGridView1.Rows[i].Cells[11].Value.ToString().Trim();
+                        string entry = dataGridView1.Rows[i].Cells[12].Value.ToString().Trim();
+                        string install = dataGridView1.Rows[i].Cells[13].Value.ToString().Trim();
+
+                        #region "Speed"
+                        string[] msgSpeed = validation.CheckSpeed(lstSpeedMast, mkt, speed);
+                        if (msgSpeed[0] != "Success")
+                        {
+                            listBox1.Items.Add(msgSpeed[0]);
+                            indexListbox.Add(i);
+                            hilightRow("Hispeed", "mkt", i);
+
+                            validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgSpeed[0] + "\r\n";
+                        }
+
+                        if (msgSpeed[1] != "Success")
+                        {
+                            listBox1.Items.Add(msgSpeed[1]);
+                            indexListbox.Add(i);
+                            hilightRow("Hispeed", "speed", i);
+
+                            validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgSpeed[1] + "\r\n";
+                        }
+
+                        if (msgSpeed[2] != "Success" && msgSpeed[2] != null)
+                        {
+                            listBox1.Items.Add(msgSpeed[2]);
+                            indexListbox.Add(i);
+                            hilightRow("Hispeed", "mkt", i);
+                            hilightRow("Hispeed", "speed", i);
+
+                            validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgSpeed[2] + "\r\n";
+                        }
+                        #endregion
+
+                        #region"Extra Profile"
+                        string msgExtra = validation.CheckExtra(lstExtraProfile, extra);
+                        if (msgExtra != "Success")
+                        {
+                            listBox1.Items.Add(msgExtra);
+                            indexListbox.Add(i);
+                            hilightRow("Hispeed", "extra", i);
+
+                            validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgExtra + "\r\n";
+                        }
+                        #endregion
+
+                        #region "SubProfile"
+                        string msgSub = validation.CheckSubProfile(lstSubProfile, subProfile);
+                        if (msgSub != "Success")
+                        {
+                            listBox1.Items.Add(msgSub);
+                            indexListbox.Add(i);
+                            hilightRow("Hispeed", "subProfile", i);
+
+                            validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgSub + "\r\n";
+                        }
+                        #endregion
+
+                        #region "OrderType"
+                        order = Regex.Replace(order, "NEW", "New", RegexOptions.IgnoreCase);
+                        order = Regex.Replace(order, "CHANGE", "Change", RegexOptions.IgnoreCase);
+                        dataGridView1.Rows[i].Cells[6].Value = order;
+
+                        string msgOrder = validation.CheckOrderType(order);
+                        if (msgOrder != "Success")
+                        {
+                            listBox1.Items.Add(msgOrder);
+                            indexListbox.Add(i);
+                            hilightRow("Hispeed", "order", i);
+
+                            validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgOrder + "\r\n";
+                        }
+                        #endregion
+
+                        #region "Channel"
+                        channel = Regex.Replace(channel, "ALL", "DEFAULT", RegexOptions.IgnoreCase);
+                        dataGridView1.Rows[i].Cells[7].Value = channel;
+
+                        string msgChannel = validation.CheckChannel(lstChannel, channel, end);
+                        if (msgChannel != "Success")
+                        {
+                            listBox1.Items.Add(msgChannel);
+                            indexListbox.Add(i);
+                            hilightRow("Hispeed", "channel", i);
+
+                            validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgChannel + "\r\n";
+                        }
+                        #endregion
+
+                        #region "Date"
+                        string msgDate = validation.CheckDate(start, end);
+                        if (msgDate != "Success")
+                        {
+                            if (msgDate == "Start Date fotmat is not supported")
+                            {
+                                listBox1.Items.Add(msgDate);
+                                indexListbox.Add(i);
+                                hilightRow("Hispeed", "start", i);
+
+                                validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgDate + "\r\n";
+                            }
+                            else if (msgDate == "End Date fotmat is not supported")
+                            {
+                                listBox1.Items.Add(msgDate);
+                                indexListbox.Add(i);
+                                hilightRow("Hispeed", "end", i);
+
+                                validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgDate + "\r\n";
+                            }
+                            else
+                            {
+                                listBox1.Items.Add(msgDate);
+                                indexListbox.Add(i);
+                                hilightRow("Hispeed", "start", i);
+                                hilightRow("Hispeed", "end", i);
+
+                                validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgDate + "\r\n";
+                            }
+                        }
+                        #endregion
+
+                        #region "Contract"
+                        string msgContract = validation.CheckContract(tableContract, entry, install);
+                        if (msgContract != "Success")
+                        {
+                            listBox1.Items.Add(msgContract);
+                            indexListbox.Add(i);
+                            hilightRow("Hispeed", "entry", i);
+                            hilightRow("Hispeed", "install", i);
+
+                            validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgContract + "\r\n";
+                        }
+                        #endregion
+
+                        backgroundWorker1.ReportProgress(20 + ((i + 1) * 80 / dataGridView1.RowCount));
+                    }
+                }
+
+                if (String.IsNullOrEmpty(validateLog))
+                {
+                    btnLog.Visible = false;
+                }
+
+
+            }
+            catch
+            {}
+            finally 
             {
-                btnLog.Visible = false;
+                Application.UseWaitCursor = false;
+                Cursor.Current = Cursors.Default;
+
+                this.Refresh();
             }
-
-            Application.UseWaitCursor = false;
-            Cursor.Current = Cursors.Default;
-
-            this.Refresh();
         }
+                
 
         private void ValidateCampaign()
         {
@@ -1026,11 +1041,11 @@ namespace AutomateMapping
 
             Application.UseWaitCursor = false;
             Cursor.Current = Cursors.Default;
-
+            
             if (sheets.Contains("Campaign Mapping"))
             {
                 DialogResult dialogResult = MessageBox.Show("The process mapping Hi-Speed promotion has been completed." + "\r\n" +
-                    "Do you want to go to the process mapping campaign?", "Complete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    "Do you want go to the process mapping campaign?", "Complete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Yes)
                 {
                     Cursor.Current = Cursors.WaitCursor;
@@ -1314,6 +1329,7 @@ namespace AutomateMapping
                                         lstChannelDB.Add(reader["SALE_CHANNEL"].ToString(), date);
                                     }
 
+                                    //channel from file
                                     string[] lstCh;
                                     if (channel.Contains(','))
                                     {
@@ -1333,6 +1349,7 @@ namespace AutomateMapping
                                         DateTime startF = new DateTime();
                                         DateTime endF = new DateTime();
 
+                                        //existing channel
                                         if (lstChannelDB.Keys.Contains(ch))
                                         {
                                             string[] date = lstChannelDB[ch];
@@ -1362,7 +1379,7 @@ namespace AutomateMapping
                                                 {
                                                     //update startdate == datetime.now
                                                     cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET START_DATE = sysdate " +
-                                                        "WHERE P_ID = " + id;
+                                                        "WHERE P_ID = " + id + " AND SALE_CHANNEL = '" + ch + "'";
                                                     expHisp += cmd.CommandText + ";" + "\r\n";
                                                     cmd.ExecuteNonQuery();
                                                 }
@@ -1372,7 +1389,7 @@ namespace AutomateMapping
                                                     {
                                                         //update start date by date on file
                                                         cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET START_DATE = TO_DATE('" +
-                                                            start + "', 'dd/MM/yyyy') WHERE P_ID = " + id;
+                                                            start + "', 'dd/MM/yyyy') WHERE P_ID = " + id + " AND SALE_CHANNEL = '" + ch + "'";
                                                         expHisp += cmd.CommandText + ";" + "\r\n";
                                                         cmd.ExecuteNonQuery();
                                                     }
@@ -1382,7 +1399,7 @@ namespace AutomateMapping
                                                         {
                                                             //update enddate = datetime sysdate
                                                             cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET END_DATE = sysdate " +
-                                                                "WHERE P_ID = " + id;
+                                                                "WHERE P_ID = " + id + " AND SALE_CHANNEL = '" + ch + "'";
                                                             expHisp += cmd.CommandText + ";" + "\r\n";
                                                             cmd.ExecuteNonQuery();
                                                         }
@@ -1390,7 +1407,7 @@ namespace AutomateMapping
                                                         {
                                                             //update enddate = end on file
                                                             cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET END_DATE = TO_DATE('" +
-                                                            end + "', 'dd/MM/yyyy') WHERE P_ID = " + id;
+                                                            end + "', 'dd/MM/yyyy') WHERE P_ID = " + id + " AND SALE_CHANNEL = '" + ch + "'";
                                                             expHisp += cmd.CommandText + ";" + "\r\n";
                                                             cmd.ExecuteNonQuery();
                                                         }
@@ -1403,7 +1420,7 @@ namespace AutomateMapping
                                                 {
                                                     //update start = date sysdate
                                                     cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET START_DATE = sysdate " +
-                                                                "WHERE P_ID = " + id;
+                                                                "WHERE P_ID = " + id + " AND SALE_CHANNEL = '" + ch + "'";
                                                     expHisp += cmd.CommandText + ";" + "\r\n";
                                                     cmd.ExecuteNonQuery();
                                                 }
@@ -1413,7 +1430,7 @@ namespace AutomateMapping
                                                     {
                                                         //update enddate = datetime sysdate
                                                         cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET END_DATE = sysdate " +
-                                                                "WHERE P_ID = " + id;
+                                                                "WHERE P_ID = " + id + " AND SALE_CHANNEL = '" + ch + "'";
                                                         expHisp += cmd.CommandText + ";" + "\r\n";
                                                         cmd.ExecuteNonQuery();
                                                     }
@@ -1421,7 +1438,7 @@ namespace AutomateMapping
                                                     {
                                                         //update enddate = end on file
                                                         cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET END_DATE = TO_DATE('" +
-                                                            end + "', 'dd/MM/yyyy') WHERE P_ID = " + id;
+                                                            end + "', 'dd/MM/yyyy') WHERE P_ID = " + id + " AND SALE_CHANNEL = '" + ch + "'";
                                                         expHisp += cmd.CommandText + ";" + "\r\n";
                                                         cmd.ExecuteNonQuery();
                                                     }
@@ -1983,7 +2000,7 @@ namespace AutomateMapping
                 int indexCol = indexDisc[key];
                 dataGridView1.Rows[indexRow].Cells[indexCol].Style.BackColor = Color.Red;
             }
-            else if(type.Equals("Hispeed"))
+            else if (type.Equals("Hispeed"))
             {
                 int indexCol = indexHisp[key];
                 dataGridView1.Rows[indexRow].Cells[indexCol].Style.BackColor = Color.Red;
