@@ -28,7 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.labelHead = new System.Windows.Forms.Label();
+            this.pictureBox8 = new System.Windows.Forms.PictureBox();
             this.btnLogout = new System.Windows.Forms.Button();
             this.btnMinimize = new System.Windows.Forms.Button();
             this.btnMaximize = new System.Windows.Forms.Button();
@@ -64,7 +67,11 @@
             this.userControlVASProduct1 = new AutomateMapping.UserControlVASProduct();
             this.userControlCriteria1 = new AutomateMapping.UserControlCriteria();
             this.userControlNotAllow1 = new AutomateMapping.UserControlNotAllow();
+            this.btnHome = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.labelLogViewer = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
             this.panel2.SuspendLayout();
             this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
@@ -84,6 +91,8 @@
             // 
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(116)))), ((int)(((byte)(205)))));
+            this.panel1.Controls.Add(this.labelHead);
+            this.panel1.Controls.Add(this.pictureBox8);
             this.panel1.Controls.Add(this.btnLogout);
             this.panel1.Controls.Add(this.btnMinimize);
             this.panel1.Controls.Add(this.btnMaximize);
@@ -97,6 +106,28 @@
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel5_MouseDown);
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel5_MouseMove);
             this.panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel5_MouseUp);
+            // 
+            // labelHead
+            // 
+            this.labelHead.Font = new System.Drawing.Font("Roboto", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelHead.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.labelHead.Location = new System.Drawing.Point(48, 13);
+            this.labelHead.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelHead.Name = "labelHead";
+            this.labelHead.Size = new System.Drawing.Size(133, 24);
+            this.labelHead.TabIndex = 43;
+            this.labelHead.Text = "VASUPSPEED";
+            // 
+            // pictureBox8
+            // 
+            this.pictureBox8.Image = global::AutomateMapping.Properties.Resources.icons8_administrative_tools_32;
+            this.pictureBox8.Location = new System.Drawing.Point(8, 9);
+            this.pictureBox8.Margin = new System.Windows.Forms.Padding(4);
+            this.pictureBox8.Name = "pictureBox8";
+            this.pictureBox8.Size = new System.Drawing.Size(32, 32);
+            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox8.TabIndex = 44;
+            this.pictureBox8.TabStop = false;
             // 
             // btnLogout
             // 
@@ -380,7 +411,7 @@
             this.btnValidate.FlatAppearance.BorderSize = 0;
             this.btnValidate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnValidate.Image = global::AutomateMapping.Properties.Resources.icons8_refresh_24;
-            this.btnValidate.Location = new System.Drawing.Point(1234, 669);
+            this.btnValidate.Location = new System.Drawing.Point(1231, 670);
             this.btnValidate.Name = "btnValidate";
             this.btnValidate.Size = new System.Drawing.Size(40, 32);
             this.btnValidate.TabIndex = 40;
@@ -505,6 +536,7 @@
             this.userControlUpdate1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.userControlUpdate1.AutoSize = true;
+            this.userControlUpdate1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.userControlUpdate1.Location = new System.Drawing.Point(0, 300);
             this.userControlUpdate1.Name = "userControlUpdate1";
             this.userControlUpdate1.Size = new System.Drawing.Size(1276, 369);
@@ -545,6 +577,38 @@
             this.userControlNotAllow1.Size = new System.Drawing.Size(1275, 369);
             this.userControlNotAllow1.TabIndex = 31;
             // 
+            // btnHome
+            // 
+            this.btnHome.FlatAppearance.BorderSize = 0;
+            this.btnHome.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHome.Image = global::AutomateMapping.Properties.Resources.icons8_home_24;
+            this.btnHome.Location = new System.Drawing.Point(1187, 669);
+            this.btnHome.Name = "btnHome";
+            this.btnHome.Size = new System.Drawing.Size(38, 34);
+            this.btnHome.TabIndex = 44;
+            this.btnHome.UseVisualStyleBackColor = true;
+            this.btnHome.Click += new System.EventHandler(this.btnHome_Click);
+            // 
+            // labelLogViewer
+            // 
+            this.labelLogViewer.AutoSize = true;
+            this.labelLogViewer.FlatAppearance.BorderSize = 0;
+            this.labelLogViewer.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(172)))), ((int)(((byte)(254)))));
+            this.labelLogViewer.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(172)))), ((int)(((byte)(254)))));
+            this.labelLogViewer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.labelLogViewer.Font = new System.Drawing.Font("Roboto", 11F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelLogViewer.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.labelLogViewer.Image = global::AutomateMapping.Properties.Resources.icons8_system_report_36;
+            this.labelLogViewer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelLogViewer.Location = new System.Drawing.Point(0, 669);
+            this.labelLogViewer.Name = "labelLogViewer";
+            this.labelLogViewer.Size = new System.Drawing.Size(197, 42);
+            this.labelLogViewer.TabIndex = 45;
+            this.labelLogViewer.Text = "  Log Viewer";
+            this.labelLogViewer.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.labelLogViewer.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.labelLogViewer.UseVisualStyleBackColor = true;
+            // 
             // MainVASUpSpeed
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -552,6 +616,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(79)))), ((int)(((byte)(172)))), ((int)(((byte)(254)))));
             this.ClientSize = new System.Drawing.Size(1275, 1074);
+            this.Controls.Add(this.btnHome);
             this.Controls.Add(this.userControlUpdate1);
             this.Controls.Add(this.btnValidate);
             this.Controls.Add(this.btnBack);
@@ -565,6 +630,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnLog);
             this.Controls.Add(this.btnExe);
+            this.Controls.Add(this.labelLogViewer);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "MainVASUpSpeed";
             this.Text = "ValidateVASForm";
@@ -573,6 +639,7 @@
             this.SizeChanged += new System.EventHandler(this.MainVASUpSpeed_SizeChanged);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
@@ -630,5 +697,10 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.ComponentModel.BackgroundWorker backgroundWorker2;
+        private System.Windows.Forms.Button btnHome;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Button labelLogViewer;
+        private System.Windows.Forms.Label labelHead;
+        private System.Windows.Forms.PictureBox pictureBox8;
     }
 }

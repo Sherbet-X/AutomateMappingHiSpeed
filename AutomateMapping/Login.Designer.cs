@@ -99,6 +99,7 @@
             this.btnVas.TabIndex = 5;
             this.btnVas.Text = "VAS";
             this.btnVas.UseVisualStyleBackColor = false;
+            this.btnVas.Click += new System.EventHandler(this.btnVas_Click);
             this.btnVas.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnVas_MouseClick);
             // 
             // btnDiscount
@@ -212,7 +213,6 @@
             this.txtUser.Name = "txtUser";
             this.txtUser.Size = new System.Drawing.Size(397, 31);
             this.txtUser.TabIndex = 37;
-            this.txtUser.Text = "EPCSUPUSR";
             this.txtUser.WordWrap = false;
             // 
             // txtPassword
@@ -227,7 +227,6 @@
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(397, 31);
             this.txtPassword.TabIndex = 39;
-            this.txtPassword.Text = "EPCSUPUSR_55";
             this.txtPassword.WordWrap = false;
             this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPassword_KeyDown);
             // 

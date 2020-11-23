@@ -135,6 +135,11 @@ namespace AutomateMapping
 
         }
 
+        private void btnVas_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void panel5_MouseDown(object sender, MouseEventArgs e)
         {
             mov = 1;
@@ -165,11 +170,11 @@ namespace AutomateMapping
                 {
                     ConnectionProd = new OracleConnection();
 
-                    string connString = @"Data Source= (DESCRIPTION =(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 172.19.217.162)(PORT = 1559))) " +
-                                    "(CONNECT_DATA =(SERVICE_NAME = CVMDEV)));User Id=" + user + "; Password=" + password + ";";
+                    //string connString = @"Data Source= (DESCRIPTION =(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 172.19.217.162)(PORT = 1559))) " +
+                    //                "(CONNECT_DATA =(SERVICE_NAME = CVMDEV)));User Id=" + user + "; Password=" + password + ";";
 
-                    //string connString = @"Data Source= (DESCRIPTION =(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 150.4.2.2)(PORT = 1521)) )" +
-                    //   "(CONNECT_DATA =(SERVICE_NAME = TAPRD)));User ID=" + user + ";Password=" + password + ";";
+                    string connString = @"Data Source= (DESCRIPTION =(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 150.4.2.2)(PORT = 1521)) )" +
+                       "(CONNECT_DATA =(SERVICE_NAME = TAPRD)));User ID=" + user + ";Password=" + password + ";";
 
                     ConnectionProd.ConnectionString = connString;
                     ConnectionProd.Open();

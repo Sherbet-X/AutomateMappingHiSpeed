@@ -135,12 +135,10 @@ namespace AutomateMapping
             toolTip1.ShowAlways = true;
             toolTip1.SetToolTip(btnValidate, "Click to validate again");
 
-            ToolTip toolTip2 = new ToolTip();
-            toolTip2.ShowAlways = true;
+            ToolTip toolTip2 = new ToolTip { ShowAlways = true };
             toolTip2.SetToolTip(btnHome, "Back to home page");
 
-            ToolTip toolTip3 = new ToolTip();
-            toolTip3.ShowAlways = true;
+            ToolTip toolTip3 = new ToolTip { ShowAlways = true };
             toolTip3.SetToolTip(btnLogout, "Log out");
             #endregion
 
@@ -218,7 +216,7 @@ namespace AutomateMapping
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message,"Loding Data Failed!!",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace, "Loding Data Failed!!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -249,7 +247,7 @@ namespace AutomateMapping
             btnLog.Location = new Point(btnExe.Location.X - 210, listBox1.Location.Y + listBox1.Height + 30);
 
             labelLogViewer.Location = new Point(12, listBox1.Location.Y - 45);
-            labelHead.Location = new Point(58, 12);
+            labelHead.Location = new Point(58, 10);
 
             if (dataGridView1.AutoSizeColumnsMode != DataGridViewAutoSizeColumnsMode.Fill)
             {
@@ -729,7 +727,7 @@ namespace AutomateMapping
                         string msgDate = validation.CheckDate(start, end);
                         if (msgDate != "Success")
                         {
-                            if (msgDate == "Start Date fotmat is not supported")
+                            if (msgDate == "StartDate fotmat is not supported")
                             {
                                 listBox1.Items.Add(msgDate);
                                 indexListbox.Add(i);
@@ -737,7 +735,7 @@ namespace AutomateMapping
 
                                 validateLog += "[MKT:" + mkt + ", Speed:" + speed + "]     " + msgDate + "\r\n";
                             }
-                            else if (msgDate == "End Date fotmat is not supported")
+                            else if (msgDate == "EndDate fotmat is not supported")
                             {
                                 listBox1.Items.Add(msgDate);
                                 indexListbox.Add(i);
@@ -906,203 +904,231 @@ namespace AutomateMapping
 
         private void MappingHiSpeed()
         {
-            Application.UseWaitCursor = true;
-            Cursor.Current = Cursors.WaitCursor;
-
-            toolStripStatusLabel1.Text = "Inserting Hi-Speed...";
-
-            ReserveID reserveID = new ReserveID();
-            reserveID.Reserve(ConnectionProd, ConnectionTemp, "Hispeed", implementer, urNo);
-
-            backgroundWorker2.ReportProgress(5);
-
-            for (int i = 0; i < dataGridView1.RowCount; i++)
+            try
             {
-                string media = dataGridView1.Rows[i].Cells[0].Value.ToString().Trim();
-                string mkt = dataGridView1.Rows[i].Cells[1].Value.ToString();
-                string speed = dataGridView1.Rows[i].Cells[2].Value.ToString();
-                string sub = dataGridView1.Rows[i].Cells[3].Value.ToString().Trim();
-                string extra = dataGridView1.Rows[i].Cells[4].Value.ToString().Trim();
-                double price = Convert.ToDouble(dataGridView1.Rows[i].Cells[5].Value.ToString().Trim());
-                string order = dataGridView1.Rows[i].Cells[6].Value.ToString().Trim();
-                string channel = dataGridView1.Rows[i].Cells[7].Value.ToString();
-                string modemType = dataGridView1.Rows[i].Cells[8].Value.ToString().Trim();
-                string docsis = dataGridView1.Rows[i].Cells[9].Value.ToString().Trim();
-                string start = dataGridView1.Rows[i].Cells[10].Value.ToString().Trim();
-                string end = dataGridView1.Rows[i].Cells[11].Value.ToString().Trim();
-                string entry = dataGridView1.Rows[i].Cells[12].Value.ToString().Trim();
-                string install = dataGridView1.Rows[i].Cells[13].Value.ToString().Trim();
+                Application.UseWaitCursor = true;
+                Cursor.Current = Cursors.WaitCursor;
 
-                string[] lstMkt = mkt.Split('-');
-                mkt = lstMkt[0].Trim();
+                toolStripStatusLabel1.Text = "Inserting Hi-Speed...";
 
-                int suffix;
-                if (lstMkt[1].Contains("G"))
+                ReserveID reserveID = new ReserveID();
+                reserveID.Reserve(ConnectionProd, ConnectionTemp, "Hispeed", implementer, urNo);
+
+                backgroundWorker2.ReportProgress(5);
+
+                for (int i = 0; i < dataGridView1.RowCount; i++)
                 {
-                    lstMkt[1] = Regex.Replace(lstMkt[1], "[^0-9]", "");
-                    suffix = Convert.ToInt32(lstMkt[1]) * 1000;
-                }
-                else
-                {
-                    if (lstMkt[1] == "00" || lstMkt[1] == "01")
+                    string media = dataGridView1.Rows[i].Cells[0].Value.ToString().Trim();
+                    string mkt = dataGridView1.Rows[i].Cells[1].Value.ToString();
+                    string speed = dataGridView1.Rows[i].Cells[2].Value.ToString();
+                    string sub = dataGridView1.Rows[i].Cells[3].Value.ToString().Trim();
+                    string extra = dataGridView1.Rows[i].Cells[4].Value.ToString().Trim();
+                    double price = Convert.ToDouble(dataGridView1.Rows[i].Cells[5].Value.ToString().Trim());
+                    string order = dataGridView1.Rows[i].Cells[6].Value.ToString().Trim();
+                    string channel = dataGridView1.Rows[i].Cells[7].Value.ToString();
+                    string modemType = dataGridView1.Rows[i].Cells[8].Value.ToString().Trim();
+                    string docsis = dataGridView1.Rows[i].Cells[9].Value.ToString().Trim();
+                    string start = dataGridView1.Rows[i].Cells[10].Value.ToString().Trim();
+                    string end = dataGridView1.Rows[i].Cells[11].Value.ToString().Trim();
+                    string entry = dataGridView1.Rows[i].Cells[12].Value.ToString().Trim();
+                    string install = dataGridView1.Rows[i].Cells[13].Value.ToString().Trim();
+
+                    string[] lstMkt = mkt.Split('-');
+                    mkt = lstMkt[0].Trim();
+
+                    int suffix;
+                    if (lstMkt[1].Contains("G"))
                     {
-                        suffix = Convert.ToInt32(Regex.Replace((speed.Split('/'))[0], "[^0-9]", ""));
+                        lstMkt[1] = Regex.Replace(lstMkt[1], "[^0-9]", "");
+                        suffix = Convert.ToInt32(lstMkt[1]) * 1000;
                     }
                     else
                     {
-                        suffix = Convert.ToInt32(lstMkt[1]);
+                        if (lstMkt[1] == "00" || lstMkt[1] == "01")
+                        {
+                            suffix = Convert.ToInt32(Regex.Replace((speed.Split('/'))[0], "[^0-9]", ""));
+                        }
+                        else
+                        {
+                            suffix = Convert.ToInt32(lstMkt[1]);
+                        }
                     }
-                }
 
-                //OrderType
-                string[] lstOrder;
-                if (order.Contains(","))
-                {
-                    lstOrder = order.Split(',');
-                }
-                else
-                {
-                    lstOrder = new string[1];
-                    lstOrder[0] = order;
-                }
-
-                //SubProfile = STL
-                if(sub.StartsWith("STL"))
-                {
-                    sub = "N";
-                }
-
-                //Get P_Name
-                string p_name = GetPName(dataGridView1.Rows[i].Cells[1].Value.ToString().Trim());
-                if (p_name == dataGridView1.Rows[i].Cells[1].Value.ToString().Trim())
-                {
-                    listBox1.Items.Add("Not found description of MKT [P_NAME] in file or database!!");
-                    indexListbox.Add(i);
-                    dataGridView1.Rows[i].Cells[1].Style.BackColor = Color.Yellow;
-                }
-
-                //Convert upload speed
-                string[] sp = speed.Split('/');
-                int uploadK = validation.ConvertUOM2K(sp[1], Regex.Replace(sp[1], "[0-9]", ""));
-
-                //Change format date
-                start = validation.ChangeFormatDate(start);
-                end = validation.ChangeFormatDate(end);
-
-                for (int j = 0; j < lstOrder.Length; j++)
-                {
-                    List<string> lstData = new List<string>();
-
-                    string txt = "SELECT P.P_ID, P.P_CODE, P.ORDER_TYPE,C.SALE_CHANNEL ,P.START_DATE,P.END_DATE,P.STATUS, " +
-                        "S.SPEED_ID DOWNLOAD, S.UPLOAD_SPEED / 1024 UPLOAD,S.PRICE FROM HISPEED_PROMOTION P, " +
-                        "HISPEED_SPEED_PROMOTION S,HISPEED_CHANNEL_PROMOTION C WHERE P.P_ID = S.P_ID AND P.P_ID = C.P_ID " +
-                        "AND P_CODE = '" + mkt + "' AND SPEED_ID = '" + suffix + "' AND ORDER_TYPE = '" + lstOrder[j] + "'";
-                    OracleCommand cmd = new OracleCommand(txt, ConnectionProd);
-                    OracleDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.HasRows)
+                    //OrderType
+                    string[] lstOrder;
+                    if (order.Contains(","))
                     {
-                        //Existing
-                        reader.Read();
-                        int id = Convert.ToInt32(reader["P_ID"]);
-
-                        ExistingData(id, suffix, uploadK, channel, price, start,end, dataGridView1.Rows[i].Cells[1].Value.ToString(),sub);
+                        lstOrder = order.Split(',');
                     }
                     else
                     {
-                        //New promotion
-                        lstData.Add(media);
-                        lstData.Add(mkt);
-                        lstData.Add(uploadK.ToString());
-                        lstData.Add(sub);
-                        lstData.Add(extra);
-                        lstData.Add(price.ToString());
-                        lstData.Add(lstOrder[j]);
-                        lstData.Add(channel);
-                        lstData.Add(modemType);
-                        lstData.Add(docsis);
-                        lstData.Add(start);
-                        lstData.Add(end);
-                        lstData.Add(entry);
-                        lstData.Add(install);
-                        lstData.Add(p_name);
-                        lstData.Add(suffix.ToString());
-
-                        NewHiSpeedData(lstData);
+                        lstOrder = new string[1];
+                        lstOrder[0] = order;
                     }
+
+                    //SubProfile = STL
+                    if (sub.StartsWith("STL"))
+                    {
+                        sub = "N";
+                    }
+
+                    //Get P_Name
+                    string p_name = GetPName(dataGridView1.Rows[i].Cells[1].Value.ToString().Trim());
+                    if (p_name == dataGridView1.Rows[i].Cells[1].Value.ToString().Trim())
+                    {
+                        listBox1.Items.Add("Not found description of MKT [P_NAME] in file or database!!");
+                        indexListbox.Add(i);
+                        dataGridView1.Rows[i].Cells[1].Style.BackColor = Color.Yellow;
+                    }
+
+                    //Convert upload speed
+                    string[] sp = speed.Split('/');
+                    int uploadK = validation.ConvertUOM2K(sp[1], Regex.Replace(sp[1], "[0-9]", ""));
+
+                    //Change format date
+                    start = validation.ChangeFormatDate(start);
+                    end = validation.ChangeFormatDate(end);
+
+                    for (int j = 0; j < lstOrder.Length; j++)
+                    {
+                        List<string> lstData = new List<string>();
+                        string tmpExtra = "";
+                        /* string txt = "SELECT P.P_ID, P.P_CODE, P.ORDER_TYPE,C.SALE_CHANNEL ,P.START_DATE,P.END_DATE,P.STATUS, " +
+                             "S.SPEED_ID DOWNLOAD, S.UPLOAD_SPEED / 1024 UPLOAD,S.PRICE FROM HISPEED_PROMOTION P, " +
+                             "HISPEED_SPEED_PROMOTION S,HISPEED_CHANNEL_PROMOTION C WHERE P.P_ID = S.P_ID AND P.P_ID = C.P_ID " +
+                             "AND P_CODE = '" + mkt + "' AND SPEED_ID = '" + suffix + "' AND ORDER_TYPE = '" + lstOrder[j] + "'";*/
+
+                        if (String.IsNullOrEmpty(extra))
+                        {
+                            tmpExtra = "IS NULL";
+                        }
+                        else
+                        {
+                            tmpExtra = "= '" + extra + "'";
+                        }
+                        string txt = "SELECT P.P_ID, P.P_CODE, P.ORDER_TYPE,C.SALE_CHANNEL ,P.START_DATE,P.END_DATE, " +
+                                        "P.STATUS, S.SPEED_ID DOWNLOAD, S.UPLOAD_SPEED/1024 UPLOAD,S.PRICE,P.EXTRA_MESSAGE, " +
+                                        "P.PRODTYPE,P.BUNDLE_CAMPAIGN " +
+                                     "FROM HISPEED_PROMOTION P, HISPEED_SPEED_PROMOTION S,HISPEED_CHANNEL_PROMOTION C " +
+                                     "WHERE P.P_ID = S.P_ID  AND P.P_ID = C.P_ID AND P_CODE = '" + mkt + "' " +
+                                     "AND SPEED_ID = '" + suffix + "' AND ORDER_TYPE = '" + lstOrder[j] + "' " +
+                                     "AND P.EXTRA_MESSAGE " + tmpExtra + " AND P.BUNDLE_CAMPAIGN = '" + sub + "'";
+
+                        OracleCommand cmd = new OracleCommand(txt, ConnectionProd);
+                        OracleDataReader reader = cmd.ExecuteReader();
+
+                        if (reader.HasRows)
+                        {
+                            //Existing
+                            reader.Read();
+                            int id = Convert.ToInt32(reader["P_ID"]);
+
+                            ExistingData(id, suffix, uploadK, channel, price, start, end, dataGridView1.Rows[i].Cells[1].Value.ToString());
+                        }
+                        else
+                        {
+                            //New promotion
+                            lstData.Add(media);
+                            lstData.Add(mkt);
+                            lstData.Add(uploadK.ToString());
+                            lstData.Add(sub);
+                            lstData.Add(extra);
+                            lstData.Add(price.ToString());
+                            lstData.Add(lstOrder[j]);
+                            lstData.Add(channel);
+                            lstData.Add(modemType);
+                            lstData.Add(docsis);
+                            lstData.Add(start);
+                            lstData.Add(end);
+                            lstData.Add(entry);
+                            lstData.Add(install);
+                            lstData.Add(p_name);
+                            lstData.Add(suffix.ToString());
+
+                            NewHiSpeedData(lstData);
+                        }
+                    }
+
+                    backgroundWorker2.ReportProgress(5 + ((i + 1) * 90 / dataGridView1.RowCount));
                 }
 
-                backgroundWorker2.ReportProgress(5 + ((i + 1) * 90 / dataGridView1.RowCount));
-            }
+                //Update ReserveID
+                reserveID.UpdateReserveID(ConnectionTemp, ConnectionProd, "Hispeed", urNo);
+                backgroundWorker2.ReportProgress(100);
 
-            //Update ReserveID
-            reserveID.UpdateReserveID(ConnectionTemp, ConnectionProd, "Hispeed", urNo);
-            backgroundWorker2.ReportProgress(100);
+                Application.UseWaitCursor = false;
+                Cursor.Current = Cursors.Default;
 
-            Application.UseWaitCursor = false;
-            Cursor.Current = Cursors.Default;
-            
-            if (sheets.Contains("Campaign Mapping"))
-            {
-                DialogResult dialogResult = MessageBox.Show("The process mapping Hi-Speed promotion has been completed." + "\r\n" +
-                    "Do you want go to the process mapping campaign?", "Complete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (dialogResult == DialogResult.Yes)
+                if (sheets.Contains("Campaign Mapping"))
                 {
-                    Cursor.Current = Cursors.WaitCursor;
-                    this.UseWaitCursor = true;
-
-                    btnExe.Enabled = true;
-                    btnLog.Visible = true;
-
-                    func = "Campaign";
-                    //validate campaign
-                    DgvSettings dgvSettings = new DgvSettings();
-                    List<string> lstHeader = new List<string>();
-
-                    lstHeader.Clear();
-
-                    lstHeader.Add("Type");
-                    lstHeader.Add("Campaign Name");
-                    lstHeader.Add("TOL Package");
-                    lstHeader.Add("TOL Discount");
-                    lstHeader.Add("TVS Package");
-                    lstHeader.Add("TVS Discount");
-
-                    InitialValue();
-
-                    dataGridView1.DataSource = null;
-
-                    dgvSettings.SetDgv(dataGridView1, filename, "Campaign Mapping$B2:G", lstHeader);
-                    dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-                    //validate campaign
-                    if (backgroundWorker1.IsBusy)
+                    DialogResult dialogResult = MessageBox.Show("The process mapping Hi-Speed promotion has been completed." + "\r\n" +
+                        "Do you want go to the process mapping campaign?", "Complete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (dialogResult == DialogResult.Yes)
                     {
-                        backgroundWorker1.CancelAsync();
+                        Cursor.Current = Cursors.WaitCursor;
+                        this.UseWaitCursor = true;
+
+                        btnExe.Enabled = true;
+                        btnLog.Visible = true;
+
+                        func = "Campaign";
+                        //validate campaign
+                        DgvSettings dgvSettings = new DgvSettings();
+                        List<string> lstHeader = new List<string>();
+
+                        lstHeader.Clear();
+
+                        lstHeader.Add("Type");
+                        lstHeader.Add("Campaign Name");
+                        lstHeader.Add("TOL Package");
+                        lstHeader.Add("TOL Discount");
+                        lstHeader.Add("TVS Package");
+                        lstHeader.Add("TVS Discount");
+
+                        InitialValue();
+
+                        dataGridView1.DataSource = null;
+
+                        dgvSettings.SetDgv(dataGridView1, filename, "Campaign Mapping$B2:G", lstHeader);
+                        dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                        //validate campaign
+                        if (backgroundWorker1.IsBusy)
+                        {
+                            backgroundWorker1.CancelAsync();
+                        }
+                        backgroundWorker1.RunWorkerAsync(func);
                     }
-                    backgroundWorker1.RunWorkerAsync(func);
+                    else
+                    {
+                        if (backgroundWorker2.IsBusy)
+                        {
+                            backgroundWorker2.CancelAsync();
+                        }
+                        if (backgroundWorker1.IsBusy)
+                        {
+                            backgroundWorker1.CancelAsync();
+                        }
+
+                        //export hispeed
+                        backgroundWorker3.RunWorkerAsync();
+                    }
                 }
                 else
                 {
-                    if(backgroundWorker2.IsBusy)
-                    {
-                        backgroundWorker2.CancelAsync();
-                    }
-                    if(backgroundWorker1.IsBusy)
-                    {
-                        backgroundWorker1.CancelAsync();
-                    }
-
                     //export hispeed
                     backgroundWorker3.RunWorkerAsync();
                 }
             }
-            else
+            catch (Exception ex)
             {
-                //export hispeed
-                backgroundWorker3.RunWorkerAsync();
-            }
+                MessageBox.Show("An error occurred while processing HiSpeed Function. Please try again!!" + "\r\n" +
+                    "System Detail : " + ex.Message + "\r\n" + ex.StackTrace, "Automate Mapping Tool"
+                    , MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                Application.UseWaitCursor = false;
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         private void NewHiSpeedData(List<string> data)
@@ -1198,7 +1224,7 @@ namespace AutomateMapping
                                 + suffix + " into database" + "\r\n" +
                                 "Detail : Incorrect media" + "\r\n" + "\r\n";
                     }
-                    else if(Convert.ToDateTime(start) >= DateTime.Now == false)
+                    else if(Convert.ToDateTime(start).Date >= DateTime.Now.Date == false)
                     {
                         logHispeed += "Cannot to insert ID: " + minID + " MKT: " + mkt + " Order: " + order + " Speed: "
                                 + suffix + " into database" + "\r\n" +
@@ -1265,18 +1291,18 @@ namespace AutomateMapping
                                 transaction.Rollback();
                                 logHispeed += "Failed to insert ID: " + minID + " MKT: " + mkt + " Order: " + order + " Speed: "
                                     + suffix + " into database" + "\r\n" +
-                                    "Detail :" + ex.Message + "\r\n" + "\r\n";
+                                    "Detail of system :" + ex.Message + "\r\n" + ex.StackTrace + "\r\n" + "\r\n";
                             }
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {}
             }
         }
 
         private void ExistingData(int id, int suffix, int upload, string channel, double price, string start, 
-            string end, string mkt, string sub)
+            string end, string mkt)
         {
             int suffixDB = -1, uploadDB = -1;
             double priceDB = 999999;
@@ -1294,7 +1320,7 @@ namespace AutomateMapping
             }
 
             cmd = ConnectionProd.CreateCommand();
-            OracleTransaction transaction = null;
+            OracleTransaction transaction;
             using (transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted))
             {
                 cmd.Transaction = transaction;
@@ -1373,9 +1399,9 @@ namespace AutomateMapping
                                                 endF = Convert.ToDateTime(end);
                                             }
 
-                                            if (endDB < DateTime.Now)
+                                            if (endDB.Date < DateTime.Now.Date)
                                             {
-                                                if (startF == DateTime.Now)
+                                                if (startF.Date == DateTime.Now.Date)
                                                 {
                                                     //update startdate == datetime.now
                                                     cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET START_DATE = sysdate " +
@@ -1385,7 +1411,7 @@ namespace AutomateMapping
                                                 }
                                                 else
                                                 {
-                                                    if (startF > DateTime.Now)
+                                                    if (startF.Date > DateTime.Now.Date)
                                                     {
                                                         //update start date by date on file
                                                         cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET START_DATE = TO_DATE('" +
@@ -1395,7 +1421,7 @@ namespace AutomateMapping
                                                     }
                                                     else
                                                     {
-                                                        if (endF == DateTime.Now)
+                                                        if (endF.Date == DateTime.Now.Date)
                                                         {
                                                             //update enddate = datetime sysdate
                                                             cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET END_DATE = sysdate " +
@@ -1416,7 +1442,7 @@ namespace AutomateMapping
                                             }
                                             else
                                             {
-                                                if (startDB > DateTime.Now)
+                                                if (startDB.Date > DateTime.Now.Date)
                                                 {
                                                     //update start = date sysdate
                                                     cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET START_DATE = sysdate " +
@@ -1426,7 +1452,7 @@ namespace AutomateMapping
                                                 }
                                                 else
                                                 {
-                                                    if (endF == DateTime.Now)
+                                                    if (endF.Date == DateTime.Now.Date)
                                                     {
                                                         //update enddate = datetime sysdate
                                                         cmd.CommandText = "UPDATE HISPEED_CHANNEL_PROMOTION SET END_DATE = sysdate " +
@@ -1517,144 +1543,165 @@ namespace AutomateMapping
                     transaction.Rollback();
 
                     logHispeed += "Failed to update data ID: " + id + " MKT: " + mkt + " Speed: " + suffix + " into database" + "\r\n" +
-                                "Detail :" + ex.Message + "\r\n" + "\r\n";
+                                "Detail of system :" + ex.Message + "\r\n" + ex.StackTrace + "\r\n" + "\r\n";
                 }
             }
         }
 
         private void MappingCampaign()
         {
-            Cursor.Current = Cursors.WaitCursor;
-            this.UseWaitCursor = true;
-
-            toolStripStatusLabel1.Text = "Inserting Campaign...";
-
-            OracleTransaction transaction = null;
-            OracleCommand cmd = null;
-
-            for (int i = 0; i < dataGridView1.RowCount; i++)
+            try
             {
-                string requestType = dataGridView1.Rows[i].Cells[0].Value.ToString().Trim();
-                string campaignName = dataGridView1.Rows[i].Cells[1].Value.ToString().Trim();
-                string tolPackage = dataGridView1.Rows[i].Cells[2].Value.ToString().Trim();
-                string tolDiscount = dataGridView1.Rows[i].Cells[3].Value.ToString().Trim();
-                string tvsPackage = dataGridView1.Rows[i].Cells[4].Value.ToString().Trim();
-                string tvsDiscount = dataGridView1.Rows[i].Cells[5].Value.ToString().Trim();
+                Cursor.Current = Cursors.WaitCursor;
+                this.UseWaitCursor = true;
 
-                if (String.IsNullOrEmpty(campaignName) == false &&
-                    String.IsNullOrEmpty(tolPackage) == false)
+                toolStripStatusLabel1.Text = "Inserting Campaign...";
+
+                OracleTransaction transaction = null;
+                OracleCommand cmd = null;
+
+                for (int i = 0; i < dataGridView1.RowCount; i++)
                 {
-                    using (transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted))
+                    string requestType = dataGridView1.Rows[i].Cells[0].Value.ToString().Trim();
+                    string campaignName = dataGridView1.Rows[i].Cells[1].Value.ToString().Trim();
+                    string tolPackage = dataGridView1.Rows[i].Cells[2].Value.ToString().Trim();
+                    string tolDiscount = dataGridView1.Rows[i].Cells[3].Value.ToString().Trim();
+                    string tvsPackage = dataGridView1.Rows[i].Cells[4].Value.ToString().Trim();
+                    string tvsDiscount = dataGridView1.Rows[i].Cells[5].Value.ToString().Trim();
+
+                    if (String.IsNullOrEmpty(campaignName) == false &&
+                        String.IsNullOrEmpty(tolPackage) == false)
                     {
-                        cmd = ConnectionProd.CreateCommand();
-                        cmd.Transaction = transaction;
-                        string status = "", valTOLDisc, valTVSDisc;
-
-                        if(String.IsNullOrEmpty(tolDiscount))
+                        using (transaction = ConnectionProd.BeginTransaction(IsolationLevel.ReadCommitted))
                         {
-                            valTOLDisc = "IS NULL";
-                        }
-                        else
-                        {
-                            valTOLDisc = "= '" + tolDiscount + "'";
-                        }
+                            cmd = ConnectionProd.CreateCommand();
+                            cmd.Transaction = transaction;
+                            string status = "", valTOLDisc, valTVSDisc;
 
-                        if(String.IsNullOrEmpty(tvsDiscount))
-                        {
-                            valTVSDisc = "IS NULL";
-                        }
-                        else
-                        {
-                            valTVSDisc = "= '" + tvsDiscount + "'";
-                        }
-
-                        try
-                        {
-                            string txt = "SELECT * FROM CAMPAIGN_MAPPING WHERE TOL_PACKAGE = '" + tolPackage + "' AND TOL_DISCOUNT " + valTOLDisc +
-                                     " AND TVS_PACKAGE = '" + tvsPackage + "' AND TVS_DISCOUNT " + valTVSDisc + " AND STATUS IN('A', 'I')";
-
-                            //OracleCommand command = new OracleCommand(txt, ConnectionProd);
-                            cmd.CommandText = txt;
-                            OracleDataReader reader = cmd.ExecuteReader();
-
-                            if (requestType == "Insert")
+                            if (String.IsNullOrEmpty(tolDiscount))
                             {
-                                if (reader.HasRows)
-                                {
-                                    reader.Read();
-                                    status = reader["STATUS"].ToString();
-                                    if (status == "A")
-                                    {
-                                        //Already exists data in the database
-                                        logCampaign += "Already exists data TOL_PACKAGE: '" + tolPackage + "' Campaign_Name: '" + campaignName +
-                                            "' TOL_DISCOUNT: '" + tolDiscount + "' TVS_PACKAGE: '" + tvsPackage + "' TVS_DISCOUNT: '" +
-                                            tvsDiscount + "'" + "\r\n";
-                                    }
-                                    else
-                                    {
-                                        cmd.CommandText = "UPDATE CAMPAIGN_MAPPING SET STATUS = 'A' WHERE TOL_PACKAGE = '" + tolPackage +
-                                            "' AND TOL_DISCOUNT " + valTOLDisc + " AND TVS_PACKAGE = '" + tvsPackage +
-                                            "' AND TVS_DISCOUNT " + valTVSDisc;
-                                        expCamp += cmd.CommandText + ";" + "\r\n";
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                }
-                                else
-                                {
-                                    //insert new campaign
-                                    cmd.CommandText = "INSERT INTO CAMPAIGN_MAPPING(CAMPAIGN_NAME, TOL_PACKAGE, TOL_DISCOUNT, " +
-                                        "TVS_PACKAGE, TVS_DISCOUNT, STATUS) VALUES('" + campaignName + "', '" + tolPackage + "', '" + tolDiscount +
-                                        "', '" + tvsPackage + "', '" + tvsDiscount + "', 'A')";
-                                    expCamp += cmd.CommandText + ";" + "\r\n";
-                                    cmd.ExecuteNonQuery();
-                                }
+                                valTOLDisc = "IS NULL";
                             }
                             else
                             {
-                                if (reader.HasRows)
-                                {
-                                    reader.Read();
-                                    status = reader["STATUS"].ToString();
+                                valTOLDisc = "= '" + tolDiscount + "'";
+                            }
 
-                                    if (status == "A")
+                            if (String.IsNullOrEmpty(tvsDiscount))
+                            {
+                                valTVSDisc = "IS NULL";
+                            }
+                            else
+                            {
+                                valTVSDisc = "= '" + tvsDiscount + "'";
+                            }
+
+                            try
+                            {
+                                string txt = "SELECT * FROM CAMPAIGN_MAPPING WHERE TOL_PACKAGE = '" + tolPackage + "' AND TOL_DISCOUNT " + valTOLDisc +
+                                         " AND TVS_PACKAGE = '" + tvsPackage + "' AND TVS_DISCOUNT " + valTVSDisc + " AND STATUS IN('A', 'I')";
+
+                                //OracleCommand command = new OracleCommand(txt, ConnectionProd);
+                                cmd.CommandText = txt;
+                                OracleDataReader reader = cmd.ExecuteReader();
+
+                                if (requestType == "Insert")
+                                {
+                                    if (reader.HasRows)
                                     {
-                                        cmd.CommandText = "UPDATE CAMPAIGN_MAPPING SET STATUS = 'I' WHERE TOL_PACKAGE = '" + tolPackage +
-                                            "' AND TOL_DISCOUNT " + valTOLDisc + " AND TVS_PACKAGE = '" + tvsPackage +
-                                            "' AND TVS_DISCOUNT " + valTVSDisc;
+                                        reader.Read();
+                                        status = reader["STATUS"].ToString();
+                                        if (status == "A")
+                                        {
+                                            //Already exists data in the database
+                                            logCampaign += "Already exists data TOL_PACKAGE: '" + tolPackage + "' Campaign_Name: '" + campaignName +
+                                                "' TOL_DISCOUNT: '" + tolDiscount + "' TVS_PACKAGE: '" + tvsPackage + "' TVS_DISCOUNT: '" +
+                                                tvsDiscount + "'" + "\r\n";
+                                        }
+                                        else
+                                        {
+                                            cmd.CommandText = "UPDATE CAMPAIGN_MAPPING SET STATUS = 'A' WHERE TOL_PACKAGE = '" + tolPackage +
+                                                "' AND TOL_DISCOUNT " + valTOLDisc + " AND TVS_PACKAGE = '" + tvsPackage +
+                                                "' AND TVS_DISCOUNT " + valTVSDisc;
+                                            expCamp += cmd.CommandText + ";" + "\r\n";
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //insert new campaign
+                                        cmd.CommandText = "INSERT INTO CAMPAIGN_MAPPING(CAMPAIGN_NAME, TOL_PACKAGE, TOL_DISCOUNT, " +
+                                            "TVS_PACKAGE, TVS_DISCOUNT, STATUS) VALUES('" + campaignName + "', '" + tolPackage + "', '" + tolDiscount +
+                                            "', '" + tvsPackage + "', '" + tvsDiscount + "', 'A')";
                                         expCamp += cmd.CommandText + ";" + "\r\n";
                                         cmd.ExecuteNonQuery();
                                     }
                                 }
                                 else
                                 {
-                                    logCampaign += "Not found data TOL_PACKAGE: '" + tolPackage + "' Campaign_Name: '" + campaignName +
-                                            "' TOL_DISCOUNT: '" + tolDiscount + "' TVS_PACKAGE: '" + tvsPackage + "' TVS_DISCOUNT: '" +
-                                            tvsDiscount + "' in database" + "\r\n";
+                                    if (reader.HasRows)
+                                    {
+                                        reader.Read();
+                                        status = reader["STATUS"].ToString();
+
+                                        if (status == "A")
+                                        {
+                                            cmd.CommandText = "UPDATE CAMPAIGN_MAPPING SET STATUS = 'I' WHERE TOL_PACKAGE = '" + tolPackage +
+                                                "' AND TOL_DISCOUNT " + valTOLDisc + " AND TVS_PACKAGE = '" + tvsPackage +
+                                                "' AND TVS_DISCOUNT " + valTVSDisc;
+                                            expCamp += cmd.CommandText + ";" + "\r\n";
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        logCampaign += "Not found data TOL_PACKAGE: '" + tolPackage + "' Campaign_Name: '" + campaignName +
+                                                "' TOL_DISCOUNT: '" + tolDiscount + "' TVS_PACKAGE: '" + tvsPackage + "' TVS_DISCOUNT: '" +
+                                                tvsDiscount + "' in database" + "\r\n";
+                                    }
                                 }
+
+                                transaction.Commit();
+
+                                tolPack += "," + "'" + tolPackage + "'";
+                                tvsPack += "," + "'" + tvsPackage + "'";
                             }
+                            catch (Exception)
+                            {
+                                transaction.Rollback();
 
-                            transaction.Commit();
-
-                            tolPack += "," + "'" + tolPackage + "'";
-                            tvsPack += "," + "'" + tvsPackage + "'";
+                                logCampaign += "Failed to insert or update data TOL_PACKAGE: '" + tolPackage + "' Campaign_Name: '" + campaignName +
+                                                "' TOL_DISCOUNT: '" + tolDiscount + "' TVS_PACKAGE: '" + tvsPackage + "' TVS_DISCOUNT: '" +
+                                                tvsDiscount + "' in database" + "\r\n";
+                            }
                         }
-                        catch (Exception)
-                        {
-                            transaction.Rollback();
-
-                            logCampaign += "Failed to insert or update data TOL_PACKAGE: '" + tolPackage + "' Campaign_Name: '" + campaignName +
-                                            "' TOL_DISCOUNT: '" + tolDiscount + "' TVS_PACKAGE: '" + tvsPackage + "' TVS_DISCOUNT: '" +
-                                            tvsDiscount + "' in database" + "\r\n";
-                        }
-                    }               
+                    }
                 }
+
+                if (String.IsNullOrEmpty(logCampaign) == false && String.IsNullOrEmpty(tolPack) && String.IsNullOrEmpty(tvsPack))
+                {
+                    string logPath = outputPath + "\\Log_Campaign_" + urNo.ToUpper() + ".txt";
+                    using (StreamWriter writer = new StreamWriter(logPath, true))
+                    {
+                        writer.Write(logCampaign);
+                    }
+                }
+
+                backgroundWorker3.RunWorkerAsync();
+
+                this.UseWaitCursor = false;
+                Cursor.Current = Cursors.Default;
             }
+            catch(Exception ex)
+            {
+                MessageBox.Show("An error occurred while processing Campaign Mapping Function. Please try again!!" + "\r\n" +
+                    "Detail of system : " + ex.Message + "\r\n" + ex.StackTrace, "Automate Mapping Tool"
+                    , MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            backgroundWorker3.RunWorkerAsync();
+                Application.UseWaitCursor = false;
+                Cursor.Current = Cursors.Default;
 
-            this.UseWaitCursor = false;
-            Cursor.Current = Cursors.Default;
-
+            }
         }
 
         private void ExportHiSpeed()
@@ -1731,8 +1778,8 @@ namespace AutomateMapping
                     if (j == 0 || j == 1 || j == 9 || j == 10)
                     {
                         string date = dt.Rows[i][j].ToString();
-                        DateTime dDate;
-                        if (DateTime.TryParse(date, out dDate))
+
+                        if (DateTime.TryParse(date, out DateTime dDate))
                         {
                             date = string.Format("{0:dd/MMM/yyyy}", dDate);
                             sheet.Cells[i + 2, j + 1] = date;
@@ -1888,8 +1935,7 @@ namespace AutomateMapping
         /// </summary>
         private string GetPName(string mkt)
         {
-            string pName = "";
-
+            string pName;
             if (lstPname.Count > 0)
             {
                 if (lstPname.ContainsKey(mkt))

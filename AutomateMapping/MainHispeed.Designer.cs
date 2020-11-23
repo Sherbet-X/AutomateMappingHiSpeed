@@ -83,7 +83,7 @@
             this.panel5.Controls.Add(this.labelHead);
             this.panel5.Controls.Add(this.pictureBox1);
             this.panel5.Location = new System.Drawing.Point(0, 0);
-            this.panel5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel5.Margin = new System.Windows.Forms.Padding(4);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(1712, 54);
             this.panel5.TabIndex = 16;
@@ -153,7 +153,7 @@
             // 
             this.pictureBox1.Image = global::AutomateMapping.Properties.Resources.icons8_administrative_tools_32;
             this.pictureBox1.Location = new System.Drawing.Point(14, 10);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(32, 32);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -164,13 +164,13 @@
             // 
             this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listBox1.Font = new System.Drawing.Font("Roboto", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBox1.Font = new System.Drawing.Font("Roboto", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 28;
+            this.listBox1.ItemHeight = 29;
             this.listBox1.Location = new System.Drawing.Point(0, 454);
-            this.listBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.listBox1.Margin = new System.Windows.Forms.Padding(4);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(1032, 144);
+            this.listBox1.Size = new System.Drawing.Size(1032, 120);
             this.listBox1.TabIndex = 18;
             this.listBox1.Click += new System.EventHandler(this.listBox1_Click);
             // 
@@ -193,7 +193,7 @@
             this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(0, 128);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.Size = new System.Drawing.Size(1712, 244);
@@ -324,7 +324,7 @@
             this.btnExe.Image = global::AutomateMapping.Properties.Resources.icons8_services_24;
             this.btnExe.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnExe.Location = new System.Drawing.Point(1492, 594);
-            this.btnExe.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnExe.Margin = new System.Windows.Forms.Padding(4);
             this.btnExe.Name = "btnExe";
             this.btnExe.Size = new System.Drawing.Size(176, 63);
             this.btnExe.TabIndex = 29;
@@ -348,7 +348,7 @@
             this.btnLog.Image = global::AutomateMapping.Properties.Resources.icons8_exit_24;
             this.btnLog.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnLog.Location = new System.Drawing.Point(1182, 594);
-            this.btnLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnLog.Margin = new System.Windows.Forms.Padding(4);
             this.btnLog.Name = "btnLog";
             this.btnLog.Size = new System.Drawing.Size(268, 63);
             this.btnLog.TabIndex = 28;
@@ -375,7 +375,7 @@
             this.Controls.Add(this.panel5);
             this.Controls.Add(this.statusStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(0, 736);

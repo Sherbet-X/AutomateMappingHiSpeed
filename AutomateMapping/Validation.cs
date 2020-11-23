@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
 using System.Data.OracleClient;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -67,7 +68,7 @@ namespace AutomateMapping
             {
                 if (this._lstChannel is null || this._lstChannel.Count <= 0)
                 {
-                    this._lstChannel = getChannelFromDB();
+                    this._lstChannel = _getChannelFromDB();
                 }
 
                 return this._lstChannel;
@@ -79,7 +80,7 @@ namespace AutomateMapping
         }
 
         //Get sale channel from database
-        public List<string[]> getChannelFromDB()
+        public List<string[]> _getChannelFromDB()
         {
             List<string[]> list = new List<string[]>();
 
@@ -249,7 +250,7 @@ namespace AutomateMapping
 
                 reader.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 string msg = "Cannot get speed from database.";
 
@@ -322,7 +323,6 @@ namespace AutomateMapping
         private List<string[]> GetProvince()
         {
             List<string[]> list = new List<string[]>();
-
             try
             {
                 string query = "SELECT DP_PROVINCE FROM DISCOUNT_CRITERIA_PROVINCE";
@@ -340,7 +340,7 @@ namespace AutomateMapping
 
                 reader.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 string msg = "Cannot get province from database.";
 
@@ -597,7 +597,7 @@ namespace AutomateMapping
                                 speedID = Convert.ToInt32(Regex.Replace(download, "[^0-9]", ""));
                                 if (uomDownload == "G")
                                 {
-                                    speedID = speedID * 1000;
+                                    speedID *= 1000;
                                 }
 
                                 DialogResult dialog = MessageBox.Show("Do you want to insert new speed into DB[Hispeed Speed]?" +
@@ -833,11 +833,11 @@ namespace AutomateMapping
 
             if (uom == "G")
             {
-                convSpeed = convSpeed * 1024000;
+                convSpeed *= 1024000;
             }
             else if (uom == "M")
             {
-                convSpeed = convSpeed * 1024;
+                convSpeed *= 1024;
             }
             else
             {
@@ -1141,7 +1141,6 @@ namespace AutomateMapping
 
         public string CheckOrderType(string order)
         {
-            string[] lstOrder = null;
             string msg = "Success";
 
             if (String.IsNullOrEmpty(order))
@@ -1150,9 +1149,10 @@ namespace AutomateMapping
             }
             else
             {
+                string[] lstOrder;
                 if (order.Contains(','))
                 {
-                    lstOrder = new string[2];
+                    _ = new string[2];
                     lstOrder = order.Split(',');
                 }
                 else
@@ -1224,8 +1224,10 @@ namespace AutomateMapping
                                     try
                                     {
                                         transaction = ConnectionTemp.BeginTransaction(IsolationLevel.ReadCommitted);
-                                        OracleCommand command = new OracleCommand(cmd, ConnectionTemp);
-                                        command.Transaction = transaction;
+                                        OracleCommand command = new OracleCommand(cmd, ConnectionTemp)
+                                        {
+                                            Transaction = transaction
+                                        };
                                         command.ExecuteNonQuery();
 
                                         transaction.Commit();
@@ -1281,7 +1283,7 @@ namespace AutomateMapping
 
                     if (dateStr == "Invalid")
                     {
-                        msg = "Start Date fotmat is not supported";
+                        msg = "StartDate fotmat is not supported";
                     }
                 }
             }
@@ -1293,18 +1295,19 @@ namespace AutomateMapping
 
                     if (dateEnd == "Invalid")
                     {
-                        msg = "End Date fotmat is not supported";
+                        msg = "EndDate fotmat is not supported";
                     }
                 }
                 else
                 {
                     dateStr = this.ChangeFormatDate(start);
                     dateEnd = this.ChangeFormatDate(end);
-
-                    if(dateStr != "Invalid" && dateEnd != "Invalid")
+                    
+                    if (dateStr != "Invalid" && dateEnd != "Invalid")
                     {
-                        if (Convert.ToDateTime(dateStr) < Convert.ToDateTime(dateEnd) &&
-                            Convert.ToDateTime(dateStr) >= DateTime.Now)
+                        if (DateTime.ParseExact(dateStr, "dd/MM/yyyy", CultureInfo.InvariantCulture) <
+                              DateTime.ParseExact(dateEnd, "dd/MM/yyyy", CultureInfo.InvariantCulture) &&
+                            DateTime.ParseExact(dateStr, "dd/MM/yyyy", CultureInfo.InvariantCulture) >= DateTime.Now.Date)
                         { }
                         else
                         {
@@ -1313,36 +1316,86 @@ namespace AutomateMapping
                     }
                     else
                     {
-                        msg = "Start Date and End Date fotmat are not supported";
+                        msg = "StartDate and EndDate fotmat are not supported";
                     }
                 }
             }
 
             return msg;
         }
-        public string ChangeFormatDate(string date)
-        {
-            double d;
-            DateTime dDate;
 
-            if (DateTime.TryParse(date, out dDate))
+        public string[] CheckDateVASUpSpeed(string start, string end)
+        {
+            string[] msg = { "Success","Success"};
+
+            start = ChangeFormatDate(start);
+            end = ChangeFormatDate(end);
+
+            if (String.IsNullOrEmpty(start))
             {
-                date = dDate.ToString("dd/MM/yyyy");
+                msg[0] = "StartDate is null or empty";
+            }
+            else if (start == "Invalid")
+            {
+                msg[0] = "StartDate fotmat is not supported";
             }
             else
             {
-                if (double.TryParse(date, out d))
+                if (Convert.ToDateTime(start) < DateTime.Now.Date)
                 {
-                    dDate = DateTime.FromOADate(d);
-                    date = dDate.ToString("dd/MM/yyyy");
+                    //write log
+                    msg[0] = "StartDate("+start+") < Sysdate("+DateTime.Now.ToString("dd/MM/yyyy")+").";
                 }
-                else if (date == "-" || String.IsNullOrEmpty(date))
+            }
+
+            if(String.IsNullOrEmpty(end) == false)
+            {
+                if (end == "Invalid")
                 {
-                    date = null;
+                    msg[1] = "EndDate fotmat is not supported";
                 }
                 else
                 {
-                    date = "Invalid";
+                    if (msg[0] == "Success")
+                    {
+                        if (Convert.ToDateTime(start) < Convert.ToDateTime(end))
+                        { }
+                        else
+                        {
+                            //write log
+                            msg[0] = "StartDate(" + start + ") < EndDate(" + end + ").";
+                        }
+                    }
+                }
+            }
+
+            return msg;
+        }
+
+        public string ChangeFormatDate(string date)
+        {
+
+            if (date == "-" || String.IsNullOrEmpty(date))
+            {
+                date = null;
+            }
+            else
+            {
+                if (DateTime.TryParse(date, out DateTime dDate))
+                {
+                    date = dDate.ToString("dd/MM/yyyy");
+                }
+                else
+                {
+                    if (double.TryParse(date, out double d))
+                    {
+                        dDate = DateTime.FromOADate(d);
+                        date = dDate.ToString("dd/MM/yyyy");
+                    }
+                    else
+                    {
+                        date = "Invalid";
+                    }
                 }
             }
 
